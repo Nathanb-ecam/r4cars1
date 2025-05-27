@@ -5,7 +5,7 @@ import connectDB from '@/lib/mongodb';
 export async function GET() {
   try {
     await connectDB();
-    const products = await ProductModel.find({});
+    const products = await ProductModel.find({}).sort({ createdAt: -1 });
     return NextResponse.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
