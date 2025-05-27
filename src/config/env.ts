@@ -1,6 +1,6 @@
 export const env = {
   database: {
-    url: process.env.MONGODB_URI || '',    
+    url: process.env.MONGODB_URI || 'mongodb://mongo-makassar:mongo-makassar-password@localhost:27017/labeuromed?authSource=admin',    
   },
   jwt: {
     secret: process.env.JWT_SECRET || 'secret-jwt-key',
