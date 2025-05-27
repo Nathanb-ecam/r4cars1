@@ -19,6 +19,7 @@ interface CheckoutForm {
 
 export default function CartPage() {
   const router = useRouter();
+  const bypassPayment = true;
   const { items, removeItem, updateQuantity } = useCartStore();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [formData, setFormData] = useState<CheckoutForm>({ name: '', email: '' });
@@ -26,26 +27,43 @@ export default function CartPage() {
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
+  const stripePayment = async () =>{
+
+  }
+  
   const handleCheckout = async () => {
     try {
       setIsProcessing(true);
       const orderId = `ORDER-${Date.now()}`;
       const doctorNumber = Cookies.get('doctorNumber');
 
-      // Create Stripe checkout session
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items,
-          customer: formData,
-          orderId,
-        }),
-      });
+      if(!bypassPayment){
+          // Create Stripe checkout session
+          const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              items,
+              customer: formData,
+              orderId,
+            }),
+          });
 
-      const { sessionId } = await response.json();
+          const { sessionId } = await response.json();
+              // Redirect to Stripe checkout
+          const stripe = await stripePromise;
+          const { error } = await stripe!.redirectToCheckout({ sessionId });
+
+          if (error) {
+            console.error('Stripe error:', error);
+            throw error;
+          }
+
+      }
+
+
 
       // Track affiliate sale
       if (doctorNumber) {
@@ -55,15 +73,9 @@ export default function CartPage() {
           total,
         });
       }
+      
 
-      // Redirect to Stripe checkout
-      const stripe = await stripePromise;
-      const { error } = await stripe!.redirectToCheckout({ sessionId });
 
-      if (error) {
-        console.error('Stripe error:', error);
-        throw error;
-      }
 
       // Clear cart and authentication
       useCartStore.getState().clearCart();      

@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    ports:
+      - "27017:27017"    
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo-makassar
+      - MONGO_INITDB_ROOT_PASSWORD=mongo-makassar-password
+      - MONGO_INITDB_DATABASE=labeuromed
+      # - MONGO_INITDB_DATABASE=labeuromed
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data: 
