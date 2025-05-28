@@ -21,7 +21,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/cart" className="text-gray-400 hover:text-white">
+                <Link href="/visitor/cart" className="text-gray-400 hover:text-white">
                   Cart
                 </Link>
               </li>

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { Doctor } from '@/models/Doctor';
+import { DoctorModel } from '@/models/Doctor';
 import { UserRole } from '@/models/User';
 import { generateToken } from '@/lib/jwt';
 import connectDB from '@/lib/mongodb';
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const { doctorNumber, accessCode } = await request.json();
 
-    const doctor = await Doctor.findOne({ doctorNumber });
+    const doctor = await DoctorModel.findOne({ doctorNumber });
     if (!doctor || doctor.accessCode !== accessCode) {
       return NextResponse.json(
         { error: 'Invalid doctor number or access code' },

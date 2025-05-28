@@ -8,11 +8,11 @@ export default function AdminLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      {/* <Header /> */}
       <div className="flex-grow">
         {children}
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 } 

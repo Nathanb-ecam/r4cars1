@@ -30,7 +30,7 @@ export default function VisitorLoginForm() {
         throw new Error(data.error || 'Login failed');
       }
 
-      router.push('/home');
+      router.push('/visitor/home');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     }
