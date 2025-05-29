@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { StockModel } from '@/models/Stock';
 import connectDB from '@/lib/mongodb';
+import { ProductModel } from '@/models/Product';
 
 export async function GET(
   request: Request,
@@ -10,7 +10,7 @@ export async function GET(
     const { id } = params;
     await connectDB();
 
-    const stock = await StockModel.findById(id)
+    const stock = await ProductModel.findById(id)
       .populate('productId', 'name description price image');
 
     if (!stock) {
@@ -39,10 +39,10 @@ export async function PUT(
     const data = await request.json();
     await connectDB();
 
-    const stock = await StockModel.findByIdAndUpdate(
+    const stock = await ProductModel.findByIdAndUpdate(
       id,
       {
-        quantity: data.quantity,
+        stock: data.quantity,
         lastUpdated: new Date(),
         updatedAt: new Date(),
       },
@@ -66,29 +66,3 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const { id } = params;
-    await connectDB();
-
-    const stock = await StockModel.findByIdAndDelete(id);
-
-    if (!stock) {
-      return NextResponse.json(
-        { error: 'Stock non trouvé' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ message: 'Stock supprimé avec succès' });
-  } catch (error) {
-    console.error('Error deleting stock item:', error);
-    return NextResponse.json(
-      { error: 'Erreur lors de la suppression du stock' },
-      { status: 500 }
-    );
-  }
-} 

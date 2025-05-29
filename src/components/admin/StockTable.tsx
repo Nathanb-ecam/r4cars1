@@ -1,20 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Product, ProductModel } from '@/models/Product';
-
-
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 export default function StockTable() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState({
-    name: '',
-    description: '',
-    price: '',
-    imageUrl: '',
-    stock:0,
-  });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [newStock, setNewStock] = useState('');
 
   useEffect(() => {
     fetchProducts();
@@ -33,28 +27,53 @@ export default function StockTable() {
     }
   };
 
-  const handleCreateProduct = async (e: React.FormEvent) => {
+  const handleUpdateStock = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!editingProduct) return;
+
     try {
-      const response = await fetch('/api/admin/products', {
-        method: 'POST',
+      const response = await fetch(`/api/admin/products/${editingProduct._id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...newProduct,
-          price: parseFloat(newProduct.price)
+          ...editingProduct,
+          stock: parseInt(newStock)
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to create product');
+      if (!response.ok) throw new Error('Failed to update stock');
       
       await fetchProducts();
-      setIsModalOpen(false);
-      setNewProduct({ name: '', description: '', price: '', imageUrl: '', stock:0 });
+      setIsEditModalOpen(false);
+      setEditingProduct(null);
+      setNewStock('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
+  };
+
+  const handleDeleteProduct = async (productId: string) => {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+
+    try {
+      const response = await fetch(`/api/admin/products/${productId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete product');
+      
+      await fetchProducts();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
+  };
+
+  const openEditModal = (product: Product) => {
+    setEditingProduct(product);
+    setNewStock(product.stock.toString());
+    setIsEditModalOpen(true);
   };
 
   if (isLoading) {
@@ -75,15 +94,14 @@ export default function StockTable() {
 
   return (
     <div>
-
-      {/* Create Product Modal */}
-      {isModalOpen && (
+      {/* Edit Stock Modal */}
+      {isEditModalOpen && editingProduct && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Create New Product</h3>
+              <h3 className="text-lg font-medium text-gray-900">Edit Stock</h3>
               <button
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => setIsEditModalOpen(false)}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,45 +109,27 @@ export default function StockTable() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleCreateProduct} className="space-y-4">
+            <form onSubmit={handleUpdateStock} className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={newProduct.name}
-                  onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required
-                />
+                <label htmlFor="product-name" className="block text-sm font-medium text-gray-700">Product</label>
+                <p className="mt-1 text-sm text-gray-900">{editingProduct.name}</p>
               </div>
-       
               <div>
-                <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
+                <label htmlFor="stock" className="block text-sm font-medium text-gray-700">Stock Quantity</label>
                 <input
                   type="number"
-                  id="price"
-                  value={newProduct.price}
-                  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                  id="stock"
+                  value={newStock}
+                  onChange={(e) => setNewStock(e.target.value)}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
+                  min="0"
                   required
-                />
-              </div>
-              <div>
-                <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
-                <input
-                  type="url"
-                  id="image"
-                  value={newProduct.imageUrl}
-                  onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
               <div className="flex justify-end space-x-3">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => setIsEditModalOpen(false)}
                   className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Cancel
@@ -138,7 +138,7 @@ export default function StockTable() {
                   type="submit"
                   className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  Create
+                  Save Changes
                 </button>
               </div>
             </form>
@@ -155,26 +155,49 @@ export default function StockTable() {
                 Product
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Quantity
+                SKU
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Added
+                Stock
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Last Updated
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
               </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {products.map((product) => (
-              <tr key={product.id}>
+              <tr key={product._id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {product.name}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-900">
-                  <div className="max-w-xs truncate">
-                    {product.stock}
-                  </div>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {product.sku}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {product.stock}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {new Date(product.updatedAt).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => openEditModal(product)}
+                      className="text-indigo-600 hover:text-indigo-900"
+                    >
+                      <PencilIcon className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProduct(product._id)}
+                      className="text-red-600 hover:text-red-900"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -185,19 +208,37 @@ export default function StockTable() {
       {/* Mobile view */}
       <div className="md:hidden space-y-4">
         {products.map((product) => (
-          <div key={product.id} className="bg-white shadow rounded-lg p-4">
+          <div key={product._id} className="bg-white shadow rounded-lg p-4">
             <div className="space-y-2">
               <div>
                 <span className="text-xs font-medium text-gray-500">Product</span>
                 <p className="text-sm text-gray-900">{product.name}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Quantity</span>
-                <p className="text-sm text-gray-900">{product.stock}</p>
-              </div> 
+                <span className="text-xs font-medium text-gray-500">SKU</span>
+                <p className="text-sm text-gray-900">{product.sku}</p>
+              </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Updated</span>
+                <span className="text-xs font-medium text-gray-500">Stock</span>
+                <p className="text-sm text-gray-900">{product.stock}</p>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-gray-500">Last Updated</span>
                 <p className="text-sm text-gray-900">{new Date(product.updatedAt).toLocaleDateString()}</p>
+              </div>
+              <div className="flex space-x-2 pt-2">
+                <button
+                  onClick={() => openEditModal(product)}
+                  className="text-indigo-600 hover:text-indigo-900"
+                >
+                  <PencilIcon className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={() => handleDeleteProduct(product._id)}
+                  className="text-red-600 hover:text-red-900"
+                >
+                  <TrashIcon className="h-5 w-5" />
+                </button>
               </div>
             </div>
           </div>

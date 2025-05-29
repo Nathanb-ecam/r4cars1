@@ -26,7 +26,7 @@ export default function CartPage() {
   const [formData, setFormData] = useState<CheckoutForm>({ name: '', email: '' });
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const total = items.reduce((sum, item) => sum + item.discountedPrice * item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + Math.min(item.discountedPrice, item.originalPrice) * item.quantity, 0);
 
   const stripePayment = async () =>{
 
@@ -132,7 +132,7 @@ export default function CartPage() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{item.name}</h3>
-                <p className="text-gray-600">€{item.discountedPrice.toFixed(2)}</p>
+                <p className="text-gray-600">€{Math.min(item.discountedPrice, item.originalPrice).toFixed(2)}</p>
               </div>
               <div className="flex items-center space-x-4">
                 <input
@@ -159,9 +159,7 @@ export default function CartPage() {
             <div className="text-xl font-bold">
               Total: €{total.toFixed(2)}
             </div>
-            <div className="text-xl font-bold">
-              Total: €{total.toFixed(2)}
-            </div>
+
             <button
               onClick={() => setIsCheckoutOpen(true)}
               className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700"
