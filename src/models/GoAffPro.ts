@@ -12,12 +12,13 @@ export interface GoAffProLineItem {
   
 export interface GoAffProOrder {
     id: string;
-    affiliate_id: string;
-    total:string;
-    subtotal:string;
+    affiliate_id: number;
+    total:number;
+    subtotal:number;
     shipping_address: string;
     customer_email:string;
     number:string;
+    coupons:Array<string>;
     commission:string;
     line_items: GoAffProLineItem[];
     status: string;  

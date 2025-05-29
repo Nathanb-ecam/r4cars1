@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 export interface Product {
   _id: string;
   name: string;
+  sku: string;
   description: string;
   originalPrice: number;
   discountedPrice: number;

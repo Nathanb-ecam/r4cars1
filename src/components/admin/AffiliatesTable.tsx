@@ -22,6 +22,7 @@ export default function AffiliatesTable() {
     email: '',
     tag:'',
     ref_code: '',    
+    status:'approved'
   });
 
   useEffect(() => {
@@ -59,13 +60,13 @@ export default function AffiliatesTable() {
       
       await fetchAffiliates();
       setIsModalOpen(false);
-      setNewAffiliates({ name: '', email: '',tag:'',ref_code:''});
+      setNewAffiliates({ name: '', email: '',tag:'',ref_code:'', status:'approved'});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
   };
 
-  const hanldeDeleteAffiliate = async (affiliate_id: string) => {
+  const handleDeleteAffiliate = async (affiliate_id: string) => {
     try {
       const response = await fetch(`/api/admin/affiliates/${affiliate_id}`, {
         method: 'DELETE',
@@ -198,6 +199,9 @@ export default function AffiliatesTable() {
           <thead className="bg-gray-50">
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Id
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Email
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -219,6 +223,9 @@ export default function AffiliatesTable() {
             {affiliates.map((affiliate) => (
               <tr key={affiliate.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {affiliate.id}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {affiliate.email}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -231,7 +238,7 @@ export default function AffiliatesTable() {
                   {new Date(affiliate.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <button onClick={()=>hanldeDeleteAffiliate(affiliate.id)}>Delete</button>
+                  <button onClick={()=>handleDeleteAffiliate(affiliate.id)}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -244,6 +251,10 @@ export default function AffiliatesTable() {
         {affiliates.map((affiliate) => (
           <div key={affiliate.id} className="bg-white shadow rounded-lg p-4">
             <div className="space-y-2">
+              <div>
+                <span className="text-xs font-medium text-gray-500">Id</span>
+                <p className="text-sm text-gray-900">{affiliate.id}</p>
+              </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Name</span>
                 <p className="text-sm text-gray-900">{affiliate.name}</p>
@@ -265,7 +276,7 @@ export default function AffiliatesTable() {
                 <p className="text-sm text-gray-900">{new Date(affiliate.createdAt).toLocaleDateString()}</p>
               </div>
               <div>
-                <button onClick={()=>hanldeDeleteAffiliate(affiliate.id)}>Delete</button>                                
+                <button onClick={()=>handleDeleteAffiliate(affiliate.id)}>Delete</button>                                
               </div>
             </div>
           </div>

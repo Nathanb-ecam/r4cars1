@@ -20,7 +20,7 @@ export async function GET() {
   });
       
   const {affiliates, _} = await response.json();
-  // console.log("RESPONSE")
+  // console.log("__________________AFFILIATES__________________")
   // console.log(JSON.stringify(affiliates))  
   return NextResponse.json(affiliates, { status: 201 });
   }

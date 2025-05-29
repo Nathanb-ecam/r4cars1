@@ -1,12 +1,7 @@
 import { Product } from '@/models/Product';
 import { useEffect, useState } from 'react';
 import { Affiliate } from './AffiliatesTable';
-import { GoAffProOrder } from '@/models/GoAffPro';
-
-
-
-
-
+import { GoAffProOrder, GoAffProLineItem } from '@/models/GoAffPro';
 
 export default function OrdersTable() {
   const [orders, setOrders] = useState<GoAffProOrder[]>([]);
@@ -16,10 +11,15 @@ export default function OrdersTable() {
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newOrder, setNewOrder] = useState({
-    doctorId: '',
-    products: [{ productId: '', quantity: '' }],
-    status: 'pending'
+    affiliate_id: 0,
+    customer_email: '',
+    shipping_address: '',
+    line_items: [{ product_id: '', quantity: 1 }] as { product_id: string; quantity: number }[],
+    status: 'pending',
+    coupon: ''
   });
+
+  const defaultCoupons = ['EASY10OFF']
 
   useEffect(() => {
     fetchOrders();
@@ -65,38 +65,62 @@ export default function OrdersTable() {
   const handleAddProduct = () => {
     setNewOrder({
       ...newOrder,
-      products: [...newOrder.products, { productId: '', quantity: '' }]
+      line_items: [...newOrder.line_items, { product_id: '', quantity: 1 }]
     });
   };
 
   const handleRemoveProduct = (index: number) => {
     setNewOrder({
       ...newOrder,
-      products: newOrder.products.filter((_, i) => i !== index)
+      line_items: newOrder.line_items.filter((_, i) => i !== index)
     });
   };
 
-  const handleProductChange = (index: number, field: 'productId' | 'quantity', value: string) => {
-    const updatedProducts = [...newOrder.products];
-    updatedProducts[index] = { ...updatedProducts[index], [field]: value };
-    setNewOrder({ ...newOrder, products: updatedProducts });
+  const handleProductChange = (index: number, field: 'product_id' | 'quantity', value: string | number) => {
+    const updatedLineItems = [...newOrder.line_items];
+    updatedLineItems[index] = { 
+      ...updatedLineItems[index], 
+      [field]: field === 'quantity' ? Number(value) : value 
+    };
+    setNewOrder({ ...newOrder, line_items: updatedLineItems });
   };
 
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Calculate total and prepare line items
+      const line_items: GoAffProLineItem[] = newOrder.line_items.map(item => {
+        const product = products.find(p => p._id === item.product_id);
+        if (!product) throw new Error('Product not found');
+        
+        return {
+          name: product.name,
+          sku: product.sku,
+          price: product.discountedPrice,
+          quantity: item.quantity,
+          product_id: product._id          
+        };
+      });
+
+      const total = line_items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      const orderData = {
+        affiliate_id: newOrder.affiliate_id,
+        customer_email: newOrder.customer_email,
+        shipping_address: newOrder.shipping_address,
+        coupons:[newOrder.coupon],
+        line_items,
+        total: total,
+        subtotal: total,
+        status: 'approved' 
+      };
+
       const response = await fetch('/api/admin/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...newOrder,
-          products: newOrder.products.map(p => ({
-            productId: p.productId,
-            quantity: parseInt(p.quantity)
-          }))
-        }),
+        body: JSON.stringify(orderData),
       });
 
       if (!response.ok) throw new Error('Failed to create order');
@@ -104,9 +128,12 @@ export default function OrdersTable() {
       await fetchOrders();
       setIsModalOpen(false);
       setNewOrder({
-        doctorId: '',
-        products: [{ productId: '', quantity: '' }],
-        status: 'pending'
+        affiliate_id: 0,
+        customer_email: '',
+        shipping_address: '',
+        line_items: [{ product_id: '', quantity: 1 }],
+        status: 'pending',
+        coupon: ''
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -160,11 +187,11 @@ export default function OrdersTable() {
             </div>
             <form onSubmit={handleCreateOrder} className="space-y-4">
               <div>
-                <label htmlFor="doctorId" className="block text-sm font-medium text-gray-700">Doctor</label>
+                <label htmlFor="affiliate_id" className="block text-sm font-medium text-gray-700">Doctor</label>
                 <select
-                  id="doctorId"
-                  value={newOrder.doctorId}
-                  onChange={(e) => setNewOrder({ ...newOrder, doctorId: e.target.value })}
+                  id="affiliate_id"
+                  value={newOrder.affiliate_id}
+                  onChange={(e) => setNewOrder({ ...newOrder, affiliate_id: parseInt(e.target.value) })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 >
@@ -175,6 +202,48 @@ export default function OrdersTable() {
                     </option>
                   ))}
                 </select>
+              </div>
+              <div>
+                <label htmlFor="coupon" className="block text-sm font-medium text-gray-700">Coupon</label>
+                <select
+                  id="coupon"
+                  value={newOrder.coupon}
+                  onChange={(e) => setNewOrder({ ...newOrder, coupon: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
+                >
+                  <option value="">Select a coupon</option>
+                  {defaultCoupons.map((coupon) => (
+                      <option key={coupon} value={coupon}>
+                        {coupon}
+                      </option>
+                    ))}
+                </select>
+              </div>
+             
+
+
+              <div>
+                <label htmlFor="customer_email" className="block text-sm font-medium text-gray-700">Customer Email</label>
+                <input
+                  type="email"
+                  id="customer_email"
+                  value={newOrder.customer_email}
+                  onChange={(e) => setNewOrder({ ...newOrder, customer_email: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="shipping_address" className="block text-sm font-medium text-gray-700">Shipping Address</label>
+                <textarea
+                  id="shipping_address"
+                  value={newOrder.shipping_address}
+                  onChange={(e) => setNewOrder({ ...newOrder, shipping_address: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
+                />
               </div>
 
               <div>
@@ -188,12 +257,12 @@ export default function OrdersTable() {
                     + Add Product
                   </button>
                 </div>
-                {newOrder.products.map((product, index) => (
+                {newOrder.line_items.map((item, index) => (
                   <div key={index} className="flex gap-4 mb-2">
                     <div className="flex-1">
                       <select
-                        value={product.productId}
-                        onChange={(e) => handleProductChange(index, 'productId', e.target.value)}
+                        value={item.product_id}
+                        onChange={(e) => handleProductChange(index, 'product_id', e.target.value)}
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         required
                       >
@@ -208,7 +277,7 @@ export default function OrdersTable() {
                     <div className="w-32">
                       <input
                         type="number"
-                        value={product.quantity}
+                        value={item.quantity}
                         onChange={(e) => handleProductChange(index, 'quantity', e.target.value)}
                         placeholder="Quantity"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -274,45 +343,25 @@ export default function OrdersTable() {
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Total
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date
-              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {orders.map((order) => (
-              <tr key={order.number}>
+              <tr key={order.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.number}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.affiliate_id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customer_email}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {order.number}
+                  <ul>
+                    {order.line_items.map((item, idx) => (
+                      <li key={idx}>
+                        {item.name} (SKU: {item.sku}) x {item.quantity} @ ${item.price}
+                      </li>
+                    ))}
+                  </ul>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {order.affiliate_id}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {order.customer_email}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900">
-                  {order.line_items.map((p, index) => (
-                    <div key={index}>
-                      {p.name}({p.price}) (x{p.quantity})
-                    </div>
-                  ))}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                    order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {order.status}
-                  </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  ${order.total}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {new Date(order.createdAt).toLocaleDateString()}
-                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.status}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${order.total}</td>
               </tr>
             ))}
           </tbody>
@@ -326,20 +375,22 @@ export default function OrdersTable() {
             <div className="space-y-2">
               <div>
                 <span className="text-xs font-medium text-gray-500">Order ID</span>
-                <p className="text-sm text-gray-900">{order._id}</p>
+                <p className="text-sm text-gray-900">{order.id}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Doctor</span>
-                <p className="text-sm text-gray-900">{order.doctorId}</p>
+                <p className="text-sm text-gray-900">{order.affiliate_id}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Products</span>
                 <div className="text-sm text-gray-900">
-                  {order.products.map((p, index) => (
-                    <div key={index}>
-                      {p.productId} (x{p.quantity})
-                    </div>
-                  ))}
+                  <ul>
+                    {order.line_items.map((item, idx) => (
+                      <li key={idx}>
+                        {item.name} (SKU: {item.sku}) x {item.quantity} @ ${item.price}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
               <div>
@@ -356,7 +407,7 @@ export default function OrdersTable() {
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Total</span>
-                <p className="text-sm text-gray-900">${order.totalAmount.toFixed(2)}</p>
+                <p className="text-sm text-gray-900">${order.total}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Date</span>

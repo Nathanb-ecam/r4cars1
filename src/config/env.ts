@@ -11,7 +11,8 @@ export const env = {
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
   },
   goaffpro: {
-    
+    accessToken: process.env.GOAFFPRO_API_KEY || '',
+    publicToken: process.env.GOAFFPRO_PUBLIC_TOKEN || '',
     affiliateId: process.env.GOAFFPRO_AFFILIATE_ID || '',
     apiUrl: process.env.GOAFFPRO_API_URL || 'https://api.goaffpro.com/v1',
     

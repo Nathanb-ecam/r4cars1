@@ -9,7 +9,7 @@ export async function GET() {
       // created_at_max, created_at_min
       fields: "id,affiliate_id,status,total,subtotal,shipping_address,customer_email,number,line_items,commission" // comma-separated fields
     });
-    console.log(url)
+    console.log("GET URL" + url)
 
     const response = await fetch(`${url}?${params.toString()}`, {
           method: 'GET', // Optional, since GET is default
@@ -20,29 +20,37 @@ export async function GET() {
       },
     });
       
-    const {orders, _} = await response.json();
-    console.log("RESPONSE")
+    console.log(response)
+    const {orders} = await response.json();
+    console.log("GET RESPONSE")
     console.log(JSON.stringify(orders))  
     return NextResponse.json(orders, { status: 201 });
   }
 
   
 
+  // first need to create an internal order then use its id and orderNumber to call this function
   export async function POST(request : Request) {
     try{
-        const {tag,...data} = await request.json();
-    
+        const number = 1 // should be obtained by the db
+        const id = "1238" // should be pulled from the db, should be different (incremented)
+        const {affiliate_id, ...order} = await request.json();        
+        const goaffOrder = {...order,id, number,forceSdk: true}
+ 
         const response = await fetch(`${env.goaffpro.apiUrl}/admin/orders`, {
           method: 'POST',
           headers: {          
             'x-goaffpro-access-token':`${env.goaffpro.accessToken}`,                      
             'Content-Type': 'application/json', 
           },
-          body:JSON.stringify(data)
+          body:JSON.stringify({order:goaffOrder, affiliate_id:affiliate_id})
         });
 
-
-        return NextResponse.json(response, { status: 201 });
+        console.log("__________________GOAFFPRO__________________")
+        console.log({affiliate_id,goaffOrder})
+        
+        await response.json();
+        return NextResponse.json({ status: 201 });
     }
     catch (error){
       console.error('Error creating order:', error);

@@ -3,8 +3,10 @@ import { NextResponse } from "next/server";
 
 export async function DELETE(request: Request, { params }: { params: { affiliate_id: string } }) {
     
-    const affiliateId = params.affiliate_id;
+    const affiliateId = await params.affiliate_id;
   
+    console.log("__________DELETE_AFFILIATE__________")
+    console.log(affiliateId)
     const res = await fetch(`${env.goaffpro.apiUrl}/admin/affiliates/${affiliateId}`, {
       method: "DELETE",
       headers: {
