@@ -2,16 +2,16 @@
 
 import { useState } from 'react';
 import OrdersTable from '@/components/admin/OrdersTable';
-import DoctorsTable from '@/components/admin/DoctorsTable';
 import StockTable from '@/components/admin/StockTable';
 import ProductsTable from '@/components/admin/ProductsTable';
+import AffiliatesTable from '@/components/admin/AffiliatesTable';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('orders');
 
   const tabs = [
-    { id: 'orders', label: 'Orders' },
-    { id: 'doctors', label: 'Doctors' },
+    { id: 'orders', label: 'Sales' },    
+    { id: 'affiliates', label: 'Affiliates' },
     { id: 'stock', label: 'Stock' },
     { id: 'products', label: 'Products' },
   ];
@@ -60,8 +60,8 @@ export default function AdminDashboard() {
       </div>
 
       <div className="mt-8">
-        {activeTab === 'orders' && <OrdersTable />}
-        {activeTab === 'doctors' && <DoctorsTable />}
+        {activeTab === 'orders' && <OrdersTable />}        
+        {activeTab === 'affiliates' && <AffiliatesTable />}
         {activeTab === 'stock' && <StockTable />}
         {activeTab === 'products' && <ProductsTable />}
       </div>

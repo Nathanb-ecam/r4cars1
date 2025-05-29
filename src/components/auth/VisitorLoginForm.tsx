@@ -16,7 +16,7 @@ export default function VisitorLoginForm() {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/access-code-login', {
+      const response = await fetch('/api/auth/affiliate-refcode-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

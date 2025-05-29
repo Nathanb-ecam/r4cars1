@@ -1,6 +1,6 @@
 export const env = {
   database: {
-    url: process.env.MONGODB_URI || 'mongodb://mongo-makassar:mongo-makassar-password@localhost:27017/labeuromed?authSource=admin',    
+    url: process.env.MONGODB_URI || '',    
   },
   jwt: {
     secret: process.env.JWT_SECRET || 'secret-jwt-key',
@@ -11,9 +11,12 @@ export const env = {
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
   },
   goaffpro: {
-    apiKey: process.env.GOAFFPRO_API_KEY || '',
+    
     affiliateId: process.env.GOAFFPRO_AFFILIATE_ID || '',
     apiUrl: process.env.GOAFFPRO_API_URL || 'https://api.goaffpro.com/v1',
+    
+    
+    
   },
   app: {
     url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',

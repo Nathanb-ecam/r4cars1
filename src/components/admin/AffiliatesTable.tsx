@@ -1,30 +1,42 @@
 import { useEffect, useState } from 'react';
-import { Product, ProductModel } from '@/models/Product';
+import { UserModel } from '@/models/User';
+import { env } from '@/config/env';
 
+export interface Affiliate {
+  id: string;
+  name: string;
+  email: string;
+  ref_codes: Array<string>;
+  tags: Array<string>;
+  coupons: Array<string>;
+  createdAt: string;
+}
 
-
-export default function ProductsTable() {
-  const [products, setProducts] = useState<Product[]>([]);
+export default function AffiliatesTable() {
+  const [affiliates, setAffiliates] = useState<Affiliate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newProduct, setNewProduct] = useState({
+  const [newAffiliates, setNewAffiliates] = useState({
     name: '',
-    description: '',
-    price: '',
-    imageUrl: ''
+    email: '',
+    tag:'',
+    ref_code: '',    
   });
 
   useEffect(() => {
-    fetchProducts();
+    fetchAffiliates();
   }, []);
 
-  const fetchProducts = async () => {
+  const fetchAffiliates = async () => {
     try {
-      const response = await fetch('/api/products');
-      if (!response.ok) throw new Error('Failed to fetch products');
+      const response = await fetch(`/api/admin/affiliates`);
+      if (!response.ok) throw new Error('Failed to fetch affiliates');
       const data = await response.json();
-      setProducts(data);
+      console.log("FETCHED AFFILIATES")
+      console.log(data)
+      // setAffiliates(data);
+      setAffiliates(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -32,29 +44,43 @@ export default function ProductsTable() {
     }
   };
 
-  const handleCreateProduct = async (e: React.FormEvent) => {
+  const handleCreateAffiliates = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/admin/products', {
+      const response = await fetch('/api/admin/affiliates', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...newProduct,
-          price: parseFloat(newProduct.price)
-        }),
+        body: JSON.stringify(newAffiliates),
       });
 
-      if (!response.ok) throw new Error('Failed to create product');
+      if (!response.ok) throw new Error('Failed to create doctor');
       
-      await fetchProducts();
+      await fetchAffiliates();
       setIsModalOpen(false);
-      setNewProduct({ name: '', description: '', price: '', imageUrl: '' });
+      setNewAffiliates({ name: '', email: '',tag:'',ref_code:''});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
   };
+
+  const hanldeDeleteAffiliate = async (affiliate_id: string) => {
+    try {
+      const response = await fetch(`/api/admin/affiliates/${affiliate_id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },        
+      });
+
+      if (!response.ok) throw new Error('Failed to delete affiliate');
+      
+      await fetchAffiliates();      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
+  }
 
   if (isLoading) {
     return (
@@ -82,16 +108,16 @@ export default function ProductsTable() {
           <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
           </svg>
-          Add Product
+          Add Affiliate
         </button>
       </div>
 
-      {/* Create Product Modal */}
+      {/* Create Affiliate Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Create New Product</h3>
+              <h3 className="text-lg font-medium text-gray-900">Add New Affiliate</h3>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-gray-400 hover:text-gray-500"
@@ -101,49 +127,49 @@ export default function ProductsTable() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleCreateProduct} className="space-y-4">
+            <form onSubmit={handleCreateAffiliates} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                 <input
                   type="text"
                   id="name"
-                  value={newProduct.name}
-                  onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                  value={newAffiliates.name}
+                  onChange={(e) => setNewAffiliates({ ...newAffiliates, name: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
               </div>
               <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                  id="description"
-                  value={newProduct.description}
-                  onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  rows={3}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                 <input
-                  type="number"
-                  id="price"
-                  value={newProduct.price}
-                  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                  type="email"
+                  id="email"
+                  value={newAffiliates.email}
+                  onChange={(e) => setNewAffiliates({ ...newAffiliates, email: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
                   required
                 />
               </div>
               <div>
-                <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
+                <label htmlFor="tag" className="block text-sm font-medium text-gray-700">Tag</label>
                 <input
-                  type="url"
-                  id="image"
-                  value={newProduct.imageUrl}
-                  onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
+                  type="text"
+                  id="tag"
+                  value={newAffiliates.tag}
+                  onChange={(e) => setNewAffiliates({ ...newAffiliates, tag: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="ref_code" className="block text-sm font-medium text-gray-700">Referral code</label>
+                <input
+                  type="text"
+                  id="ref_code"
+                  value={newAffiliates.ref_code}
+                  onChange={(e) => setNewAffiliates({ ...newAffiliates, ref_code: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
                 />
               </div>
               <div className="flex justify-end space-x-3">
@@ -172,41 +198,40 @@ export default function ProductsTable() {
           <thead className="bg-gray-50">
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Product
+                Email
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Description
+                Ref Codes
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Original Price
+                Tags
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Discounted Price
+                Registered
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Added
+                  Actions
               </th>
+
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {products.map((product) => (
-              <tr key={product._id}>
+            {affiliates.map((affiliate) => (
+              <tr key={affiliate.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {product.name}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-900">
-                  <div className="max-w-xs truncate">
-                    {product.description}
-                  </div>
+                  {affiliate.email}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  €{product.originalPrice.toFixed(2)}
+                  {JSON.stringify(affiliate.ref_codes)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  €{product.discountedPrice.toFixed(2)}
+                  {JSON.stringify(affiliate.tags)}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {new Date(product.createdAt).toLocaleDateString()}
+                  {new Date(affiliate.createdAt).toLocaleDateString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <button onClick={()=>hanldeDeleteAffiliate(affiliate.id)}>Delete</button>
                 </td>
               </tr>
             ))}
@@ -216,28 +241,31 @@ export default function ProductsTable() {
 
       {/* Mobile view */}
       <div className="md:hidden space-y-4">
-        {products.map((product) => (
-          <div key={product._id} className="bg-white shadow rounded-lg p-4">
+        {affiliates.map((affiliate) => (
+          <div key={affiliate.id} className="bg-white shadow rounded-lg p-4">
             <div className="space-y-2">
               <div>
-                <span className="text-xs font-medium text-gray-500">Product</span>
-                <p className="text-sm text-gray-900">{product.name}</p>
+                <span className="text-xs font-medium text-gray-500">Name</span>
+                <p className="text-sm text-gray-900">{affiliate.name}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Description</span>
-                <p className="text-sm text-gray-900">{product.description}</p>
+                <span className="text-xs font-medium text-gray-500">Email</span>
+                <p className="text-sm text-gray-900">{affiliate.email}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Original Price</span>
-                <p className="text-sm text-gray-900">€{product.originalPrice.toFixed(2)}</p>
+                <span className="text-xs font-medium text-gray-500">Ref_codes</span>
+                <p className="text-sm text-gray-900">{JSON.stringify(affiliate.ref_codes)}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Discounted Price</span>
-                <p className="text-sm text-gray-900">€{product.discountedPrice.toFixed(2)}</p>
+                <span className="text-xs font-medium text-gray-500">Tags</span>
+                <p className="text-sm text-gray-900">{JSON.stringify(affiliate.tags)}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Added</span>
-                <p className="text-sm text-gray-900">{new Date(product.createdAt).toLocaleDateString()}</p>
+                <span className="text-xs font-medium text-gray-500">Registered</span>
+                <p className="text-sm text-gray-900">{new Date(affiliate.createdAt).toLocaleDateString()}</p>
+              </div>
+              <div>
+                <button onClick={()=>hanldeDeleteAffiliate(affiliate.id)}>Delete</button>                                
               </div>
             </div>
           </div>

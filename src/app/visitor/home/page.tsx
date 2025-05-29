@@ -1,51 +1,30 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useCartStore, Product as CartProduct } from '@/store/cartStore';
+import { useProductStore } from '@/store/productStore';
 import Link from 'next/link';
 import Image from 'next/image';
-
-interface Product {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  stock: number;
-}
+import { useEffect } from 'react';
+import { Product } from '@/models/Product';
+import PriceDiscount from '@/components/visitor/PriceDiscount';
 
 export default function HomePage() {
   const addItem = useCartStore((state) => state.addItem);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { products, isLoading, error, fetchProducts } = useProductStore();
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('/api/products');
-        if (!response.ok) throw new Error('Failed to fetch products');
-        const data = await response.json();
-        setProducts(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const handleAddToCart = (product: Product) => {
-    const cartProduct: CartProduct = {
-      id: product._id,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.image || '/images/anabolisants.png',
-    };
-    addItem(cartProduct);
+    // const cartProduct: CartProduct = {
+    //   id: product._id,
+    //   name: product.name,
+    //   description: product.description,
+    //   price: product.price,
+    //   imageUrl: product.image || '/images/anabolisants.png',
+    // };
+    addItem(product);
   };
 
   if (isLoading) {
@@ -75,7 +54,7 @@ export default function HomePage() {
             <Link href={`/visitor/product/${product._id}`}>
               <div className="relative h-48 w-full">
                 <Image
-                  src={product.image || '/images/anabolisants.png'}
+                  src={product.imageUrl || '/images/anabolisants.png'}
                   alt={product.name}
                   fill
                   className="object-cover"
@@ -85,14 +64,15 @@ export default function HomePage() {
                 <h3 className="text-lg font-semibold text-gray-900">
                   {product.name}
                 </h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 h-25 line-clamp-3 min-h-[4.5em]">
                   {product.description}
                 </p>
-                <p className="mt-2 text-lg font-bold text-gray-900">
-                  ${product.price.toFixed(2)}
-                </p>
+                <div className='flex'>
+                  <PriceDiscount product={product}></PriceDiscount>                               
+                </div>
               </div>
             </Link>
+
             <div className="px-4 pb-4">
               <button
                 onClick={() => handleAddToCart(product)}

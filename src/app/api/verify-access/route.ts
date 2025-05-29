@@ -1,44 +1,25 @@
-import { NextResponse } from 'next/server';
-import { UserModel, UserRole } from '@/models/User';
-import connectDB from '@/lib/mongodb';
+import { env } from "@/config/env";
 
-export async function POST(request: Request) {
-  try {
-    const { accessCode } = await request.json();
+export async function GET() {
+  const url =   `${env.goaffpro.apiUrl}/admin/affiliates`
+  // const url =   `${env.goaffpro.apiUrl}/sdk/affiliate`
+  const params = new URLSearchParams({
+    // ref_code: "YOUR_REFERRAL_CODE",        // or use `coupon` instead
+    fields: "id,name,email,ref_codes, coupons" // comma-separated fields
+  });
+  console.log(url)
 
-    if (!accessCode) {
-      return NextResponse.json(
-        { error: 'Code d\'accès requis' },
-        { status: 400 }
-      );
-    }
-
-    await connectDB();
-    const doctor = await UserModel.findOne({
-      accessCode,
-      role: UserRole.DOCTOR
-    });
-
-    if (!doctor) {
-      return NextResponse.json(
-        { error: 'Code d\'accès invalide' },
-        { status: 401 }
-      );
-    }
-
-    return NextResponse.json({
-      message: 'Code d\'accès valide',
-      doctor: {
-        id: doctor._id,
-        name: doctor.name,
-        email: doctor.email
-      }
-    });
-  } catch (error) {
-    console.error('Error verifying access code:', error);
-    return NextResponse.json(
-      { error: 'Erreur lors de la vérification du code d\'accès' },
-      { status: 500 }
-    );
+  const response = await fetch(`${url}?${params.toString()}`, {
+        method: 'GET', // Optional, since GET is default
+        headers: {          
+          'x-goaffpro-access-token':`${env.goaffpro.accessToken}`,          
+          // 'x-goaffpro-public-token':`${env.goaffpro.publicToken}`,          
+          'Content-Type': 'application/json', // Often a good idea to include
+        },
+      });
+      
+      const data = await response.json();
+      console.log("RESPONSE")
+      console.log(JSON.stringify(data))
+      return data;
   }
-} 

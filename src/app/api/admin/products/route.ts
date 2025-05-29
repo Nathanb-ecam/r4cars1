@@ -16,3 +16,24 @@ export async function GET() {
   }
 }
 
+export async function POST(request: Request) {
+  try {
+    const data = await request.json();
+    await connectDB();
+    
+    const product = await ProductModel.create({
+      ...data,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    return NextResponse.json(product, { status: 201 });
+  } catch (error) {
+    console.error('Error creating product:', error);
+    return NextResponse.json(
+      { error: 'Erreur lors de la création du produit' },
+      { status: 500 }
+    );
+  }
+} 
+

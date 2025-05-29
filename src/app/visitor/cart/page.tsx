@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { loadStripe } from '@stripe/stripe-js';
 import { trackAffiliateSale } from '@/utils/affiliate';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -25,7 +26,7 @@ export default function CartPage() {
   const [formData, setFormData] = useState<CheckoutForm>({ name: '', email: '' });
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + item.discountedPrice * item.quantity, 0);
 
   const stripePayment = async () =>{
 
@@ -75,6 +76,18 @@ export default function CartPage() {
       }
       
 
+      // register new order
+      const response = await fetch('/api/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items,
+          customer: formData,
+          orderId,
+        }),
+      });
 
 
       // Clear cart and authentication
@@ -92,20 +105,26 @@ export default function CartPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold mb-8">Shopping Cart</h1>
-      
+      <Link href="/visitor/home" className="text-2xl font-bold text-gray-900">        
+        <div className='mb-5 flex items-center gap-2'>
+          <ArrowLeftIcon className="h-4 w-4 text-gray-600" />
+          <p className='text-sm text-gray-700 border-b border-b-gray-300'>Tous nos produits</p>
+        </div>
+      </Link>
+
+      <h1 className="text-2xl font-bold mb-8">Shopping Cart</h1>      
       {items.length === 0 ? (
         <p>Your cart is empty</p>
       ) : (
         <div className="space-y-4">
           {items.map((item) => (
             <div
-              key={item.id}
+              key={item._id}
               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow"
             >
               <div className="relative h-24 w-24 flex-shrink-0">
                 <Image
-                  src="/images/anabolisants.png"
+                  src={item.imageUrl ?? "/images/anabolisants.png"}
                   alt={item.name}
                   fill
                   className="object-cover rounded"
@@ -113,7 +132,7 @@ export default function CartPage() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{item.name}</h3>
-                <p className="text-gray-600">${item.price.toFixed(2)}</p>
+                <p className="text-gray-600">€{item.discountedPrice.toFixed(2)}</p>
               </div>
               <div className="flex items-center space-x-4">
                 <input
@@ -121,12 +140,12 @@ export default function CartPage() {
                   min="1"
                   value={item.quantity}
                   onChange={(e) =>
-                    updateQuantity(item.id, parseInt(e.target.value))
+                    updateQuantity(item._id, parseInt(e.target.value))
                   }
                   className="w-20 px-2 py-1 border rounded"
                 />
                 <button
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => removeItem(item._id)}
                   className="text-red-500 hover:text-red-700"
                 >
                   <XMarkIcon className="h-6 w-6" />
@@ -136,8 +155,12 @@ export default function CartPage() {
           ))}
 
           <div className="mt-8 flex justify-between items-center">
+            
             <div className="text-xl font-bold">
-              Total: ${total.toFixed(2)}
+              Total: €{total.toFixed(2)}
+            </div>
+            <div className="text-xl font-bold">
+              Total: €{total.toFixed(2)}
             </div>
             <button
               onClick={() => setIsCheckoutOpen(true)}

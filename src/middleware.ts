@@ -12,7 +12,11 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = request.nextUrl.pathname === '/api/auth/access-code-login' ||
                        request.nextUrl.pathname === '/api/admin/login' ||
                        request.nextUrl.pathname === '/api/products' ||
-                       request.nextUrl.pathname === '/api/orders';
+                       request.nextUrl.pathname === '/api/orders' ||
+                       request.nextUrl.pathname === '/cookies' ||
+                       request.nextUrl.pathname === '/privacy' ||
+                       request.nextUrl.pathname === '/terms'                        
+                       ;
 
   console.log('Middleware - Path:', request.nextUrl.pathname);
   console.log('Middleware - Token:', token ? 'Present' : 'Missing');

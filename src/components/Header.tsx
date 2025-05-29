@@ -12,9 +12,9 @@ export default function Header() {
     <header className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-gray-900">
+          {/* <Link href="/" className="text-2xl font-bold text-gray-900"> */}
             Labeuromed
-          </Link>
+          {/* </Link> */}
           <div className="flex items-center space-x-4">
             <Link href="/visitor/cart" className="relative">
               <ShoppingCartIcon className="h-6 w-6 text-gray-600" />
