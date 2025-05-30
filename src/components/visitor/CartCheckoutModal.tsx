@@ -1,5 +1,5 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import MondialRelayWidget from '../mondial-relay/RelayWidget';
 
@@ -8,7 +8,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 interface CartCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (formData: { name: string; email: string }) => Promise<void>;
+  onSubmit: (formData: { name: string; email: string; shipping_address: string }) => Promise<void>;
   isProcessing: boolean;
   total: number;
 }
@@ -24,11 +24,29 @@ export default function CartCheckoutModal({
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    shipping_address: '',
   });
+
+  useEffect(() => {
+    // Listen for changes to the Mondial Relay widget
+    const checkMondialRelaySelection = setInterval(() => {
+      const targetInput = document.getElementById('Target_Widget') as HTMLInputElement;
+      if (targetInput && targetInput.value) {
+        setFormData(prev => ({ ...prev, shipping_address: targetInput.value }));
+      }
+    }, 1000);
+
+    return () => clearInterval(checkMondialRelaySelection);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (step === 1) {
+      // Validate all required fields
+      if (!formData.name || !formData.email || !formData.shipping_address) {
+        alert('Please fill in all required fields and select a Mondial Relay point');
+        return;
+      }
       setStep(2);
     } else {
       await onSubmit(formData);
@@ -45,6 +63,7 @@ export default function CartCheckoutModal({
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          shipping_address: formData.shipping_address,
         }),
       });
 
@@ -99,7 +118,7 @@ export default function CartCheckoutModal({
             <div className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name
+                  Name *
                 </label>
                 <input
                   type="text"
@@ -112,7 +131,7 @@ export default function CartCheckoutModal({
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
+                  Email *
                 </label>
                 <input
                   type="email"
@@ -123,7 +142,19 @@ export default function CartCheckoutModal({
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
-              <MondialRelayWidget></MondialRelayWidget>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select a Mondial Relay Point *
+                </label>
+                <div className="border rounded-md p-2">
+                  <MondialRelayWidget />
+                </div>
+                {formData.shipping_address && (
+                  <p className="mt-2 text-sm text-gray-600">
+                    Selected point: {formData.shipping_address}
+                  </p>
+                )}
+              </div>
             </div>
           ) : (
             <div className="space-y-4">
@@ -132,6 +163,11 @@ export default function CartCheckoutModal({
                 <div className="flex justify-between mb-2">
                   <span>Total Amount:</span>
                   <span className="font-medium">${total.toFixed(2)}</span>
+                </div>
+                <div className="mt-4 pt-4 border-t">
+                  <p className="text-sm text-gray-600">
+                    <strong>Shipping Address:</strong> {formData.shipping_address}
+                  </p>
                 </div>
               </div>
               <p className="text-sm text-gray-600">

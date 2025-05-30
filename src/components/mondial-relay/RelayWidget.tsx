@@ -63,6 +63,8 @@ export default function MondialRelayWidget() {
           NbResults: "7",
           Responsive: true,
           ShowResultsOnMap: true,
+          Height: "400px",
+          Width: "100%",
         });
       } catch (error) {
         console.error(error);
@@ -74,7 +76,7 @@ export default function MondialRelayWidget() {
 
   return (
     <>
-      <div className="w-300 h-300" id="Zone_Widget"></div>
+      <div className="w-full h-[300px]" id="Zone_Widget"></div>
       <input type="hidden" id="Target_Widget" />
     </>
   );

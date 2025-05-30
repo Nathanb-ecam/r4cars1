@@ -17,6 +17,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 interface CheckoutForm {
   name: string;
   email: string;
+  shipping_address: string;
 }
 
 export default function CartPage() {
