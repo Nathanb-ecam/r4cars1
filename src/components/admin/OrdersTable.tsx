@@ -1,7 +1,7 @@
 import { Product } from '@/models/Product';
 import { useEffect, useState } from 'react';
 import { Affiliate } from './AffiliatesTable';
-import { GoAffProOrder, GoAffProLineItem } from '@/models/GoAffPro';
+import { GoAffProOrder, GoAffProLineItem, ExtendSchemaGoAffPro, ExtendedOrderGoAffPro } from '@/models/GoAffPro';
 
 export default function OrdersTable() {
   const [orders, setOrders] = useState<GoAffProOrder[]>([]);
@@ -88,6 +88,11 @@ export default function OrdersTable() {
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+
+      const {discount, tax, shipping} = {discount:100,tax: 0, shipping: 7}
+      const orderId = "1002";
+      const orderNumber =  "#1002"; // TODO : must be fetched 
+
       // Calculate total and prepare line items
       const line_items: GoAffProLineItem[] = newOrder.line_items.map(item => {
         const product = products.find(p => p._id === item.product_id);
@@ -98,29 +103,73 @@ export default function OrdersTable() {
           sku: product.sku,
           price: product.discountedPrice,
           quantity: item.quantity,
-          product_id: product._id          
+          product_id: product._id,
+          tax: 0, // tax charged on this product. USE this only if the product price has VAT included in the price
+          discount: 0,     
+
         };
       });
 
-      const total = line_items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      // const total = line_items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const subtotal = line_items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const total = subtotal // TODO : compute the taxes and shipping costs to obtain 'total'
+      
+      const extendedGoAffProOrder: ExtendedOrderGoAffPro = {
+        id: orderId,
+        number:orderNumber, // ex: #1001. human readable order number displayed to the admins
+        total: total, // the order total (the final amount that the customer paid)
+        subtotal: subtotal, // order subtotal (order total minus shipping and taxes)
+        discount: discount, // the discount received by the customer
+        tax: tax, // the tax charged on the order
+        shipping: shipping,  // the shipping charged on the order
+        currency:'EUR', // ex: USD. ISO-4217 three letter currency code of the order
+        date: new Date().toISOString(), // ex: 2021-04-27T17:06:55.450Z
+        customer: { // customer details
+            first_name:'John',
+            last_name:'Doe',
+            email:'johndoe@gmail.com',
+            // phone?:string, // optional
+            // is_new_customer?:boolean //optional
+        },
+        coupons: ['EASY10OFF'], // ex: ['EASY10OFF']. an array of discount codes applied to the order
+        line_items:[ // array of products sold in this order
+            {
+                name:'Médicament A', // ex: Product A. name of the product
+                quantity:2, //total quantities sold
+                price: 80,
+                sku:'PD-111-1', // ex: PD-110-1. product SKU
+                product_id: 'mongo-product-id', //ex: 21413232. Internal product ID (used if you are using REST JSON FILE)
+                tax: 0, // tax charged on this product. USE this only if the product price has VAT included in the price
+                discount: 0, // total discount received by the customer on this product. In this case, the customer got $25 discount per item.
+            }
+        ],
+       status:'approved', // ex: approved
+       forceSDK:true , //ex: true.  use this parameter to process this order as a CUSTOM ORDER (bypasses platform order enrichment 
+      //commission: 45, // (not recommended) specify the commission to be given for this order
+      //  delay: number
+      } 
 
-      const orderData = {
-        affiliate_id: newOrder.affiliate_id,
-        customer_email: newOrder.customer_email,
-        shipping_address: newOrder.shipping_address,
-        coupons:[newOrder.coupon],
-        line_items,
-        total: total,
-        subtotal: total,
-        status: 'approved' 
-      };
+      
+
+      // const orderData : ExtendSchemaGoAffPro = {
+      //   order:extendedGoAffProOrder,        
+      //   affiliate_id: newOrder.affiliate_id,
+      //   customer_email: newOrder.customer_email,
+      //   shipping_address: newOrder.shipping_address,
+      //   coupons:[newOrder.coupon],
+      //   line_items,
+      //   total: total,
+      //   subtotal: total,
+      //   status: 'approved' 
+      // };
 
       const response = await fetch('/api/admin/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(orderData),
+        // body: JSON.stringify(orderData),
+        body: JSON.stringify(extendedGoAffProOrder),
       });
 
       if (!response.ok) throw new Error('Failed to create order');

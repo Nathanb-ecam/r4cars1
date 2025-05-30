@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { env } from '@/config/env';
+import { ExtendSchemaGoAffPro } from '@/models/GoAffPro';
 
 
 
@@ -27,15 +28,16 @@ export async function GET() {
     return NextResponse.json(orders, { status: 201 });
   }
 
-  
 
   // first need to create an internal order then use its id and orderNumber to call this function
   export async function POST(request : Request) {
-    try{
-        const number = 1 // should be obtained by the db
-        const id = "1238" // should be pulled from the db, should be different (incremented)
-        const {affiliate_id, ...order} = await request.json();        
-        const goaffOrder = {...order,id, number,forceSdk: true}
+    try{  
+        // const number = 1 // should be obtained by the db
+        // const id = "1238" // should be pulled from the db, should be different (incremented)
+        // const {affiliate_id, ...order} = await request.json();        
+        // const goaffOrder = {...order,id, number,forceSdk: true}
+
+        const order:ExtendSchemaGoAffPro = await request.json();
  
         const response = await fetch(`${env.goaffpro.apiUrl}/admin/orders`, {
           method: 'POST',
@@ -43,11 +45,12 @@ export async function GET() {
             'x-goaffpro-access-token':`${env.goaffpro.accessToken}`,                      
             'Content-Type': 'application/json', 
           },
-          body:JSON.stringify({order:goaffOrder, affiliate_id:affiliate_id})
+          // body:JSON.stringify({order:goaffOrder, affiliate_id:affiliate_id})
+          body:JSON.stringify(order)
         });
 
-        console.log("__________________GOAFFPRO__________________")
-        console.log({affiliate_id,goaffOrder})
+        console.log("__________________POST_GOAFFPRO_ORDER__________________")
+        console.log(order)
         
         await response.json();
         return NextResponse.json({ status: 201 });
