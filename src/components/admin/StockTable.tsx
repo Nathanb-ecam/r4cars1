@@ -191,12 +191,12 @@ export default function StockTable() {
                     >
                       <PencilIcon className="h-5 w-5" />
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => handleDeleteProduct(product._id)}
                       className="text-red-600 hover:text-red-900"
                     >
                       <TrashIcon className="h-5 w-5" />
-                    </button>
+                    </button> */}
                   </div>
                 </td>
               </tr>
@@ -233,12 +233,12 @@ export default function StockTable() {
                 >
                   <PencilIcon className="h-5 w-5" />
                 </button>
-                <button
+                {/* <button
                   onClick={() => handleDeleteProduct(product._id)}
                   className="text-red-600 hover:text-red-900"
                 >
                   <TrashIcon className="h-5 w-5" />
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

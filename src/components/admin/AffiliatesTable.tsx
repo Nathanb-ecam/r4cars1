@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { UserModel } from '@/models/User';
 import { env } from '@/config/env';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export interface Affiliate {
   id: string;
@@ -17,6 +18,8 @@ export default function AffiliatesTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [affiliateToDelete, setAffiliateToDelete] = useState<Affiliate | null>(null);
   const [newAffiliates, setNewAffiliates] = useState({
     name: '',
     email: '',
@@ -67,8 +70,18 @@ export default function AffiliatesTable() {
   };
 
   const handleDeleteAffiliate = async (affiliate_id: string) => {
+    const affiliate = affiliates.find(a => a.id === affiliate_id);
+    if (!affiliate) return;
+    
+    setAffiliateToDelete(affiliate);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!affiliateToDelete) return;
+
     try {
-      const response = await fetch(`/api/admin/affiliates/${affiliate_id}`, {
+      const response = await fetch(`/api/admin/affiliates/${affiliateToDelete.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -77,11 +90,13 @@ export default function AffiliatesTable() {
 
       if (!response.ok) throw new Error('Failed to delete affiliate');
       
-      await fetchAffiliates();      
+      await fetchAffiliates();
+      setIsDeleteModalOpen(false);
+      setAffiliateToDelete(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -193,6 +208,17 @@ export default function AffiliatesTable() {
         </div>
       )}
 
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setAffiliateToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Affiliate"
+        itemName={`the affiliate "${affiliateToDelete?.name}"`}
+      />
+
       {/* Desktop view */}
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
@@ -238,7 +264,15 @@ export default function AffiliatesTable() {
                   {new Date(affiliate.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <button onClick={()=>handleDeleteAffiliate(affiliate.id)}>Delete</button>
+                  <button
+                    onClick={() => handleDeleteAffiliate(affiliate.id)}
+                    className="text-red-600 hover:text-red-900"
+                    title="Delete affiliate"
+                  >
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
                 </td>
               </tr>
             ))}

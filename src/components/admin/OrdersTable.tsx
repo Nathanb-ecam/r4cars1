@@ -2,6 +2,7 @@ import { Product } from '@/models/Product';
 import { useEffect, useState } from 'react';
 import { Affiliate } from './AffiliatesTable';
 import { GoAffProOrder, GoAffProLineItem, ExtendSchemaGoAffPro, ExtendedOrderGoAffPro } from '@/models/GoAffPro';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export default function OrdersTable() {
   const [orders, setOrders] = useState<GoAffProOrder[]>([]);
@@ -10,6 +11,8 @@ export default function OrdersTable() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState<GoAffProOrder | null>(null);
   const [newOrder, setNewOrder] = useState({
     affiliate_id: 0,
     customer: {
@@ -180,6 +183,32 @@ export default function OrdersTable() {
         date: new Date().toISOString(),
         forceSDK: true
       });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    const order = orders.find(o => o.id === orderId);
+    if (!order) return;
+    
+    setOrderToDelete(order);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!orderToDelete) return;
+
+    try {
+      const response = await fetch(`/api/admin/orders/${orderToDelete.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error('Failed to delete order');
+      
+      await fetchOrders();
+      setIsDeleteModalOpen(false);
+      setOrderToDelete(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -461,6 +490,17 @@ export default function OrdersTable() {
         </div>
       )}
 
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setOrderToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Order"
+        itemName={`order #${orderToDelete?.number}`}
+      />
+
       {/* Desktop view */}
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
@@ -487,6 +527,9 @@ export default function OrdersTable() {
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Total
               </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -507,6 +550,17 @@ export default function OrdersTable() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.status}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${order.total}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <button
+                    onClick={() => handleDeleteOrder(order.id)}
+                    className="text-red-600 hover:text-red-900"
+                    title="Delete order"
+                  >
+                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

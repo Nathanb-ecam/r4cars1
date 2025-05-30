@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Product, ProductModel } from '@/models/Product';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export default function ProductsTable() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -8,13 +9,16 @@ export default function ProductsTable() {
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [newProduct, setNewProduct] = useState({
     name: '',
     description: '',
     originalPrice: '',
     discountedPrice: '',
-    imageUrl: ''
+    imageUrl: '',
+    sku: ''
   });
 
   useEffect(() => {
@@ -53,7 +57,7 @@ export default function ProductsTable() {
       
       await fetchProducts();
       setIsModalOpen(false);
-      setNewProduct({ name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '' });
+      setNewProduct({ name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '', sku: '' });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -87,16 +91,26 @@ export default function ProductsTable() {
   };
 
   const handleDeleteProduct = async (productId: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    const product = products.find(p => p._id === productId);
+    if (!product) return;
+    
+    setProductToDelete(product);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
 
     try {
-      const response = await fetch(`/api/admin/products/${productId}`, {
+      const response = await fetch(`/api/admin/products/${productToDelete._id}`, {
         method: 'DELETE',
       });
 
       if (!response.ok) throw new Error('Failed to delete product');
       
       await fetchProducts();
+      setIsDeleteModalOpen(false);
+      setProductToDelete(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -160,6 +174,17 @@ export default function ProductsTable() {
                   id="name"
                   value={newProduct.name}
                   onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="sku" className="block text-sm font-medium text-gray-700">SKU</label>
+                <input
+                  type="text"
+                  id="sku"
+                  value={newProduct.sku}
+                  onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
@@ -257,6 +282,17 @@ export default function ProductsTable() {
                 />
               </div>
               <div>
+                <label htmlFor="edit-sku" className="block text-sm font-medium text-gray-700">SKU</label>
+                <input
+                  type="text"
+                  id="edit-sku"
+                  value={editingProduct.sku}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, sku: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
+                />
+              </div>
+              <div>
                 <label htmlFor="edit-description" className="block text-sm font-medium text-gray-700">Description</label>
                 <textarea
                   id="edit-description"
@@ -321,6 +357,17 @@ export default function ProductsTable() {
         </div>
       )}
 
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setProductToDelete(null);
+        }}
+        onConfirm={confirmDelete}
+        title="Delete Product"
+        itemName={`the product "${productToDelete?.name}"`}
+      />
+
       {/* Desktop view */}
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
@@ -328,6 +375,9 @@ export default function ProductsTable() {
             <tr>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Product
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                SKU
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Description
@@ -351,6 +401,9 @@ export default function ProductsTable() {
               <tr key={product._id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {product.name}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {product.sku}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">
                   <div className="max-w-xs truncate">
@@ -396,6 +449,10 @@ export default function ProductsTable() {
               <div>
                 <span className="text-xs font-medium text-gray-500">Product</span>
                 <p className="text-sm text-gray-900">{product.name}</p>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-gray-500">SKU</span>
+                <p className="text-sm text-gray-900">{product.sku}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Description</span>
