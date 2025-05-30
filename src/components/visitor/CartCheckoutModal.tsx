@@ -1,6 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
+import MondialRelayWidget from '../mondial-relay/RelayWidget';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -122,6 +123,7 @@ export default function CartCheckoutModal({
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
+              <MondialRelayWidget></MondialRelayWidget>
             </div>
           ) : (
             <div className="space-y-4">
