@@ -12,11 +12,24 @@ export default function OrdersTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newOrder, setNewOrder] = useState({
     affiliate_id: 0,
-    customer_email: '',
+    customer: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone: '',
+      is_new_customer: false
+    },
     shipping_address: '',
     line_items: [{ product_id: '', quantity: 1 }] as { product_id: string; quantity: number }[],
     status: 'pending',
-    coupon: ''
+    coupons: [''],
+    total: 0,
+    subtotal: 0,
+    discount: 0,
+    tax: 0,
+    shipping: 0,
+    date: new Date().toISOString(),
+    forceSDK: true
   });
 
   const defaultCoupons = ['EASY10OFF']
@@ -88,13 +101,11 @@ export default function OrdersTable() {
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Calculate total based on subtotal, discount, tax, and shipping
+      const total = newOrder.subtotal - newOrder.discount + newOrder.tax + newOrder.shipping;
 
-      const {discount, tax, shipping} = {discount:100,tax: 0, shipping: 7}
-      const orderId = "1002";
-      const orderNumber =  "#1002"; // TODO : must be fetched 
-
-      // Calculate total and prepare line items
-      const line_items: GoAffProLineItem[] = newOrder.line_items.map(item => {
+      // Prepare line items with product details
+      const line_items = newOrder.line_items.map(item => {
         const product = products.find(p => p._id === item.product_id);
         if (!product) throw new Error('Product not found');
         
@@ -104,72 +115,44 @@ export default function OrdersTable() {
           price: product.discountedPrice,
           quantity: item.quantity,
           product_id: product._id,
-          tax: 0, // tax charged on this product. USE this only if the product price has VAT included in the price
-          discount: 0,     
-
+          tax: 0, // tax charged on this product
+          discount: 0, // discount received on this product
         };
       });
 
-      // const total = line_items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const subtotal = line_items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const total = subtotal // TODO : compute the taxes and shipping costs to obtain 'total'
-      
+      if (line_items.length === 0) {
+        throw new Error('At least one product is required');
+      }
+
       const extendedGoAffProOrder: ExtendedOrderGoAffPro = {
-        id: orderId,
-        number:orderNumber, // ex: #1001. human readable order number displayed to the admins
-        total: total, // the order total (the final amount that the customer paid)
-        subtotal: subtotal, // order subtotal (order total minus shipping and taxes)
-        discount: discount, // the discount received by the customer
-        tax: tax, // the tax charged on the order
-        shipping: shipping,  // the shipping charged on the order
-        currency:'EUR', // ex: USD. ISO-4217 three letter currency code of the order
-        date: new Date().toISOString(), // ex: 2021-04-27T17:06:55.450Z
-        customer: { // customer details
-            first_name:'John',
-            last_name:'Doe',
-            email:'johndoe@gmail.com',
-            // phone?:string, // optional
-            // is_new_customer?:boolean //optional
-        },
-        coupons: ['EASY10OFF'], // ex: ['EASY10OFF']. an array of discount codes applied to the order
-        line_items:[ // array of products sold in this order
-            {
-                name:'Médicament A', // ex: Product A. name of the product
-                quantity:2, //total quantities sold
-                price: 80,
-                sku:'PD-111-1', // ex: PD-110-1. product SKU
-                product_id: 'mongo-product-id', //ex: 21413232. Internal product ID (used if you are using REST JSON FILE)
-                tax: 0, // tax charged on this product. USE this only if the product price has VAT included in the price
-                discount: 0, // total discount received by the customer on this product. In this case, the customer got $25 discount per item.
-            }
-        ],
-       status:'approved', // ex: approved
-       forceSDK:true , //ex: true.  use this parameter to process this order as a CUSTOM ORDER (bypasses platform order enrichment 
-      //commission: 45, // (not recommended) specify the commission to be given for this order
-      //  delay: number
-      } 
+        id: "1002", // This will be set by the backend
+        number: "#1002", // This will be set by the backend
+        total: total,
+        subtotal: newOrder.subtotal,
+        discount: newOrder.discount,
+        tax: newOrder.tax,
+        shipping: newOrder.shipping,
+        currency: 'EUR',
+        date: new Date().toISOString(),
+        shipping_address: newOrder.shipping_address,
+        customer: newOrder.customer,
+        coupons: newOrder.coupons.filter(c => c !== ''),
+        line_items: [line_items[0]], // Take the first line item to satisfy the tuple type
+        status: 'approved',
+        forceSDK: true
+      };
 
-      
-
-      // const orderData : ExtendSchemaGoAffPro = {
-      //   order:extendedGoAffProOrder,        
-      //   affiliate_id: newOrder.affiliate_id,
-      //   customer_email: newOrder.customer_email,
-      //   shipping_address: newOrder.shipping_address,
-      //   coupons:[newOrder.coupon],
-      //   line_items,
-      //   total: total,
-      //   subtotal: total,
-      //   status: 'approved' 
-      // };
+      const orderData = {
+        order: extendedGoAffProOrder,
+        affiliate_id: newOrder.affiliate_id
+      };
 
       const response = await fetch('/api/admin/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // body: JSON.stringify(orderData),
-        body: JSON.stringify(extendedGoAffProOrder),
+        body: JSON.stringify(orderData),
       });
 
       if (!response.ok) throw new Error('Failed to create order');
@@ -178,11 +161,24 @@ export default function OrdersTable() {
       setIsModalOpen(false);
       setNewOrder({
         affiliate_id: 0,
-        customer_email: '',
+        customer: {
+          first_name: '',
+          last_name: '',
+          email: '',
+          phone: '',
+          is_new_customer: false
+        },
         shipping_address: '',
         line_items: [{ product_id: '', quantity: 1 }],
         status: 'pending',
-        coupon: ''
+        coupons: [''],
+        total: 0,
+        subtotal: 0,
+        discount: 0,
+        tax: 0,
+        shipping: 0,
+        date: new Date().toISOString(),
+        forceSDK: true
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -252,35 +248,64 @@ export default function OrdersTable() {
                   ))}
                 </select>
               </div>
-              <div>
-                <label htmlFor="coupon" className="block text-sm font-medium text-gray-700">Coupon</label>
-                <select
-                  id="coupon"
-                  value={newOrder.coupon}
-                  onChange={(e) => setNewOrder({ ...newOrder, coupon: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required
-                >
-                  <option value="">Select a coupon</option>
-                  {defaultCoupons.map((coupon) => (
-                      <option key={coupon} value={coupon}>
-                        {coupon}
-                      </option>
-                    ))}
-                </select>
-              </div>
-             
 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">Customer First Name</label>
+                  <input
+                    type="text"
+                    id="first_name"
+                    value={newOrder.customer.first_name}
+                    onChange={(e) => setNewOrder({ 
+                      ...newOrder, 
+                      customer: { ...newOrder.customer, first_name: e.target.value }
+                    })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">Customer Last Name</label>
+                  <input
+                    type="text"
+                    id="last_name"
+                    value={newOrder.customer.last_name}
+                    onChange={(e) => setNewOrder({ 
+                      ...newOrder, 
+                      customer: { ...newOrder.customer, last_name: e.target.value }
+                    })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                  />
+                </div>
+              </div>
 
               <div>
                 <label htmlFor="customer_email" className="block text-sm font-medium text-gray-700">Customer Email</label>
                 <input
                   type="email"
                   id="customer_email"
-                  value={newOrder.customer_email}
-                  onChange={(e) => setNewOrder({ ...newOrder, customer_email: e.target.value })}
+                  value={newOrder.customer.email}
+                  onChange={(e) => setNewOrder({ 
+                    ...newOrder, 
+                    customer: { ...newOrder.customer, email: e.target.value }
+                  })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="customer_phone" className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input
+                  type="tel"
+                  id="customer_phone"
+                  value={newOrder.customer.phone}
+                  onChange={(e) => setNewOrder({ 
+                    ...newOrder, 
+                    customer: { ...newOrder.customer, phone: e.target.value }
+                  })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                 />
               </div>
 
@@ -293,6 +318,73 @@ export default function OrdersTable() {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="subtotal" className="block text-sm font-medium text-gray-700">Subtotal</label>
+                  <input
+                    type="number"
+                    id="subtotal"
+                    value={newOrder.subtotal}
+                    onChange={(e) => setNewOrder({ ...newOrder, subtotal: parseFloat(e.target.value) })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="discount" className="block text-sm font-medium text-gray-700">Discount</label>
+                  <input
+                    type="number"
+                    id="discount"
+                    value={newOrder.discount}
+                    onChange={(e) => setNewOrder({ ...newOrder, discount: parseFloat(e.target.value) })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="tax" className="block text-sm font-medium text-gray-700">Tax</label>
+                  <input
+                    type="number"
+                    id="tax"
+                    value={newOrder.tax}
+                    onChange={(e) => setNewOrder({ ...newOrder, tax: parseFloat(e.target.value) })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="shipping" className="block text-sm font-medium text-gray-700">Shipping Cost</label>
+                  <input
+                    type="number"
+                    id="shipping"
+                    value={newOrder.shipping}
+                    onChange={(e) => setNewOrder({ ...newOrder, shipping: parseFloat(e.target.value) })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="coupon" className="block text-sm font-medium text-gray-700">Coupon</label>
+                <select
+                  id="coupon"
+                  value={newOrder.coupons[0]}
+                  onChange={(e) => setNewOrder({ ...newOrder, coupons: [e.target.value] })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                >
+                  <option value="">Select a coupon</option>
+                  {defaultCoupons.map((coupon) => (
+                    <option key={coupon} value={coupon}>
+                      {coupon}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -384,6 +476,9 @@ export default function OrdersTable() {
                 Customer
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Shipping address
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Products
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -400,6 +495,7 @@ export default function OrdersTable() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.number}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.affiliate_id}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customer_email}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.shipping_address}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <ul>
                     {order.line_items.map((item, idx) => (
@@ -429,6 +525,10 @@ export default function OrdersTable() {
               <div>
                 <span className="text-xs font-medium text-gray-500">Doctor</span>
                 <p className="text-sm text-gray-900">{order.affiliate_id}</p>
+              </div>
+              <div>
+                <span className="text-xs font-medium text-gray-500">Shipping address</span>
+                <p className="text-sm text-gray-900">{order.shipping_address}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Products</span>

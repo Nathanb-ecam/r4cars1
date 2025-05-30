@@ -53,6 +53,7 @@ export interface ExtendedOrderGoAffPro{
   shipping: number,  // the shipping charged on the order
   currency:string, // ex: USD. ISO-4217 three letter currency code of the order
   date: string, // ex: 2021-04-27T17:06:55.450Z
+  shipping_address:string,
   customer: { // customer details
       first_name:string,
       last_name:string,
