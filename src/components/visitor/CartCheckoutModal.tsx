@@ -1,10 +1,15 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface CartCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (formData: { name: string; email: string }) => void;
+  onSubmit: (formData: { name: string; email: string }) => Promise<void>;
   isProcessing: boolean;
+  total: number;
 }
 
 export default function CartCheckoutModal({
@@ -12,71 +17,144 @@ export default function CartCheckoutModal({
   onClose,
   onSubmit,
   isProcessing,
+  total,
 }: CartCheckoutModalProps) {
-  if (!isOpen) return null;
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+  });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    onSubmit({
-      name: formData.get('name') as string,
-      email: formData.get('email') as string,
-    });
+    if (step === 1) {
+      setStep(2);
+    } else {
+      await onSubmit(formData);
+    }
   };
+
+  const handlePayment = async () => {
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+        }),
+      });
+
+      const { sessionId } = await response.json();
+      const stripe = await stripePromise;
+      if (stripe) {
+        const { error } = await stripe.redirectToCheckout({ sessionId });
+        if (error) {
+          console.error('Error:', error);
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg max-w-md w-full">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Complete Your Order</h2>
+      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold">Checkout</h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
+            className="text-gray-500 hover:text-gray-700"
           >
             <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
+
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex justify-between mb-2">
+            <span className={`text-sm ${step >= 1 ? 'text-blue-600' : 'text-gray-500'}`}>
+              Personal Info
+            </span>
+            <span className={`text-sm ${step >= 2 ? 'text-blue-600' : 'text-gray-500'}`}>
+              Payment
+            </span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(step / 2) * 100}%` }}
+            />
+          </div>
+        </div>
+
         <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
+          {step === 1 ? (
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  required
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  required
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-              />
+          ) : (
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="text-lg font-medium mb-2">Order Summary</h3>
+                <div className="flex justify-between mb-2">
+                  <span>Total Amount:</span>
+                  <span className="font-medium">${total.toFixed(2)}</span>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600">
+                You will be redirected to Stripe to complete your payment securely.
+              </p>
             </div>
-            <div className="flex justify-end space-x-4 mt-6">
+          )}
+
+          <div className="mt-6 flex justify-end space-x-3">
+            {step === 2 && (
               <button
                 type="button"
-                onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                disabled={isProcessing}
+                onClick={() => setStep(1)}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
               >
-                Cancel
+                Back
               </button>
-              <button
-                type="submit"
-                className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
-                disabled={isProcessing}
-              >
-                {isProcessing ? 'Processing...' : 'Confirm Order'}
-              </button>
-            </div>
+            )}
+            <button
+              type="submit"
+              disabled={isProcessing}
+              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+            >
+              {isProcessing ? 'Processing...' : step === 1 ? 'Continue to Payment' : 'Pay Now'}
+            </button>
           </div>
         </form>
       </div>

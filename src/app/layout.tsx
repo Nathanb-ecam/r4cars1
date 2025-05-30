@@ -6,8 +6,8 @@ import { StripeProvider } from '@/components/StripeProvider';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Labeuromed',
-  description: 'Medical supplies and equipment',
+  // title: 'Labeuromed',
+  // description: 'Medical supplies and equipment',
 };
 
 export default function RootLayout({

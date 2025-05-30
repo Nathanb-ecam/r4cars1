@@ -165,6 +165,7 @@ export default function CartPage() {
         onClose={() => setIsCheckoutOpen(false)}
         onSubmit={handleCheckout}
         isProcessing={isProcessing}
+        total={total}
       />
     </main>
   );
