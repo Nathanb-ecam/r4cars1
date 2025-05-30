@@ -67,9 +67,9 @@ export default function HomePage() {
                 <p className="mt-1 text-sm text-gray-500 h-25 line-clamp-3 min-h-[4.5em]">
                   {product.description}
                 </p>
-                <div className='flex'>
-                  <PriceDiscount product={product}></PriceDiscount>                               
-                </div>
+                
+                <PriceDiscount product={product} isCol={true} ></PriceDiscount>                               
+                
               </div>
             </Link>
 

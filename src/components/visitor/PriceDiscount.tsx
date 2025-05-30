@@ -3,8 +3,9 @@ import React from 'react'
 
 interface Props{
     product : Product
+    isCol?: boolean
 }
-export default function PriceDiscount({product} : Props) {
+export default function PriceDiscount({product, isCol} : Props) {
     if(product.discountedPrice >= product.originalPrice){
         return <p className="mt-2 text-lg font-bold text-gray-900">
                     €{product.originalPrice.toFixed(2)}
@@ -12,11 +13,12 @@ export default function PriceDiscount({product} : Props) {
     }
         
     return (
-    <div className='flex flex-col'>
-        <p className="text-sm font-bold text-gray-900 line-through">
+    <div className={`flex ${isCol ? 'flex-col' : 'items-center'}`}>
+        <p className="text-xs font-bold text-gray-900 line-through">
             €{product.originalPrice.toFixed(2)}
         </p>
-        <p className="text-md font-bold text-gray-900">
+        {/* text-gray-900 */}
+        <p className="text-md font-bold text-red-700"> 
             €{product.discountedPrice.toFixed(2)}
         </p>
     </div>

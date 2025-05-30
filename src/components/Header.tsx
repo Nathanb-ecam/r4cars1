@@ -9,15 +9,20 @@ export default function Header() {
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <header className="bg-white shadow-md">
+    // bg-gray-900
+    <header className="bg-slate-800 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* <Link href="/" className="text-2xl font-bold text-gray-900"> */}
-            Labeuromed
+          <div>
+
+            <span className='text-gray-200 font-bold'>lab</span>
+            <span className='text-gray-600 font-light'>euromed</span>
+          </div>
           {/* </Link> */}
           <div className="flex items-center space-x-4">
             <Link href="/visitor/cart" className="relative">
-              <ShoppingCartIcon className="h-6 w-6 text-gray-600" />
+              <ShoppingCartIcon className="h-6 w-6 text-gray-200" />
               {itemCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
                   {itemCount}

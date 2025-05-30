@@ -16,6 +16,7 @@ export interface Product {
 const productSchema = new mongoose.Schema<Product>({
   name: { type: String, required: true },
   description: { type: String, required: true },
+  sku: { type: String, required: true },
   originalPrice: { type: Number, required: true },
   discountedPrice: { type: Number, required: true },
   imageUrl: { type: String, required: true },

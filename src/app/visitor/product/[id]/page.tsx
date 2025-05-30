@@ -69,8 +69,8 @@ export default function ProductPage() {
           />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
-          <p className="mt-4 mb-8 text-lg text-gray-500">{product.description}</p>
+          <h1 className="text-xl font-bold text-gray-900">{product.name}</h1>
+          <p className=" my-4 text-md text-gray-500">{product.description}</p>
           
           <PriceDiscount product={product}></PriceDiscount>
           

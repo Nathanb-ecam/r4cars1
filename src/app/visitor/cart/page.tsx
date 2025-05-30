@@ -9,6 +9,7 @@ import { trackAffiliateSale } from '@/utils/affiliate';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import CartCheckoutModal from '@/components/visitor/CartCheckoutModal';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -23,16 +24,11 @@ export default function CartPage() {
   const bypassPayment = true;
   const { items, removeItem, updateQuantity } = useCartStore();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [formData, setFormData] = useState<CheckoutForm>({ name: '', email: '' });
   const [isProcessing, setIsProcessing] = useState(false);
 
   const total = items.reduce((sum, item) => sum + Math.min(item.discountedPrice, item.originalPrice) * item.quantity, 0);
-
-  const stripePayment = async () =>{
-
-  }
   
-  const handleCheckout = async () => {
+  const handleCheckout = async (formData: CheckoutForm) => {
     try {
       setIsProcessing(true);
       const orderId = `ORDER-${Date.now()}`;
@@ -61,10 +57,7 @@ export default function CartPage() {
             console.error('Stripe error:', error);
             throw error;
           }
-
       }
-
-
 
       // Track affiliate sale
       if (doctorNumber) {
@@ -75,7 +68,6 @@ export default function CartPage() {
         });
       }
       
-
       // register new order
       const response = await fetch('/api/', {
         method: 'POST',
@@ -88,7 +80,6 @@ export default function CartPage() {
           orderId,
         }),
       });
-
 
       // Clear cart and authentication
       useCartStore.getState().clearCart();      
@@ -155,7 +146,6 @@ export default function CartPage() {
           ))}
 
           <div className="mt-8 flex justify-between items-center">
-            
             <div className="text-xl font-bold">
               Total: €{total.toFixed(2)}
             </div>
@@ -170,63 +160,12 @@ export default function CartPage() {
         </div>
       )}
 
-      {/* Checkout Modal */}
-      {isCheckoutOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg max-w-md w-full">
-            <h2 className="text-xl font-bold mb-4">Complete Your Order</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleCheckout(); }}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                  />
-                </div>
-                <div className="flex justify-end space-x-4 mt-6">
-                  <button
-                    type="button"
-                    onClick={() => setIsCheckoutOpen(false)}
-                    className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
-                    disabled={isProcessing}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50"
-                    disabled={isProcessing}
-                  >
-                    {isProcessing ? 'Processing...' : 'Confirm Order'}
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <CartCheckoutModal
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+        onSubmit={handleCheckout}
+        isProcessing={isProcessing}
+      />
     </main>
   );
 } 
