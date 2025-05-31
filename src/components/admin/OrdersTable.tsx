@@ -127,9 +127,10 @@ export default function OrdersTable() {
         throw new Error('At least one product is required');
       }
 
+      const orderId = `ORDER-${Date.now()}`; 
       const extendedGoAffProOrder: ExtendedOrderGoAffPro = {
-        id: "1002", // This will be set by the backend
-        number: "#1002", // This will be set by the backend
+        id: orderId, // This will be set by the backend
+        number: `#${orderId}`, // This will be set by the backend
         total: total,
         subtotal: newOrder.subtotal,
         discount: newOrder.discount,
@@ -140,7 +141,7 @@ export default function OrdersTable() {
         shipping_address: newOrder.shipping_address,
         customer: newOrder.customer,
         coupons: newOrder.coupons.filter(c => c !== ''),
-        line_items: [line_items[0]], // Take the first line item to satisfy the tuple type
+        line_items: line_items, // Take the first line item to satisfy the tuple type
         status: 'approved',
         forceSDK: true
       };
@@ -247,7 +248,7 @@ export default function OrdersTable() {
       {/* Create Order Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
+          <div className="overflow-scroll bg-white rounded-lg p-6 max-w-2xl max-h-[80vh] w-full">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium text-gray-900">Create New Order</h3>
               <button
@@ -498,7 +499,7 @@ export default function OrdersTable() {
         }}
         onConfirm={confirmDelete}
         title="Delete Order"
-        itemName={`order #${orderToDelete?.number}`}
+        itemName={`order ${orderToDelete?.number}`}
       />
 
       {/* Desktop view */}
@@ -516,7 +517,7 @@ export default function OrdersTable() {
                 Customer
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Shipping address
+                Mondial Relay
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Products
@@ -543,13 +544,13 @@ export default function OrdersTable() {
                   <ul>
                     {order.line_items.map((item, idx) => (
                       <li key={idx}>
-                        {item.name} (SKU: {item.sku}) x {item.quantity} @ ${item.price}
+                        {item.name} (€{Math.round(item.price * 10) / 10}) - x {item.quantity}
                       </li>
                     ))}
                   </ul>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.status}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${order.total}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">€{order.total}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <button
                     onClick={() => handleDeleteOrder(order.id)}
@@ -572,16 +573,28 @@ export default function OrdersTable() {
         {orders.map((order) => (
           <div key={order.id} className="bg-white shadow rounded-lg p-4">
             <div className="space-y-2">
-              <div>
-                <span className="text-xs font-medium text-gray-500">Order ID</span>
-                <p className="text-sm text-gray-900">{order.id}</p>
+              <div className='flex justify-between items-center'>
+                <div>
+                  <span className="text-xs font-medium text-gray-500">Order Number</span>
+                  <p className="text-sm text-gray-900">{order.number}</p>
+                </div>
+                <button
+                      onClick={() => handleDeleteOrder(order.id)}
+                      className="text-red-600 hover:text-red-900"
+                      title="Delete order"
+                    >
+                      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                </button>
               </div>
+   
               <div>
                 <span className="text-xs font-medium text-gray-500">Doctor</span>
                 <p className="text-sm text-gray-900">{order.affiliate_id}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Shipping address</span>
+                <span className="text-xs font-medium text-gray-500">Mondial Relay</span>
                 <p className="text-sm text-gray-900">{order.shipping_address}</p>
               </div>
               <div>
@@ -589,14 +602,14 @@ export default function OrdersTable() {
                 <div className="text-sm text-gray-900">
                   <ul>
                     {order.line_items.map((item, idx) => (
-                      <li key={idx}>
-                        {item.name} (SKU: {item.sku}) x {item.quantity} @ ${item.price}
+                      <li key={idx}>                        
+                        {item.name} (€{Math.round(item.price * 10) / 10}) - <span className='font-light'>x{item.quantity}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
               </div>
-              <div>
+              {/* <div>
                 <span className="text-xs font-medium text-gray-500">Status</span>
                 <div>
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -607,15 +620,16 @@ export default function OrdersTable() {
                     {order.status}
                   </span>
                 </div>
-              </div>
+              </div> */}
               <div>
                 <span className="text-xs font-medium text-gray-500">Total</span>
-                <p className="text-sm text-gray-900">${order.total}</p>
+                <p className="text-sm text-gray-900">€{order.total}</p>
               </div>
-              <div>
+              
+              {/* <div>
                 <span className="text-xs font-medium text-gray-500">Date</span>
                 <p className="text-sm text-gray-900">{new Date(order.createdAt).toLocaleDateString()}</p>
-              </div>
+              </div> */}
             </div>
           </div>
         ))}

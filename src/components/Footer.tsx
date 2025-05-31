@@ -8,16 +8,20 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-4">About Labeuromed</h3>
-            <p className="text-gray-400">
-              Your trusted provider of high-quality medical products and equipment.
-              We are committed to delivering excellence in healthcare solutions.
+            <p className='text-gray-500 font-lighter text-xs'>
+              Localizacion
+            </p>
+            <p className="text-gray-400 text-sm font-light">                
+                CL CERVANTES 14 CEUTA (CEUTA)
+              {/* Your trusted provider of high-quality medical products and equipment.
+              We are committed to delivering excellence in healthcare solutions. */}
             </p>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/home" className="text-gray-400 hover:text-white">
+                <Link href="/visitor/home" className="text-gray-400 hover:text-white">
                   Products
                 </Link>
               </li>

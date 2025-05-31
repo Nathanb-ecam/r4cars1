@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function VisitorLoginForm() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    doctorNumber: '',
-    accessCode: '',
+    doctorIdentificationNumber: '',
+    refCode: '',
   });
   const [error, setError] = useState('');
 
@@ -25,11 +26,17 @@ export default function VisitorLoginForm() {
       });
 
       const data = await response.json();
+      
 
       if (!response.ok) {
         throw new Error(data.error || 'Login failed');
       }
 
+      const {affiliate_id, _} = data
+      
+      // Cookies.set('doctorTag',formData.doctorIdentificationNumber);
+      // Cookies.set('refCode',formData.refCode);      
+      Cookies.set('affiliate_id',affiliate_id);      
       router.push('/visitor/home');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred');
@@ -50,9 +57,9 @@ export default function VisitorLoginForm() {
             required
             className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
             placeholder="Doctor Number"
-            value={formData.doctorNumber}
+            value={formData.doctorIdentificationNumber}
             onChange={(e) =>
-              setFormData({ ...formData, doctorNumber: e.target.value })
+              setFormData({ ...formData, doctorIdentificationNumber: e.target.value })
             }
           />
         </div>
@@ -67,9 +74,9 @@ export default function VisitorLoginForm() {
             required
             className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
             placeholder="Access Code"
-            value={formData.accessCode}
+            value={formData.refCode}
             onChange={(e) =>
-              setFormData({ ...formData, accessCode: e.target.value })
+              setFormData({ ...formData, refCode: e.target.value })
             }
           />
         </div>

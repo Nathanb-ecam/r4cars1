@@ -27,6 +27,7 @@ export async function PUT(
           description: body.description,
           originalPrice: body.originalPrice,
           discountedPrice: body.discountedPrice,
+          sku: body.sku,
           imageUrl: body.imageUrl,
           stock: body.stock,
           updatedAt: new Date()

@@ -1,10 +1,8 @@
-interface AffiliateData {
-  doctorNumber: string;
-  orderId: string;
-  total: number;
-}
+import { CustomerPersonalInfo } from "@/app/visitor/cart/page";
+import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro } from "@/models/GoAffPro";
 
-export const trackAffiliateSale = async (data: AffiliateData) => {
+
+export const trackAffiliateSale = async (data: ExtendSchemaGoAffPro) => {
   try {
     // Here you would integrate with GoAffPro's API
     // For now, we'll just log the data
@@ -13,6 +11,17 @@ export const trackAffiliateSale = async (data: AffiliateData) => {
       platform: 'GoAffPro',
       timestamp: new Date().toISOString(),
     });
+
+
+    const response = await fetch('/api/admin/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) throw new Error('Failed to save affiliate order');
 
     // Example of how you might integrate with GoAffPro:
     // await fetch('https://api.goaffpro.com/v1/sales', {

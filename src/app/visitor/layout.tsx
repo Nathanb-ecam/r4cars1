@@ -9,7 +9,7 @@ export default function VisitorLayout({
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="flex-grow">
+      <div className="flex-grow min-h-[70vh]">
         {children}
       </div>
       <Footer />

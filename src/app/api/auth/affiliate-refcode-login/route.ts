@@ -4,23 +4,23 @@ import { UserRole } from '@/models/User';
 import { generateToken } from '@/lib/jwt';
 import connectDB from '@/lib/mongodb';
 import { env } from '@/config/env';
+import Cookies from 'js-cookie';
 
 export async function POST(request: NextRequest) {
   try {
-    
-  const { doctorNumber, accessCode } = await request.json();
-  console.log(doctorNumber, accessCode)
+  
+  const { doctorIdentificationNumber, refCode } = await request.json();    
     const url = `${env.goaffpro.apiUrl}/admin/affiliates`
     
     const params = new URLSearchParams({    
-      tag: doctorNumber,      
-      ref_code: accessCode
-      // fields: "id,name,email,ref_codes,tags,coupons" // comma-separated fields
+      tag: doctorIdentificationNumber,      
+      ref_code: refCode,
+      fields: "id", // name,email,ref_codes,tags,coupons"  (comma-separated fields)
       // fields: "refs_code" // comma-separated fields
     });
     console.log(url)
   
-    const res = await fetch(`${url}?${params.toString()}`, {
+    const res = await fetch(`${url}?${params.toString()}`, {    
           method: 'GET', // Optional, since GET is default
           headers: {          
             'x-goaffpro-access-token':`${env.goaffpro.accessToken}`,          
@@ -28,30 +28,19 @@ export async function POST(request: NextRequest) {
             'Content-Type': 'application/json', // Often a good idea to include
           },
     });
-      
+          
     const {affiliates, total_results} = await res.json();
     
-    console.log(affiliates)
+    console.log({affiliates, total_results})
     if(total_results <1){
       return NextResponse.json(
         { error: 'Invalid doctor number or access code' },
         { status: 401 }
       );
     }
-    
-    // console.log("VISITOR LOGIN")
-    // console.log(JSON.stringify(affiliates))
-
-    
       
-
-    // if (!affiliates[0]?.ref_codes?.includes(accessCode) || !affiliates || total_results < 1) {
-    //   console.log("INVALID!");
-    //   return NextResponse.json(
-    //     { error: 'Invalid doctor number or access code' },
-    //     { status: 401 }
-    //   );
-    // }
+    
+    
 
 
     const token = await generateToken({      
@@ -62,7 +51,8 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json(
       { 
-        message: 'Login successful',        
+        message: 'Login successful', 
+        affiliate_id:affiliates[0]?.id.toString()       
       },
       { status: 200 }
     );
@@ -73,6 +63,17 @@ export async function POST(request: NextRequest) {
       sameSite: 'strict',
       maxAge: 24 * 60 * 60, // 24 hours
     });
+
+    // const affiliate_id : string = affiliates[0]?.id.toString()
+    // console.log("Set cookie affiliate_id" + affiliate_id)
+    // response.cookies.set({
+    //   name: 'affiliate_id',
+    //   value: affiliate_id,
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    //   maxAge: 60 * 60 * 24 // 24 hours
+    // });
 
     return response;
   } catch (error) {

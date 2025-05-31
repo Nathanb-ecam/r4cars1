@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
@@ -8,7 +8,34 @@ declare global {
 }
 
 export default function MondialRelayWidget() {
+  const [widgetHeight, setWidgetHeight] = useState("400px");
+  const [showMap, setShowMap] = useState(true);
+
   useEffect(() => {
+    // Function to update widget height and map visibility based on screen size
+    const updateWidgetSettings = () => {
+      const isMobile = window.innerWidth < 768;
+      const height = isMobile ? "300px" : "400px";
+      const shouldShowMap = !isMobile;
+      
+      setWidgetHeight(height);
+      setShowMap(shouldShowMap);
+
+      // Update widget if it exists
+      if (window.$ && window.$("#Zone_Widget").data("MR_ParcelShopPicker")) {
+        window.$("#Zone_Widget").MR_ParcelShopPicker("destroy");
+        initWidget(height, shouldShowMap);
+      }
+    };
+
+    // Initial setup
+    updateWidgetSettings();
+
+    // Add resize listener
+    window.addEventListener('resize', updateWidgetSettings);
+
+    let isInitialized = false;
+
     function loadScript(src: string) {
       return new Promise<void>((resolve, reject) => {
         const existingScript = document.querySelector(`script[src="${src}"]`);
@@ -28,8 +55,13 @@ export default function MondialRelayWidget() {
       });
     }
 
-    async function initWidget() {
+    async function initWidget(height: string, showMap: boolean) {
       try {
+        // Clean up any existing widget
+        if (window.$ && window.$("#Zone_Widget").data("MR_ParcelShopPicker")) {
+          window.$("#Zone_Widget").MR_ParcelShopPicker("destroy");
+        }
+
         // Load jQuery (use Google CDN as per doc)
         await loadScript("//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js");
         if (!window.$) {
@@ -62,21 +94,38 @@ export default function MondialRelayWidget() {
           ColLivMod: "24R",
           NbResults: "7",
           Responsive: true,
-          ShowResultsOnMap: true,
-          Height: "400px",
+          ShowResultsOnMap: showMap,
+          Height: height,
           Width: "100%",
         });
+
+        isInitialized = true;
       } catch (error) {
         console.error(error);
       }
     }
 
-    initWidget();
-  }, []);
+    // Initialize the widget with current settings
+    initWidget(widgetHeight, showMap);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', updateWidgetSettings);
+      if (window.$ && window.$("#Zone_Widget").data("MR_ParcelShopPicker")) {
+        window.$("#Zone_Widget").MR_ParcelShopPicker("destroy");
+      }
+      // Remove the widget's scripts
+      const scripts = document.querySelectorAll('script[src*="mondialrelay"], script[src*="leaflet"], script[src*="jquery"]');
+      scripts.forEach(script => script.remove());
+      // Remove the widget's styles
+      const styles = document.querySelectorAll('link[href*="leaflet"]');
+      styles.forEach(style => style.remove());
+    };
+  }, []); // Empty dependency array since we want to reinitialize on mount/unmount
 
   return (
     <>
-      <div className="w-full h-[300px]" id="Zone_Widget"></div>
+      <div className="w-full h-[300px] md:h-[400px]" id="Zone_Widget"></div>
       <input type="hidden" id="Target_Widget" />
     </>
   );

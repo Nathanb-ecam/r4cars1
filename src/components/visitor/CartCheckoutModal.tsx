@@ -2,14 +2,18 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import MondialRelayWidget from '../mondial-relay/RelayWidget';
+import { useCartStore } from '@/store/cartStore';
+import { CustomerPersonalInfo } from '@/app/visitor/cart/page';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface CartCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (formData: { name: string; email: string; shipping_address: string }) => Promise<void>;
+  onSubmit: (formData: CustomerPersonalInfo) => Promise<void>;
   isProcessing: boolean;
+  subtotal: number;
+  shippingCost: number;
   total: number;
 }
 
@@ -18,21 +22,28 @@ export default function CartCheckoutModal({
   onClose,
   onSubmit,
   isProcessing,
-  total,
+  subtotal,
+  shippingCost,
+  total
 }: CartCheckoutModalProps) {
+  
+
+  
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    name: '',
+  const [personalInfoData, setPersonalInfoData] = useState({
+    first_name: '',
+    last_name: '',
     email: '',
     shipping_address: '',
-  });
+  });  
+
 
   useEffect(() => {
     // Listen for changes to the Mondial Relay widget
     const checkMondialRelaySelection = setInterval(() => {
       const targetInput = document.getElementById('Target_Widget') as HTMLInputElement;
       if (targetInput && targetInput.value) {
-        setFormData(prev => ({ ...prev, shipping_address: targetInput.value }));
+        setPersonalInfoData(prev => ({ ...prev, shipping_address: targetInput.value }));
       }
     }, 1000);
 
@@ -43,48 +54,23 @@ export default function CartCheckoutModal({
     e.preventDefault();
     if (step === 1) {
       // Validate all required fields
-      if (!formData.name || !formData.email || !formData.shipping_address) {
+      if (!personalInfoData.first_name || !personalInfoData.last_name || !personalInfoData.email || !personalInfoData.shipping_address) {
         alert('Please fill in all required fields and select a Mondial Relay point');
         return;
       }
       setStep(2);
-    } else {
-      await onSubmit(formData);
+    } else {      
+      
+      await onSubmit(personalInfoData);
     }
   };
 
-  const handlePayment = async () => {
-    try {
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          shipping_address: formData.shipping_address,
-        }),
-      });
-
-      const { sessionId } = await response.json();
-      const stripe = await stripePromise;
-      if (stripe) {
-        const { error } = await stripe.redirectToCheckout({ sessionId });
-        if (error) {
-          console.error('Error:', error);
-        }
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg p-4 md:p-6 w-full max-w-md md:max-w-screen-lg mx-auto max-h-[80vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Checkout</h2>
           <button
@@ -96,7 +82,7 @@ export default function CartCheckoutModal({
         </div>
 
         {/* Progress Bar */}
-        <div className="mb-8">
+        <div className="mb-4 md:mb-8">
           <div className="flex justify-between mb-2">
             <span className={`text-sm ${step >= 1 ? 'text-blue-600' : 'text-gray-500'}`}>
               Personal Info
@@ -117,16 +103,29 @@ export default function CartCheckoutModal({
           {step === 1 ? (
             <div className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name *
+                <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">
+                  Firstname *
                 </label>
                 <input
                   type="text"
-                  id="name"
+                  id="firstname"
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  value={personalInfoData.first_name}
+                  onChange={(e) => setPersonalInfoData({ ...personalInfoData, first_name: e.target.value })}
+                />
+              </div>
+              <div>
+                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
+                  Lastname *
+                </label>
+                <input
+                  type="text"
+                  id="lastname"
+                  required
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  value={personalInfoData.last_name}
+                  onChange={(e) => setPersonalInfoData({ ...personalInfoData, last_name: e.target.value })}
                 />
               </div>
               <div>
@@ -138,8 +137,8 @@ export default function CartCheckoutModal({
                   id="email"
                   required
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  value={personalInfoData.email}
+                  onChange={(e) => setPersonalInfoData({ ...personalInfoData, email: e.target.value })}
                 />
               </div>
               <div>
@@ -149,9 +148,9 @@ export default function CartCheckoutModal({
                 <div className="border rounded-md p-2">
                   <MondialRelayWidget />
                 </div>
-                {formData.shipping_address && (
+                {personalInfoData.shipping_address && (
                   <p className="mt-2 text-sm text-gray-600">
-                    Selected point: {formData.shipping_address}
+                    Selected point: {personalInfoData.shipping_address}
                   </p>
                 )}
               </div>
@@ -166,7 +165,7 @@ export default function CartCheckoutModal({
                 </div>
                 <div className="mt-4 pt-4 border-t">
                   <p className="text-sm text-gray-600">
-                    <strong>Shipping Address:</strong> {formData.shipping_address}
+                    <strong>Shipping Address:</strong> {personalInfoData.shipping_address}
                   </p>
                 </div>
               </div>

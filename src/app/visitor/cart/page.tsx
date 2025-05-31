@@ -10,30 +10,41 @@ import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CartCheckoutModal from '@/components/visitor/CartCheckoutModal';
+import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro, GoAffProLineItem } from '@/models/GoAffPro';
+import PriceDiscount from '@/components/visitor/PriceDiscount';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-interface CheckoutForm {
-  name: string;
+export interface CustomerPersonalInfo {
+  first_name: string;
+  last_name: string;
   email: string;
   shipping_address: string;
 }
 
-export default function CartPage() {
-  const router = useRouter();
+export default function CartPage() {  
   const bypassPayment = true;
   const { items, removeItem, updateQuantity } = useCartStore();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const total = items.reduce((sum, item) => sum + Math.min(item.discountedPrice, item.originalPrice) * item.quantity, 0);
+  const subtotalRaw = items.reduce(
+    (sum, item) => sum + Math.min(item.discountedPrice, item.originalPrice) * item.quantity, 0
+  );
+  const subtotal = Math.round(subtotalRaw * 10) / 10;  
+  const shippingCost = 7;
   
-  const handleCheckout = async (formData: CheckoutForm) => {
+  const totalRaw = subtotal + shippingCost;
+  const total = Math.round(totalRaw * 10) / 10;
+  // const total = subtotal
+  
+
+  const handleCheckout = async (customerPersonalInfo: CustomerPersonalInfo) => {
+    console.log("Cart Page is Handling checkout")
     try {
       setIsProcessing(true);
-      const orderId = `ORDER-${Date.now()}`;
-      const doctorNumber = Cookies.get('doctorNumber');
+ 
 
       if(!bypassPayment){
           // Create Stripe checkout session
@@ -44,8 +55,7 @@ export default function CartPage() {
             },
             body: JSON.stringify({
               items,
-              customer: formData,
-              orderId,
+              customer: customerPersonalInfo,              
             }),
           });
 
@@ -61,31 +71,65 @@ export default function CartPage() {
       }
 
       // Track affiliate sale
-      if (doctorNumber) {
-        await trackAffiliateSale({
-          doctorNumber,
-          orderId,
-          total,
-        });
+      // const doctorTag = Cookies.get('doctorTag');
+      // const doctorRefCode = Cookies.get('refCode');      
+      // console.log("Tracing data", {doctorTag, doctorRefCode})
+      const orderId = `ORDER-${Date.now()}`;  
+      
+      const line_items : GoAffProLineItem[] = items.map((item,_) => {
+        
+        return {
+          name: item.name,
+          sku: item.sku,
+          price: Math.min(item.originalPrice,item.discountedPrice),
+          quantity: item.quantity,
+          product_id: item._id,
+          tax: 0, // tax charged on this product
+          discount: 0, // discount received on this product
+        };
+      });
+
+      const extendedGoAffProOrder: ExtendedOrderGoAffPro = {
+        id: orderId, // This will be set by the backend
+        number: `#${orderId}`, // This will be set by the backend
+        total,
+        subtotal,
+        shipping:shippingCost,
+        discount: 0,
+        tax: 0,
+        currency: 'EUR',
+        date: new Date().toISOString(),
+        shipping_address: customerPersonalInfo.shipping_address,
+        customer: customerPersonalInfo,
+        coupons: ["EASY10OFF"],
+        line_items: line_items, // Take the first line item to satisfy the tuple type
+        status: 'approved',
+        forceSDK: true
+      };
+
+      const affiliate_id = Cookies.get('affiliate_id');
+      console.log("AFFILIATE ID BEFORE ORDER")
+      console.log(affiliate_id)      
+
+
+      if (affiliate_id) { // use extended goaffPro order schema        
+        const extendedSchema : ExtendSchemaGoAffPro = {order:extendedGoAffProOrder,"affiliate_id": parseInt(affiliate_id)}
+        await trackAffiliateSale(
+            extendedSchema
+        );
+      }else{ // use base order goaffPro schema
+          console.log("No valid affiliate_id found for this refferal")
       }
       
-      // register new order
-      const response = await fetch('/api/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          items,
-          customer: formData,
-          orderId,
-        }),
-      });
+
 
       // Clear cart and authentication
       useCartStore.getState().clearCart();      
       Cookies.remove('authenticated');
-      Cookies.remove('doctorNumber');
+      Cookies.remove('doctorTag');
+      Cookies.remove('refCode');
+      Cookies.remove('affiliate_id');
+      Cookies.remove('token');
       
       // Close the modal
       setIsCheckoutOpen(false);
@@ -124,7 +168,8 @@ export default function CartPage() {
               </div>
               <div className="flex-1">
                 <h3 className="text-lg font-semibold">{item.name}</h3>
-                <p className="text-gray-600">€{Math.min(item.discountedPrice, item.originalPrice).toFixed(2)}</p>
+                {/* <p className="text-gray-600">€{Math.min(item.discountedPrice, item.originalPrice).toFixed(2)}</p> */}
+                <PriceDiscount product={item}></PriceDiscount>
               </div>
               <div className="flex items-center space-x-4">
                 <input
@@ -148,7 +193,7 @@ export default function CartPage() {
 
           <div className="mt-8 flex justify-between items-center">
             <div className="text-xl font-bold">
-              Total: €{total.toFixed(2)}
+              Total: €{subtotal.toFixed(2)}
             </div>
 
             <button
@@ -166,7 +211,9 @@ export default function CartPage() {
         onClose={() => setIsCheckoutOpen(false)}
         onSubmit={handleCheckout}
         isProcessing={isProcessing}
-        total={total}
+        subtotal={subtotal}
+        shippingCost={shippingCost}
+        total={total}        
       />
     </main>
   );

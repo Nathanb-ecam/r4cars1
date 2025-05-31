@@ -446,9 +446,25 @@ export default function ProductsTable() {
         {products.map((product) => (
           <div key={product._id} className="bg-white shadow rounded-lg p-4">
             <div className="space-y-2">
-              <div>
-                <span className="text-xs font-medium text-gray-500">Product</span>
-                <p className="text-sm text-gray-900">{product.name}</p>
+              <div className="flex justify-between items-center">
+                <div>
+                  <span className="text-xs font-medium text-gray-500">Product</span>
+                  <p className="text-sm text-gray-900">{product.name}</p>
+                </div>
+                <div className="flex space-x-2 pt-2">
+                  <button
+                    onClick={() => openEditModal(product)}
+                    className="text-indigo-600 hover:text-indigo-900"
+                  >
+                    <PencilIcon className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteProduct(product._id)}
+                    className="text-red-600 hover:text-red-900"
+                  >
+                    <TrashIcon className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">SKU</span>
@@ -469,21 +485,7 @@ export default function ProductsTable() {
               <div>
                 <span className="text-xs font-medium text-gray-500">Added</span>
                 <p className="text-sm text-gray-900">{new Date(product.createdAt).toLocaleDateString()}</p>
-              </div>
-              <div className="flex space-x-2 pt-2">
-                <button
-                  onClick={() => openEditModal(product)}
-                  className="text-indigo-600 hover:text-indigo-900"
-                >
-                  <PencilIcon className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={() => handleDeleteProduct(product._id)}
-                  className="text-red-600 hover:text-red-900"
-                >
-                  <TrashIcon className="h-5 w-5" />
-                </button>
-              </div>
+              </div>  
             </div>
           </div>
         ))}
