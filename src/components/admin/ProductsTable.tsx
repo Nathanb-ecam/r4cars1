@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Product, ProductModel } from '@/models/Product';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import ToggleSwitch from '../ui/ToggleSwitch';
 
 export default function ProductsTable() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -11,14 +12,27 @@ export default function ProductsTable() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [newProduct, setNewProduct] = useState({
+  const [editingProduct, setEditingProduct] = useState({
+    _id: '',
     name: '',
     description: '',
     originalPrice: '',
     discountedPrice: '',
     imageUrl: '',
-    sku: ''
+    sku: '',
+    isSpecialOffer:false,
+    visibleOnWebsite:false
+  });
+  const [newProduct, setNewProduct] = useState({
+    _id: '',
+    name: '',
+    description: '',
+    originalPrice: '',
+    discountedPrice: '',
+    imageUrl: '',
+    sku: '',
+    isSpecialOffer:false,
+    visibleOnWebsite:false
   });
 
   useEffect(() => {
@@ -57,7 +71,7 @@ export default function ProductsTable() {
       
       await fetchProducts();
       setIsModalOpen(false);
-      setNewProduct({ name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '', sku: '' });
+      setNewProduct({ name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '', sku: '' , isSpecialOffer:false, visibleOnline:false});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -84,7 +98,7 @@ export default function ProductsTable() {
       
       await fetchProducts();
       setIsEditModalOpen(false);
-      setEditingProduct(null);
+      setEditingProduct({_id: '',name: '',description: '',originalPrice: '',discountedPrice: '',imageUrl: '',sku: '',isSpecialOffer:false,visibleOnWebsite:false});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -116,8 +130,13 @@ export default function ProductsTable() {
     }
   };
 
-  const openEditModal = (product: Product) => {
-    setEditingProduct(product);
+  const openEditModal = (product: Product) => {    
+    const p = {
+      ...product,
+      originalPrice: product.originalPrice.toString(),
+      discountedPrice: product.discountedPrice.toString()
+    }
+    setEditingProduct(p);
     setIsEditModalOpen(true);
   };
 
@@ -167,6 +186,10 @@ export default function ProductsTable() {
               </button>
             </div>
             <form onSubmit={handleCreateProduct} className="space-y-4">
+              <div>
+                  <ToggleSwitch label="visibleOnWebsite" title={"On website"} initiallyChecked={newProduct.visibleOnWebsite} onToggle={()=>setNewProduct({ ...newProduct, visibleOnWebsite: !newProduct.visibleOnWebsite })} />
+                  <ToggleSwitch label="specialOffer" title={"Grouped offer"} initiallyChecked={newProduct.isSpecialOffer} onToggle={()=>setNewProduct({ ...newProduct, isSpecialOffer: !newProduct.isSpecialOffer })} />
+              </div>
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                 <input
@@ -232,6 +255,7 @@ export default function ProductsTable() {
                   value={newProduct.imageUrl}
                   onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
                 />
               </div>
               <div className="flex justify-end space-x-3">
@@ -270,6 +294,10 @@ export default function ProductsTable() {
               </button>
             </div>
             <form onSubmit={handleEditProduct} className="space-y-4">
+              <div className='flex gap-4'>
+                <ToggleSwitch label="visibleOnSite" title="On website" initiallyChecked={editingProduct.visibleOnWebsite} onToggle={()=>setEditingProduct({ ...editingProduct, visibleOnWebsite: !editingProduct.visibleOnWebsite })} />
+                <ToggleSwitch label="specialOffer" title="Grouped offer" initiallyChecked={editingProduct.isSpecialOffer} onToggle={()=>setEditingProduct({ ...editingProduct, isSpecialOffer: !editingProduct.isSpecialOffer })} />
+              </div>
               <div>
                 <label htmlFor="edit-name" className="block text-sm font-medium text-gray-700">Name</label>
                 <input
@@ -309,7 +337,7 @@ export default function ProductsTable() {
                   type="number"
                   id="edit-originalPrice"
                   value={editingProduct.originalPrice}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, originalPrice: parseFloat(e.target.value) })}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, originalPrice: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   step="0.01"
                   required
@@ -321,7 +349,7 @@ export default function ProductsTable() {
                   type="number"
                   id="edit-discountedPrice"
                   value={editingProduct.discountedPrice}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, discountedPrice: parseFloat(e.target.value) })}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, discountedPrice: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   step="0.01"
                   required
@@ -335,6 +363,7 @@ export default function ProductsTable() {
                   value={editingProduct.imageUrl}
                   onChange={(e) => setEditingProduct({ ...editingProduct, imageUrl: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required
                 />
               </div>
               <div className="flex justify-end space-x-3">

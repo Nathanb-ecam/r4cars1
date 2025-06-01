@@ -16,8 +16,8 @@ export default function Header() {
           {/* <Link href="/" className="text-2xl font-bold text-gray-900"> */}
           <div>
 
-            <span className='text-gray-200 font-bold'>lab</span>
-            <span className='text-gray-600 font-light'>euromed</span>
+            <span className='text-gray-300 font-bold'>lab</span>
+            <span className='text-gray-600 font-light tracking-tight'>euromed</span>
           </div>
           {/* </Link> */}
           <div className="flex items-center space-x-4">

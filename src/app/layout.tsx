@@ -18,11 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <script
+        {/* <script
           type="text/javascript"
           src="https://api.goaffpro.com/loader.js?shop=dxgegkjjxn"
           async
-        />
+        /> */}
       </head>
       <body className={inter.className}>
         <StripeProvider>

@@ -84,16 +84,16 @@ export default function CartCheckoutModal({
         {/* Progress Bar */}
         <div className="mb-4 md:mb-8">
           <div className="flex justify-between mb-2">
-            <span className={`text-sm ${step >= 1 ? 'text-blue-600' : 'text-gray-500'}`}>
+            <span className={`text-sm ${step >= 1 ? 'text-lime-500' : 'text-gray-500'}`}>
               Personal Info
             </span>
-            <span className={`text-sm ${step >= 2 ? 'text-blue-600' : 'text-gray-500'}`}>
+            <span className={`text-sm ${step >= 2 ? 'text-lime-500' : 'text-gray-500'}`}>
               Payment
             </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
-              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              className="bg-lime-500 h-2 rounded-full transition-all duration-300"
               style={{ width: `${(step / 2) * 100}%` }}
             />
           </div>
@@ -102,31 +102,33 @@ export default function CartCheckoutModal({
         <form onSubmit={handleSubmit}>
           {step === 1 ? (
             <div className="space-y-4">
-              <div>
-                <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">
-                  Firstname *
-                </label>
-                <input
-                  type="text"
-                  id="firstname"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={personalInfoData.first_name}
-                  onChange={(e) => setPersonalInfoData({ ...personalInfoData, first_name: e.target.value })}
-                />
-              </div>
-              <div>
-                <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
-                  Lastname *
-                </label>
-                <input
-                  type="text"
-                  id="lastname"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={personalInfoData.last_name}
-                  onChange={(e) => setPersonalInfoData({ ...personalInfoData, last_name: e.target.value })}
-                />
+              <div className="flex gap-2 md:gap-5 flex-col md:flex-row">
+                <div className='flex-1'>
+                  <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">
+                    Firstname *
+                  </label>
+                  <input
+                    type="text"
+                    id="firstname"
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    value={personalInfoData.first_name}
+                    onChange={(e) => setPersonalInfoData({ ...personalInfoData, first_name: e.target.value })}
+                  />
+                </div>
+                <div className='flex-1'>
+                  <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
+                    Lastname *
+                  </label>
+                  <input
+                    type="text"
+                    id="lastname"
+                    required
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    value={personalInfoData.last_name}
+                    onChange={(e) => setPersonalInfoData({ ...personalInfoData, last_name: e.target.value })}
+                  />
+                </div>
               </div>
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">
@@ -160,8 +162,16 @@ export default function CartCheckoutModal({
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="text-lg font-medium mb-2">Order Summary</h3>
                 <div className="flex justify-between mb-2">
+                  <span>Subtotal:</span>
+                  <span className="font-medium">€{subtotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between mb-2">
+                  <span>Shipping:</span>
+                  <span className="font-medium">€{shippingCost.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between mb-2">
                   <span>Total Amount:</span>
-                  <span className="font-medium">${total.toFixed(2)}</span>
+                  <span className="font-medium">€{total.toFixed(2)}</span>
                 </div>
                 <div className="mt-4 pt-4 border-t">
                   <p className="text-sm text-gray-600">
@@ -188,7 +198,7 @@ export default function CartCheckoutModal({
             <button
               type="submit"
               disabled={isProcessing}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600 disabled:opacity-50"
             >
               {isProcessing ? 'Processing...' : step === 1 ? 'Continue to Payment' : 'Pay Now'}
             </button>

@@ -33,7 +33,7 @@ export default function CartPage() {
     (sum, item) => sum + Math.min(item.discountedPrice, item.originalPrice) * item.quantity, 0
   );
   const subtotal = Math.round(subtotalRaw * 10) / 10;  
-  const shippingCost = 7;
+  const shippingCost = subtotal > 60 ? 0 : 7;
   
   const totalRaw = subtotal + shippingCost;
   const total = Math.round(totalRaw * 10) / 10;
@@ -148,28 +148,45 @@ export default function CartPage() {
         </div>
       </Link>
 
-      <h1 className="text-2xl font-bold mb-8">Shopping Cart</h1>      
+      <h1 className="text-2xl font-bold mb-8 tracking-tight">Shopping Cart</h1>      
       {items.length === 0 ? (
-        <p>Your cart is empty</p>
+        <div className='mb-1 text-center bg-gray-50 py-20 px-2 rounded-lg'>
+          <h2 className='font-medium md:text-xl text-gray-800 tracking-tight'>Your cart is empty</h2>  
+          <p className='mt-1 mb-5 text-xs'>Go to products page and start adding elements.</p>        
+          <span className=' border-b border-b-lime-600 mx-2 text-sm text-lime-600'><Link href="/visitor/home">See products</Link></span>
+          
+          
+          
+          {/* <button
+            // className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-md px-5 py-2 transition duration-300 ease-in-out transform hover:scale-102"            
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
+            >                             
+            </button> */}
+          
+          
+        </div>
       ) : (
         <div className="space-y-4">
-          {items.map((item) => (
-            <div
+          {items.map((item) => {
+            // const [imgSrc, setImgSrc] = useState(item?.imageUrl || "/images/anabolisants.png");
+            return <div
               key={item._id}
               className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow"
             >
-              <div className="relative h-24 w-24 flex-shrink-0">
+              <div className="relative h-24 w-24 md:h-40 md:w-40 flex-shrink-0">
                 <Image
-                  src={item.imageUrl ?? "/images/anabolisants.png"}
+                  // src={imgSrc}
+                  src={item?.imageUrl || "/images/anabolisants.png"}
                   alt={item.name}
+                  // onError={()=>setImgSrc("/images/anabolisants.png")}
                   fill
                   className="object-cover rounded"
                 />
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold">{item.name}</h3>
+                <h3 className="text-sm md:text-lg font-semibold">{item.name}</h3>
                 {/* <p className="text-gray-600">€{Math.min(item.discountedPrice, item.originalPrice).toFixed(2)}</p> */}
-                <PriceDiscount product={item}></PriceDiscount>
+                <PriceDiscount textSize="XS" product={item} isCol={true}></PriceDiscount>
               </div>
               <div className="flex items-center space-x-4">
                 <input
@@ -189,7 +206,7 @@ export default function CartPage() {
                 </button>
               </div>
             </div>
-          ))}
+          })}
 
           <div className="mt-8 flex justify-between items-center">
             <div className="text-xl font-bold">
@@ -198,7 +215,7 @@ export default function CartPage() {
 
             <button
               onClick={() => setIsCheckoutOpen(true)}
-              className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700"
+              className="bg-lime-500 text-white px-6 py-2 rounded-md hover:bg-lime-600"
             >
               Checkout
             </button>

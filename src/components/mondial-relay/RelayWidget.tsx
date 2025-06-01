@@ -16,7 +16,8 @@ export default function MondialRelayWidget() {
     const updateWidgetSettings = () => {
       const isMobile = window.innerWidth < 768;
       const height = isMobile ? "300px" : "400px";
-      const shouldShowMap = !isMobile;
+      // const shouldShowMap = !isMobile;
+      const shouldShowMap = false;
       
       setWidgetHeight(height);
       setShowMap(shouldShowMap);
@@ -94,7 +95,8 @@ export default function MondialRelayWidget() {
           ColLivMod: "24R",
           NbResults: "7",
           Responsive: true,
-          ShowResultsOnMap: showMap,
+          // ShowResultsOnMap: showMap,
+          ShowResultsOnMap: false,
           Height: height,
           Width: "100%",
         });
@@ -125,7 +127,7 @@ export default function MondialRelayWidget() {
 
   return (
     <>
-      <div className="w-full h-[300px] md:h-[400px]" id="Zone_Widget"></div>
+      <div className="flex justify-center items-center w-full h-[300px] md:h-[400px]" id="Zone_Widget"></div>
       <input type="hidden" id="Target_Widget" />
     </>
   );

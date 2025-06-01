@@ -7,12 +7,13 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ProductPage() {
   const params = useParams();
   const addItem = useCartStore((state) => state.addItem);
   const { products, isLoading, error, fetchProducts, getProductById } = useProductStore();
+
   
   useEffect(() => {
     if (products.length === 0) {
@@ -21,6 +22,7 @@ export default function ProductPage() {
   }, [products.length, fetchProducts]);
 
   const product = getProductById(params.id as string);
+  const [imgSrc, setImgSrc] = useState(product?.imageUrl || "/images/anabolisants.png");
 
   if (isLoading) {
     return (
@@ -62,27 +64,35 @@ export default function ProductPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="relative h-96 w-full">
           <Image
-            src={product.imageUrl || '/images/anabolisants.png'}
+            src={imgSrc}
             alt={product.name}
+            onError={()=>setImgSrc("/images/anabolisants.png")}
             fill
             className="object-cover rounded-lg"
           />
         </div>
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{product.name}</h1>
-          <p className=" my-4 text-md text-gray-500">{product.description}</p>
+          <h1 className="md:text-xl font-bold text-gray-900">{product.name}</h1>
+          <p className=" mt-1 mb-4 text-sm md:text-md text-gray-500">{product.description}</p>
           
-          <PriceDiscount product={product}></PriceDiscount>
+          <div className="flex justify-between flex-col">
+            <div className='md:hidden'>
+              <PriceDiscount product={product} textSize="S"></PriceDiscount>
+            </div>
+            <div className='hidden md:block'>
+              <PriceDiscount product={product} textSize="L"></PriceDiscount>
+            </div>
+            <button
+              onClick={handleAddToCart}
+              className="mt-2 bg-lime-500 w-full text-sm md:text-md text-white py-3 px-6 rounded-md hover:bg-lime-600 transition-colors"
+            >
+              Add to Cart
+            </button>
+          </div>
           
           {/* <p className="mt-2 text-sm text-gray-500">
             Stock: {product.stock}
           </p> */}
-          <button
-            onClick={handleAddToCart}
-            className="mt-2 w-full bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 transition-colors"
-          >
-            Add to Cart
-          </button>
         </div>
       </div>
     </main>

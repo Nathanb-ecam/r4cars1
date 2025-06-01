@@ -3,22 +3,40 @@ import React from 'react'
 
 interface Props{
     product : Product
+    textSize:string;
     isCol?: boolean
 }
-export default function PriceDiscount({product, isCol} : Props) {
+export default function PriceDiscount({product, textSize, isCol} : Props) {
+    
+    const discounted = {
+        "XS": "xs",
+        "S": "md",
+        "M": "lg",
+        "L": "xl"
+    }
+
+    const original = {
+        "XS": "xs",
+        "S": "xs",
+        "M": "md",
+        "L": "lg"
+    }
+
     if(product.discountedPrice >= product.originalPrice){
-        return <p className="mt-2 text-lg font-bold text-gray-900">
+        return <p className="mt-2 text-md font-bold text-gray-900">
                     €{product.originalPrice.toFixed(2)}
                 </p>
     }
         
     return (
-    <div className={`flex ${isCol ? 'flex-col' : 'items-center'}`}>
-        <p className="text-xs font-bold text-gray-900 line-through">
+    <div className={`flex gap-1 ${isCol ? 'flex-col' : 'items-center'}`}>
+        {/* text-xs */}
+        <p className={`text-${original[textSize]} font-bold text-gray-900 line-through`}>
             €{product.originalPrice.toFixed(2)}
         </p>
         {/* text-gray-900 */}
-        <p className="text-md font-bold text-red-700"> 
+        {/* text-md */}
+        <p className={`text-${discounted[textSize]} font-bold text-red-700`}> 
             €{product.discountedPrice.toFixed(2)}
         </p>
     </div>
