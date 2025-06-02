@@ -13,7 +13,7 @@ export const trackAffiliateSale = async (data: ExtendSchemaGoAffPro) => {
     });
 
 
-    const response = await fetch('/api/admin/orders', {
+    const response = await fetch('/api/visitor/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -22,22 +22,10 @@ export const trackAffiliateSale = async (data: ExtendSchemaGoAffPro) => {
     });
 
     if (!response.ok) throw new Error('Failed to save affiliate order');
-
-    // Example of how you might integrate with GoAffPro:
-    // await fetch('https://api.goaffpro.com/v1/sales', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': `Bearer ${process.env.GOAFFPRO_API_KEY}`,
-    //   },
-    //   body: JSON.stringify({
-    //     affiliate_id: data.doctorNumber,
-    //     order_id: data.orderId,
-    //     amount: data.total,
-    //     currency: 'USD',
-    //   }),
-    // });
+    return true;
+    
   } catch (error) {
+    return false;
     console.error('Error tracking affiliate sale:', error);
   }
 };

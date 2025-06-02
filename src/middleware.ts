@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
+import { UserRole } from '@/models/User';
 
 // List of public API routes that don't require authentication
 const publicRoutes = [
@@ -60,7 +61,19 @@ export async function middleware(request: NextRequest) {
     const { payload } = await jwtVerify(token, secret);
     console.log('Token verified successfully:', payload);
 
-    // Token is valid — add it to Authorization header
+    // Check if the route is an admin route
+    const isAdminRoute = pathname.startsWith('/api/admin');
+    
+    // Check role permissions
+    if (isAdminRoute && payload.role !== UserRole.ADMIN) {
+      console.log('Access denied: Admin role required');
+      return new NextResponse(
+        JSON.stringify({ error: 'Access denied: Admin role required' }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Token is valid and role check passed — add it to Authorization header
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set('Authorization', `Bearer ${token}`);
 

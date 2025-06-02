@@ -12,6 +12,7 @@ import Link from 'next/link';
 import CartCheckoutModal from '@/components/visitor/CartCheckoutModal';
 import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro, GoAffProLineItem } from '@/models/GoAffPro';
 import PriceDiscount from '@/components/visitor/PriceDiscount';
+import ConfirmationModal from '@/components/ConfirmationModal';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -28,6 +29,7 @@ export default function CartPage() {
   const { items, removeItem, updateQuantity } = useCartStore();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [orderConfirmationVisible,setOrderConfirmationVisible] = useState(false);
 
   const subtotalRaw = items.reduce(
     (sum, item) => sum + Math.min(item.discountedPrice, item.originalPrice) * item.quantity, 0
@@ -114,9 +116,10 @@ export default function CartPage() {
 
       if (affiliate_id) { // use extended goaffPro order schema        
         const extendedSchema : ExtendSchemaGoAffPro = {order:extendedGoAffProOrder,"affiliate_id": parseInt(affiliate_id)}
-        await trackAffiliateSale(
+        const succesfullyCreated = await trackAffiliateSale(
             extendedSchema
         );
+        if(succesfullyCreated) setOrderConfirmationVisible(true)
       }else{ // use base order goaffPro schema
           console.log("No valid affiliate_id found for this refferal")
       }
@@ -126,10 +129,10 @@ export default function CartPage() {
       // Clear cart and authentication
       useCartStore.getState().clearCart();      
       Cookies.remove('authenticated');
-      Cookies.remove('doctorTag');
-      Cookies.remove('refCode');
-      Cookies.remove('affiliate_id');
-      Cookies.remove('token');
+      // Cookies.remove('doctorTag');
+      // Cookies.remove('refCode');
+      Cookies.remove('affiliate_id');      
+
       
       // Close the modal
       setIsCheckoutOpen(false);
@@ -141,6 +144,14 @@ export default function CartPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {orderConfirmationVisible && <ConfirmationModal 
+        title="Order confirmation" 
+        sentence="Your order has been placed. Thank you!" 
+        isOpen={true} 
+        onClose={()=>setOrderConfirmationVisible(false)} 
+        onConfirm={()=>setOrderConfirmationVisible(false)} 
+        />}
+
       <Link href="/visitor/home" className="text-2xl font-bold text-gray-900">        
         <div className='mb-5 flex items-center gap-2'>
           <ArrowLeftIcon className="h-4 w-4 text-gray-600" />
