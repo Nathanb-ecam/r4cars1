@@ -26,7 +26,7 @@ export default function ToggleSwitch({title,label, initiallyChecked, onToggle} :
                 />
                 <div
                     className={`block w-10 h-6 rounded-full transition-colors duration-300 ${
-                    checked ? 'bg-green-500' : 'bg-gray-300'
+                    checked ? 'bg-indigo-500' : 'bg-gray-300'
                     }`}
                 ></div>
                 <div

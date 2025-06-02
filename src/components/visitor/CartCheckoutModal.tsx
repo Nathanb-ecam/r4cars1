@@ -52,14 +52,16 @@ export default function CartCheckoutModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (step === 1) {
+    if (step === 1) {      
+      setStep(2);
+    } else if(step === 2 ){
       // Validate all required fields
       if (!personalInfoData.first_name || !personalInfoData.last_name || !personalInfoData.email || !personalInfoData.shipping_address) {
         alert('Please fill in all required fields and select a Mondial Relay point');
         return;
       }
-      setStep(2);
-    } else {      
+      setStep(3);
+    }else {      
       
       await onSubmit(personalInfoData);
     }
@@ -84,125 +86,163 @@ export default function CartCheckoutModal({
         {/* Progress Bar */}
         <div className="mb-4 md:mb-8">
           <div className="flex justify-between mb-2">
-            <span className={`text-sm ${step >= 1 ? 'text-lime-500' : 'text-gray-500'}`}>
+            <span className={`text-sm ${step >= 1 ? 'text-lime-500 font-medium' : 'text-gray-500'}`}>
+              Summary
+            </span>
+            <span className={`text-sm ${step >= 2 ? 'text-lime-500 font-medium' : 'text-gray-500'}`}>
               Personal Info
             </span>
-            <span className={`text-sm ${step >= 2 ? 'text-lime-500' : 'text-gray-500'}`}>
+            <span className={`text-sm ${step >= 3 ? 'text-lime-500 font-medium' : 'text-gray-500'}`}>
               Payment
-            </span>
+            </span>  
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
               className="bg-lime-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${(step / 2) * 100}%` }}
+              style={{ width: `${(step-1) * 50}%` }}
             />
           </div>
         </div>
 
         <form onSubmit={handleSubmit}>
-          {step === 1 ? (
-            <div className="space-y-4">
-              <div className="flex gap-2 md:gap-5 flex-col md:flex-row">
-                <div className='flex-1'>
-                  <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">
-                    Firstname *
-                  </label>
-                  <input
-                    type="text"
-                    id="firstname"
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    value={personalInfoData.first_name}
-                    onChange={(e) => setPersonalInfoData({ ...personalInfoData, first_name: e.target.value })}
-                  />
+          { step === 1 && (
+              <div className="space-y-4">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h3 className="text-lg font-medium mb-2">Order Summary</h3>
+                  <div className="flex justify-between mb-2">
+                    <span>Subtotal:</span>
+                    <span className="font-medium">€{subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span>Shipping:</span>
+                    <span className="font-medium">€{shippingCost.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span>Total Amount:</span>
+                    <span className="font-medium">€{total.toFixed(2)}</span>
+                  </div>
+                  <div className="mt-4 pt-4 border-t">
+                    <p className="text-sm text-gray-600">
+                      <strong>Shipping Address:</strong> {personalInfoData.shipping_address}
+                    </p>
+                  </div>
                 </div>
-                <div className='flex-1'>
-                  <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
-                    Lastname *
-                  </label>
-                  <input
-                    type="text"
-                    id="lastname"
-                    required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    value={personalInfoData.last_name}
-                    onChange={(e) => setPersonalInfoData({ ...personalInfoData, last_name: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  value={personalInfoData.email}
-                  onChange={(e) => setPersonalInfoData({ ...personalInfoData, email: e.target.value })}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Select a Mondial Relay Point *
-                </label>
-                <div className="border rounded-md p-2">
-                  <MondialRelayWidget />
-                </div>
-                {personalInfoData.shipping_address && (
-                  <p className="mt-2 text-sm text-gray-600">
-                    Selected point: {personalInfoData.shipping_address}
-                  </p>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h3 className="text-lg font-medium mb-2">Order Summary</h3>
-                <div className="flex justify-between mb-2">
-                  <span>Subtotal:</span>
-                  <span className="font-medium">€{subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span>Shipping:</span>
-                  <span className="font-medium">€{shippingCost.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between mb-2">
-                  <span>Total Amount:</span>
-                  <span className="font-medium">€{total.toFixed(2)}</span>
-                </div>
-                <div className="mt-4 pt-4 border-t">
+                <div className='flex justify-between items-center'>
                   <p className="text-sm text-gray-600">
-                    <strong>Shipping Address:</strong> {personalInfoData.shipping_address}
+                    You will be redirected to complete your payment securely.
                   </p>
+                  <button
+                    type="button"
+                    onClick={() => setStep(2)}
+                    className="px-6 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600"
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
-              <p className="text-sm text-gray-600">
-                You will be redirected to Stripe to complete your payment securely.
-              </p>
-            </div>
-          )}
-
-          <div className="mt-6 flex justify-end space-x-3">
-            {step === 2 && (
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-              >
-                Back
-              </button>
             )}
-            <button
-              type="submit"
-              disabled={isProcessing}
-              className="px-4 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600 disabled:opacity-50"
-            >
-              {isProcessing ? 'Processing...' : step === 1 ? 'Continue to Payment' : 'Pay Now'}
-            </button>
-          </div>
+          
+          
+          {step === 2 && (
+                  <div className="space-y-4">
+                  <div className="flex gap-2 md:gap-5 flex-col md:flex-row">
+                    <div className='flex-1'>
+                      <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">
+                        Firstname *
+                      </label>
+                      <input
+                        type="text"
+                        id="firstname"
+                        required
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        value={personalInfoData.first_name}
+                        onChange={(e) => setPersonalInfoData({ ...personalInfoData, first_name: e.target.value })}
+                      />
+                    </div>
+                    <div className='flex-1'>
+                      <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
+                        Lastname *
+                      </label>
+                      <input
+                        type="text"
+                        id="lastname"
+                        required
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        value={personalInfoData.last_name}
+                        onChange={(e) => setPersonalInfoData({ ...personalInfoData, last_name: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      value={personalInfoData.email}
+                      onChange={(e) => setPersonalInfoData({ ...personalInfoData, email: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Select a Mondial Relay Point *
+                    </label>
+                    <div className="border rounded-md p-2">
+                      <MondialRelayWidget />
+                    </div>
+                    {personalInfoData.shipping_address && (
+                      <p className="mt-2 text-sm text-gray-600">
+                        Selected point: {personalInfoData.shipping_address}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setStep(1)}
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                    >
+                      Back
+                    </button>
+                    <button
+                      onClick={()=>setStep(3)}
+                      className="px-6 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+          )}
+    
+          {step === 3 && (
+                    <>
+                    <div>
+                      <h2 className='text-lg font-bold tracking-tight'>
+                          Paiement BBVA
+                      </h2>
+                      <p>Virement</p>
+                    </div>
+                    <div className="mt-6 flex justify-end space-x-3">
+                        <button
+                          type="button"
+                          onClick={() => setStep(2)}
+                          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isProcessing}
+                          className="px-4 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600 disabled:opacity-50"
+                        >
+                          Pay Now
+                        </button>                   
+                  </div>
+                    </>
+          )}
         </form>
       </div>
     </div>

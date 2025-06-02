@@ -197,7 +197,7 @@ export default function CartPage() {
               <div className="flex-1">
                 <h3 className="text-sm md:text-lg font-semibold">{item.name}</h3>
                 {/* <p className="text-gray-600">€{Math.min(item.discountedPrice, item.originalPrice).toFixed(2)}</p> */}
-                <PriceDiscount textSize="XS" product={item} isCol={true}></PriceDiscount>
+                <PriceDiscount textSize="S" product={item} isCol={false}></PriceDiscount>
               </div>
               <div className="flex items-center space-x-4">
                 <input
@@ -219,9 +219,17 @@ export default function CartPage() {
             </div>
           })}
 
-          <div className="mt-8 flex justify-between items-center">
-            <div className="text-xl font-bold">
-              Total: €{subtotal.toFixed(2)}
+          <div className="mt-8 flex justify-between items-start">
+            <div>
+              {/* <div className="text-xs font-bold">
+                Sous-total: €{subtotal.toFixed(2)}
+              </div>
+              <div className="text-xs font-bold">
+                Livraison: €{shippingCost.toFixed(2)}
+              </div> */}
+              <div className="text-md font-bold">
+                Total: €{(shippingCost+ subtotal).toFixed(2)}
+              </div>
             </div>
 
             <button

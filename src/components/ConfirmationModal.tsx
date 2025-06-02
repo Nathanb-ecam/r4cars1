@@ -40,7 +40,7 @@ export default function ConfirmationModal({
           <button
             type="button"
             onClick={onConfirm}
-            className="px-6 py-2 text-sm font-medium text-white bg-lime-600 border border-transparent rounded-md hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            className="px-6 py-2 text-sm font-medium text-white bg-lime-500 border border-transparent rounded-md hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           >
             Ok
           </button>
