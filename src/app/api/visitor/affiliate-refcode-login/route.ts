@@ -8,8 +8,7 @@ import Cookies from 'js-cookie';
 
 export async function POST(request: NextRequest) {
   try {
-  
-  const { doctorIdentificationNumber, refCode } = await request.json();    
+    const { doctorIdentificationNumber, refCode } = await request.json();    
     const url = `${env.goaffpro.apiUrl}/admin/affiliates`
     
     const params = new URLSearchParams({    

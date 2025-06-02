@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
+import { jwtVerify } from 'jose';
 
 // List of public API routes that don't require authentication
 const publicRoutes = [
@@ -37,9 +37,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Use next-auth to decode the JWT
-  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET, cookieName: 'token' });
-  console.log(token)
+  // Get the token from cookies
+  const token = request.cookies.get('token')?.value;
+  console.log('Token from cookie:', token);
+
   if (!token) {
     console.log('No valid token found, determining redirect path');
 
@@ -53,16 +54,36 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Token is valid — add it to Authorization header
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set('Authorization', `Bearer ${token}`);
+  try {
+    // Verify the token using jose
+    const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET || 'secret');
+    const { payload } = await jwtVerify(token, secret);
+    console.log('Token verified successfully:', payload);
 
-  // Forward the request with updated headers
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+    // Token is valid — add it to Authorization header
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('Authorization', `Bearer ${token}`);
+
+    // Forward the request with updated headers
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } catch (error) {
+    console.error('Token verification error:', error);
+    
+    // Clear the invalid token
+    const response = new NextResponse(
+      JSON.stringify({ error: 'Invalid token' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    );
+    
+    // Remove the invalid token cookie
+    response.cookies.delete('token');
+    
+    return response;
+  }
 }
 
 export const config = {
