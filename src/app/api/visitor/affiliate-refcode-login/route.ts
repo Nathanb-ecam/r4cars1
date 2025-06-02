@@ -45,9 +45,8 @@ export async function POST(request: NextRequest) {
 
     const token = await generateToken({      
       role: UserRole.VISITOR,
-      userId:"",
-      email:""
     });
+    
 
     const response = NextResponse.json(
       { 
@@ -67,7 +66,7 @@ export async function POST(request: NextRequest) {
     // const affiliate_id : string = affiliates[0]?.id.toString()
     // console.log("Set cookie affiliate_id" + affiliate_id)
     // response.cookies.set({
-    //   name: 'affiliate_id',
+    //   name: 'affiliate_i,
     //   value: affiliate_id,
     //   httpOnly: true,
     //   secure: process.env.NODE_ENV === 'production',

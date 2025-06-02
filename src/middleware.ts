@@ -1,87 +1,72 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { verifyToken } from '@/lib/jwt';
-import { UserRole } from '@/models/User';
+import { getToken } from 'next-auth/jwt';
+
+// List of public API routes that don't require authentication
+const publicRoutes = [
+  '/api/visitor/affiliate-refcode-login',
+  '/api/admin/login',
+  '/api/products',
+];
+
+// List of public pages that don't require authentication
+const publicPages = [
+  '/legal',
+  '/legal/terms',
+  '/legal/privacy',
+  '/legal/cookies',
+  '/legal/contact',
+  '/visitor/login',
+  '/admin/login',
+];
 
 export async function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value;
-  const isVisitorLoginPage = request.nextUrl.pathname === '/visitor/login';
-  const isAdminLoginPage = request.nextUrl.pathname === '/admin/login';
-  const isAdminRoute = request.nextUrl.pathname.startsWith('/admin') && !isAdminLoginPage;
-  const isVisitorRoute = request.nextUrl.pathname.startsWith('/visitor') && !isVisitorLoginPage;
-  const isPublicRoute = request.nextUrl.pathname === '/api/auth/access-code-login' ||
-                       request.nextUrl.pathname === '/api/admin/login' ||
-                       request.nextUrl.pathname === '/api/products' ||
-                       request.nextUrl.pathname === '/api/orders' ||
-                       request.nextUrl.pathname === '/cookies' ||
-                       request.nextUrl.pathname === '/privacy' ||
-                       request.nextUrl.pathname === '/terms'                        
-                       ;
+  const { pathname } = request.nextUrl;
+  console.log('\n\n\n');
+  console.log('Middleware processing path:', pathname);
 
-  console.log('Middleware - Path:', request.nextUrl.pathname);
-  console.log('Middleware - Token:', token ? 'Present' : 'Missing');
-  console.log('Middleware - Is Admin Route:', isAdminRoute);
-  console.log('Middleware - Is Admin Login Page:', isAdminLoginPage);
-  console.log('Middleware - Is Visitor Route:', isVisitorRoute);
-
-  // Allow public routes
-  if (isPublicRoute) {
-    console.log('Middleware - Allowing public route');
+  // Allow access to public API routes
+  if (publicRoutes.some(route => pathname.startsWith(route))) {
+    console.log('Public API route, allowing access');
     return NextResponse.next();
   }
 
-  // Handle authentication
+  // Allow access to public pages
+  if (publicPages.some(page => pathname.startsWith(page))) {
+    console.log('Public page, allowing access');
+    return NextResponse.next();
+  }
+
+  // Use next-auth to decode the JWT
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET, cookieName: 'token' });
+  console.log(token)
   if (!token) {
-    console.log('Middleware - No token found');
-    if (isVisitorLoginPage || isAdminLoginPage) {
-      return NextResponse.next();
-    }
-    // Redirect to appropriate login page based on the route
-    if (isAdminRoute) {
-      console.log('Middleware - Redirecting to admin login');
-      return NextResponse.redirect(new URL('/admin/login', request.url));
-    }
-    if (isVisitorRoute) {
-      console.log('Middleware - Redirecting to visitor login');
-      return NextResponse.redirect(new URL('/visitor/login', request.url));
-    }
-    return NextResponse.redirect(new URL('/visitor/login', request.url));
+    console.log('No valid token found, determining redirect path');
+
+    const isAdminRoute = pathname.startsWith('/admin');
+    const loginUrl = isAdminRoute ? '/admin/login' : '/visitor/login';
+    console.log('Redirecting to:', loginUrl);
+
+    const url = new URL(loginUrl, request.url);
+    url.searchParams.set('redirect', pathname);
+
+    return NextResponse.redirect(url);
   }
 
-  try {
-    const user = await verifyToken(token);
-    console.log('Middleware - User role:', user.role);
+  // Token is valid — add it to Authorization header
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('Authorization', `Bearer ${token}`);
 
-    // Handle admin routes
-    if (isAdminRoute && user.role !== UserRole.ADMIN) {
-      console.log('Middleware - Non-admin trying to access admin route');
-      return NextResponse.redirect(new URL('/visitor/login', request.url));
-    }
-
-    // Redirect authenticated users away from login pages
-    if (isVisitorLoginPage || isAdminLoginPage) {
-      if (user.role === UserRole.ADMIN) {
-        console.log('Middleware - Admin authenticated, redirecting to dashboard');
-        return NextResponse.redirect(new URL('/admin/dashboard', request.url));
-      }
-      return NextResponse.redirect(new URL('/visitor/home', request.url));
-    }
-
-    return NextResponse.next();
-  } catch (error) {
-    console.error('Middleware - Token verification error:', error);
-    // Invalid token
-    if (isVisitorLoginPage || isAdminLoginPage) {
-      return NextResponse.next();
-    }
-    // Redirect to appropriate login page based on the route
-    if (isAdminRoute) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
-    }
-    return NextResponse.redirect(new URL('/visitor/login', request.url));
-  }
+  // Forward the request with updated headers
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
-}; 
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|public/|visitor/login|admin/login).*)',
+  ],
+};

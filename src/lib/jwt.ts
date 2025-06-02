@@ -9,24 +9,14 @@ export interface TokenPayload {
   role: UserRole;
 }
 
-export async function generateToken(payload: TokenPayload): Promise<string> {
-  const token = await new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime('24h')
-    .sign(secret);
+import jwt from 'jsonwebtoken';
 
-  return token;
+export function generateToken(payload: any) {
+  return jwt.sign(payload, process.env.NEXTAUTH_SECRET!, {
+    expiresIn: '1d',
+  });
 }
 
-export async function verifyToken(token: string): Promise<TokenPayload> {
-  try {
-    const { payload } = await jwtVerify(token, secret);
-    return payload as TokenPayload;
-  } catch (error) {
-    throw new Error('Invalid token');
-  }
-}
 
 export function getTokenFromHeader(authHeader: string | undefined): string {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

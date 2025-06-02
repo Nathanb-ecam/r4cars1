@@ -15,8 +15,8 @@ export default function AdminLoginForm() {
     e.preventDefault();
     setError('');
 
-    try {      
-        const response = await fetch('/api/auth/admin-login', {
+    try {            
+      const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,7 +27,7 @@ export default function AdminLoginForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
+        throw new Error(data.error || 'Admin login failed');
       }      
 
       router.push('/admin/dashboard');    
@@ -82,7 +82,7 @@ export default function AdminLoginForm() {
       <div>
         <button
           type="submit"
-          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-lime-500 hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >
           Sign in
         </button>

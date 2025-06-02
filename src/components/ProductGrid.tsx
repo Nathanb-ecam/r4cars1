@@ -84,7 +84,7 @@ export default function ProductGrid() {
             </div>
             <button
               onClick={() => router.push(`/visitor/product/${product.id}`)}
-              className="mt-4 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300"
+              className="mt-4 w-full bg-lime-500 text-white py-2 px-4 rounded-md hover:bg-lime-600 transition-colors duration-300"
             >
               Voir le produit
             </button>

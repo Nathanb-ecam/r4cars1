@@ -117,7 +117,7 @@ export default function Map({ onLocationSelect }: MapProps) {
         />
         <button
           type="submit"
-          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          className="px-4 py-2 bg-lime-500 text-white rounded-md hover:bg-lime-600"
         >
           Search
         </button>
