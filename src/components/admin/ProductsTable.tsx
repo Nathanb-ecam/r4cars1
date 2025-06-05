@@ -71,7 +71,7 @@ export default function ProductsTable() {
       
       await fetchProducts();
       setIsModalOpen(false);
-      setNewProduct({ name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '', sku: '' , isSpecialOffer:false, visibleOnline:false});
+      setNewProduct({ _id:'',name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '', sku: '' , isSpecialOffer:false, visibleOnWebsite:false});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -363,7 +363,7 @@ export default function ProductsTable() {
                   value={editingProduct.imageUrl}
                   onChange={(e) => setEditingProduct({ ...editingProduct, imageUrl: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required
+                  // required
                 />
               </div>
               <div className="flex justify-end space-x-3">

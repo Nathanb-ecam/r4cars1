@@ -31,6 +31,10 @@ export type EnvConfig = typeof env;
 export function validateEnv() {
   const requiredVars = [
     'MONGODB_URI',
+    'GOAFFPRO_API_KEY',
+    'GOAFFPRO_PUBLIC_TOKEN',
+    'NEXTAUTH_SECRET',
+    
     'JWT_SECRET',
     'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
     'STRIPE_SECRET_KEY',

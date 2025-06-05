@@ -22,7 +22,7 @@ export default function ProductPage() {
   }, [products.length, fetchProducts]);
 
   const product = getProductById(params.id as string);
-  const [imgSrc, setImgSrc] = useState(product?.imageUrl || "/images/anabolisants.png");
+  const [imgSrc, setImgSrc] = useState(product?.imageUrl || "/images/g5-no-bg.png");
 
   if (isLoading) {
     return (
@@ -48,7 +48,7 @@ export default function ProductPage() {
     //   name: product.name,
     //   description: product.description,
     //   price: product.price,
-    //   imageUrl: product.image || '/images/anabolisants.png',
+    //   imageUrl: product.image || '/images/g5-no-bg.png',
     // };
     addItem(product);
   };
@@ -66,9 +66,9 @@ export default function ProductPage() {
           <Image
             src={imgSrc}
             alt={product.name}
-            onError={()=>setImgSrc("/images/anabolisants.png")}
+            onError={()=>setImgSrc("/images/g5-no-bg.png")}
             fill
-            className="object-cover rounded-lg"
+            className="object-contain rounded-lg"
           />
         </div>
         <div>

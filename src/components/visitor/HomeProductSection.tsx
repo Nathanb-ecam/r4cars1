@@ -19,24 +19,24 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
         <div className="mb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {products.map((product) => {
            const [imgSrc, setImgSrc] = useState(
-            product.imageUrl || "/images/anabolisants.png"
+            product.imageUrl || "/images/g5-no-bg.png"
           );
           return <div
             key={product._id}
             className="bg-white rounded-lg shadow-md overflow-hidden"
           >
             <Link href={`/visitor/product/${product._id}`}>
-              <div className="relative h-48 w-full bg-gray-50">
+              <div className="relative h-48 w-full">
                 <Image
-                //   src={product.imageUrl || '/images/anabolisants.png'}
+                //   src={product.imageUrl || '/images/g5-no-bg.png'}
                   src={imgSrc}
                   alt={product.name}                  
                   fill
-                  onError={() => setImgSrc("/images/anabolisants.png")}
-                  className="object-cover"
+                  onError={() => setImgSrc("/images/g5-no-bg.png")}
+                  className="object-contain"
                 />
               </div>
-              <div className="p-4">
+              <div className="bg-gray-50 p-4">
                 <h3 className="md:text-lg font-semibold text-gray-900">
                   {product.name}
                 </h3>
@@ -46,7 +46,7 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
               </div>
             </Link>
 
-            <div className="px-4 pb-4 flex justify-between gap-2">
+            <div className="bg-gray-50 px-4 pb-4 flex justify-between gap-2">
                 <PriceDiscount textSize="S" product={product} isCol={false} ></PriceDiscount>                               
               <button
                 onClick={() => handleAddToCart(product)}                

@@ -26,10 +26,12 @@ export async function PUT(
           name: body.name,
           description: body.description,
           originalPrice: body.originalPrice,
-          discountedPrice: body.discountedPrice,
+          discountedPrice: body.discountedPrice,          
           sku: body.sku,
           imageUrl: body.imageUrl,
           stock: body.stock,
+          visibleOnWebsite: body.visibleOnWebsite,
+          isSpecialOffer: body.isSpecialOffer,
           updatedAt: new Date()
         }
       },

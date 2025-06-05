@@ -86,15 +86,18 @@ export default function CartCheckoutModal({
         {/* Progress Bar */}
         <div className="mb-4 md:mb-8">
           <div className="flex justify-between mb-2">
-            <span className={`text-sm ${step >= 1 ? 'text-lime-500 font-medium' : 'text-gray-500'}`}>
-              Summary
-            </span>
-            <span className={`text-sm ${step >= 2 ? 'text-lime-500 font-medium' : 'text-gray-500'}`}>
-              Personal Info
-            </span>
-            <span className={`text-sm ${step >= 3 ? 'text-lime-500 font-medium' : 'text-gray-500'}`}>
-              Payment
-            </span>  
+            <div className={`text-sm ${step >= 1 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
+              <h2 className={`${step >= 1 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>1</h2>
+              <p>Summary</p>
+            </div>
+            <div className={`text-sm ${step >= 2 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
+              <h2 className={`${step >= 2 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>2</h2>
+              <p>Personal Info</p>
+            </div>
+            <div className={`text-sm ${step >= 3 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
+              <h2 className={`${step >= 3 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>3</h2>
+              <p>Payment</p>
+            </div>  
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
             <div
