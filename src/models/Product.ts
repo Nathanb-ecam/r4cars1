@@ -8,6 +8,7 @@ export interface Product {
   originalPrice: number;
   discountedPrice: number;
   imageUrl: string;
+  imageSelfHosted:boolean;
   stock: number;
   isSpecialOffer:boolean;
   visibleOnWebsite:boolean;
@@ -22,6 +23,7 @@ const productSchema = new mongoose.Schema<Product>({
   originalPrice: { type: Number, required: true },
   discountedPrice: { type: Number, required: true },
   imageUrl: { type: String, required: true },
+  imageSelfHosted: { type: Boolean, required: true, default: true },
   stock: { type: Number, required: false, default: 0 },
   isSpecialOffer: { type: Boolean, required: false, default: false },
   visibleOnWebsite: { type: Boolean, required: false, default: false },

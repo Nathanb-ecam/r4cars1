@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cartStore';
+import Image from 'next/image';
 
 export default function Header() {
   const items = useCartStore((state) => state.items);
@@ -13,13 +14,15 @@ export default function Header() {
     <header className="bg-slate-800 text-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* <Link href="/" className="text-2xl font-bold text-gray-900"> */}
-          <div>
-
+          
+          <div className='relative h-1/2 w-[120px]'>
+            <Image src="/images/LEM_Logo_White.png" alt='logo' fill/>
+          </div>
+          {/* <div>
             <span className='text-gray-300 font-bold'>lab</span>
             <span className='text-gray-600 font-light tracking-tight'>euromed</span>
-          </div>
-          {/* </Link> */}
+          </div> */}
+          
           <div className="flex items-center space-x-4">
             <Link href="/visitor/cart" className="relative">
               <ShoppingCartIcon className="h-6 w-6 text-gray-200" />

@@ -18,7 +18,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const data = await request.json();
+    const {_id,...data} = await request.json();
     await connectDB();
     
     const product = await ProductModel.create({

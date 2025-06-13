@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { Product } from '@/models/Product';
 
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  stock: number;
-}
+// interface Product {
+//   id: string;
+//   name: string;
+//   description: string;
+//   price: number;
+//   image: string;
+//   stock: number;
+// }
 
 export default function ProductGrid() {
   const router = useRouter();
@@ -56,12 +57,13 @@ export default function ProductGrid() {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map((product) => (
         <div
-          key={product.id}
+          key={product._id}
           className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
         >
           <div className="relative h-48">
             <Image
-              src={product.image}
+              // src={product.image}
+              src={product.imageSelfHosted ? (product?.imageUrl ? `images/${product?.imageUrl}`: "/images/g5-no-bg.png" ) : (product.imageUrl) || '/images/g5-no-bg.png'}
               alt={product.name}
               fill
               className="object-contain"
@@ -76,14 +78,14 @@ export default function ProductGrid() {
             </p>
             <div className="flex justify-between items-center">
               <span className="text-lg font-bold text-indigo-600">
-                {product.price.toFixed(2)} €
+                {product.originalPrice.toFixed(2)} €
               </span>
               <span className="text-sm text-gray-500">
                 Stock: {product.stock}
               </span>
             </div>
             <button
-              onClick={() => router.push(`/visitor/product/${product.id}`)}
+              onClick={() => router.push(`/visitor/product/${product._id}`)}
               className="mt-4 w-full bg-lime-500 text-white py-2 px-4 rounded-md hover:bg-lime-600 transition-colors duration-300"
             >
               Voir le produit

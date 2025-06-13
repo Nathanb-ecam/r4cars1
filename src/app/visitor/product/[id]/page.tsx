@@ -22,8 +22,9 @@ export default function ProductPage() {
   }, [products.length, fetchProducts]);
 
   const product = getProductById(params.id as string);
-  const [imgSrc, setImgSrc] = useState(product?.imageUrl || "/images/g5-no-bg.png");
-
+  const imgSource = product?.imageUrl ?? "g5-no-bg.png" // need to repalce with a placeholder image 
+  const [imgSrc, setImgSrc] = useState(product?.imageSelfHosted ? `/images/${imgSource}` : product?.imageUrl);
+console.log(imgSrc)
   if (isLoading) {
     return (
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

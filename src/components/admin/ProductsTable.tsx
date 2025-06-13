@@ -19,6 +19,7 @@ export default function ProductsTable() {
     originalPrice: '',
     discountedPrice: '',
     imageUrl: '',
+    imageSelfHosted:false,
     sku: '',
     isSpecialOffer:false,
     visibleOnWebsite:false
@@ -30,6 +31,7 @@ export default function ProductsTable() {
     originalPrice: '',
     discountedPrice: '',
     imageUrl: '',
+    imageSelfHosted: true,
     sku: '',
     isSpecialOffer:false,
     visibleOnWebsite:false
@@ -61,7 +63,7 @@ export default function ProductsTable() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...newProduct,
+          ...newProduct,          
           originalPrice: parseFloat(newProduct.originalPrice),
           discountedPrice: parseFloat(newProduct.discountedPrice)
         }),
@@ -71,7 +73,7 @@ export default function ProductsTable() {
       
       await fetchProducts();
       setIsModalOpen(false);
-      setNewProduct({ _id:'',name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '', sku: '' , isSpecialOffer:false, visibleOnWebsite:false});
+      setNewProduct({ _id:'',name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '',imageSelfHosted:false, sku: '' , isSpecialOffer:false, visibleOnWebsite:false});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -98,7 +100,7 @@ export default function ProductsTable() {
       
       await fetchProducts();
       setIsEditModalOpen(false);
-      setEditingProduct({_id: '',name: '',description: '',originalPrice: '',discountedPrice: '',imageUrl: '',sku: '',isSpecialOffer:false,visibleOnWebsite:false});
+      setEditingProduct({_id: '',name: '',description: '',originalPrice: '',discountedPrice: '',imageUrl: '',imageSelfHosted:false,sku: '',isSpecialOffer:false,visibleOnWebsite:false});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -248,15 +250,21 @@ export default function ProductsTable() {
                 />
               </div>
               <div>
-                <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
-                <input
-                  type="url"
-                  id="image"
-                  value={newProduct.imageUrl}
-                  onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required
-                />
+                  <div>
+                    <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
+                    <ToggleSwitch label="imageSelfHosted" title="self hosted" initiallyChecked={newProduct.imageSelfHosted} onToggle={()=>setNewProduct({ ...newProduct, imageSelfHosted: !newProduct.imageSelfHosted })} />
+                  </div>
+                
+                  <input
+                    type="string"
+                    id="image"
+                    value={newProduct.imageUrl}
+                    onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    required
+                  />
+                
+             
               </div>
               <div className="flex justify-end space-x-3">
                 <button
@@ -355,16 +363,20 @@ export default function ProductsTable() {
                   required
                 />
               </div>
-              <div>
-                <label htmlFor="edit-image" className="block text-sm font-medium text-gray-700">Image URL</label>
-                <input
-                  type="url"
-                  id="edit-image"
-                  value={editingProduct.imageUrl}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, imageUrl: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  // required
-                />
+              <div>                
+                  <div className='flex justify-between'>
+                      <label htmlFor="edit-image" className="block text-sm font-medium text-gray-700">Image URL</label>
+                      <ToggleSwitch label="imageSelfHosted" title="self hosted" initiallyChecked={editingProduct.imageSelfHosted} onToggle={()=>setEditingProduct({ ...editingProduct, imageSelfHosted: !editingProduct.imageSelfHosted })} />
+                  </div>
+                  <input
+                    type="string"
+                    id="edit-image"
+                    value={editingProduct.imageUrl}
+                    onChange={(e) => setEditingProduct({ ...editingProduct, imageUrl: e.target.value })}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    // required
+                  />
+                
               </div>
               <div className="flex justify-end space-x-3">
                 <button

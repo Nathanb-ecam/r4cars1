@@ -11,6 +11,7 @@ interface Props{
 }
 
 export default function HomeProductSection({title, products, handleAddToCart} : Props){    
+    if(products.length === 0) return;
     return <>
         <h1 className='mb-4 md:mb-8 text-2xl sm:text-3xl tracking-tight font-extrabold text-gray-800'>
             {title}
@@ -19,7 +20,7 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
         <div className="mb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {products.map((product) => {
            const [imgSrc, setImgSrc] = useState(
-            product.imageUrl || "/images/g5-no-bg.png"
+            product.imageSelfHosted ? `/images/${product.imageUrl }` : `${product.imageUrl}` || '/images/g5-no-bg.png'
           );
           return <div
             key={product._id}

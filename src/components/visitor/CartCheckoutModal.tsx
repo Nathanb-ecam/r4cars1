@@ -7,6 +7,13 @@ import { CustomerPersonalInfo } from '@/app/visitor/cart/page';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
+interface PersonalInfo{
+    first_name: string,
+    last_name: string,
+    email: string,
+    shipping_address: string,
+}
+
 interface CartCheckoutModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -28,22 +35,17 @@ export default function CartCheckoutModal({
 }: CartCheckoutModalProps) {
   
 
-  
   const [step, setStep] = useState(1);
-  const [personalInfoData, setPersonalInfoData] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
-    shipping_address: '',
-  });  
+  const [personalInfoData, setPersonalInfoData] = useState<PersonalInfo | null>(null);  
 
 
-  useEffect(() => {
+
+  useEffect(() => {    
     // Listen for changes to the Mondial Relay widget
     const checkMondialRelaySelection = setInterval(() => {
       const targetInput = document.getElementById('Target_Widget') as HTMLInputElement;
       if (targetInput && targetInput.value) {
-        setPersonalInfoData(prev => ({ ...prev, shipping_address: targetInput.value }));
+        setPersonalInfoData(prev => prev ? ({ ...prev, shipping_address: targetInput.value }) : prev);
       }
     }, 1000);
 
@@ -52,17 +54,18 @@ export default function CartCheckoutModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (step === 1) {      
+    if(personalInfoData === null) {console.error("Personal Info data is empty!");return}; 
+    
+    if (step === 1){      
       setStep(2);
-    } else if(step === 2 ){
+    } else if(step === 2 ){      
       // Validate all required fields
       if (!personalInfoData.first_name || !personalInfoData.last_name || !personalInfoData.email || !personalInfoData.shipping_address) {
         alert('Please fill in all required fields and select a Mondial Relay point');
         return;
       }
       setStep(3);
-    }else {      
-      
+    }else {            
       await onSubmit(personalInfoData);
     }
   };
@@ -76,7 +79,11 @@ export default function CartCheckoutModal({
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Checkout</h2>
           <button
-            onClick={onClose}
+            onClick={()=>{
+              onClose(); 
+              // setPersonalInfoData(null);
+              // setStep(1);
+            }}
             className="text-gray-500 hover:text-gray-700"
           >
             <XMarkIcon className="h-6 w-6" />
@@ -126,7 +133,7 @@ export default function CartCheckoutModal({
                   </div>
                   <div className="mt-4 pt-4 border-t">
                     <p className="text-sm text-gray-600">
-                      <strong>Shipping Address:</strong> {personalInfoData.shipping_address}
+                      <strong>Shipping Address:</strong> {personalInfoData?.shipping_address}
                     </p>
                   </div>
                 </div>
@@ -158,8 +165,8 @@ export default function CartCheckoutModal({
                         id="firstname"
                         required
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        value={personalInfoData.first_name}
-                        onChange={(e) => setPersonalInfoData({ ...personalInfoData, first_name: e.target.value })}
+                        value={personalInfoData?.first_name}
+                        onChange={(e) => setPersonalInfoData(prev => prev ? { ...prev, first_name: e.target.value } : prev)}
                       />
                     </div>
                     <div className='flex-1'>
@@ -171,8 +178,8 @@ export default function CartCheckoutModal({
                         id="lastname"
                         required
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                        value={personalInfoData.last_name}
-                        onChange={(e) => setPersonalInfoData({ ...personalInfoData, last_name: e.target.value })}
+                        value={personalInfoData?.last_name}
+                        onChange={(e) => setPersonalInfoData(prev => prev ? { ...prev, last_name: e.target.value }: prev)}
                       />
                     </div>
                   </div>
@@ -185,8 +192,8 @@ export default function CartCheckoutModal({
                       id="email"
                       required
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      value={personalInfoData.email}
-                      onChange={(e) => setPersonalInfoData({ ...personalInfoData, email: e.target.value })}
+                      value={personalInfoData?.email}
+                      onChange={(e) => setPersonalInfoData(prev => prev ? { ...prev, email: e.target.value } : prev )}
                     />
                   </div>
                   <div>
@@ -196,9 +203,9 @@ export default function CartCheckoutModal({
                     <div className="border rounded-md p-2">
                       <MondialRelayWidget />
                     </div>
-                    {personalInfoData.shipping_address && (
+                    {personalInfoData?.shipping_address && (
                       <p className="mt-2 text-sm text-gray-600">
-                        Selected point: {personalInfoData.shipping_address}
+                        Selected point: {personalInfoData?.shipping_address}
                       </p>
                     )}
                   </div>
@@ -226,6 +233,7 @@ export default function CartCheckoutModal({
                       <h2 className='text-lg font-bold tracking-tight'>
                           Paiement BBVA
                       </h2>
+                      <p>{total}</p>
                       <p>Virement</p>
                     </div>
                     <div className="mt-6 flex justify-end space-x-3">

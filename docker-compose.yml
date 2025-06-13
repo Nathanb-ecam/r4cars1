@@ -8,8 +8,8 @@ services:
     ports:
       - "27017:27017"    
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongo-makassar
-      - MONGO_INITDB_ROOT_PASSWORD=mongo-makassar-password
+      - MONGO_INITDB_ROOT_USERNAME=mongo-lab-user
+      - MONGO_INITDB_ROOT_PASSWORD=mongo-lab-pass
       - MONGO_INITDB_DATABASE=labeuromed
       # - MONGO_INITDB_DATABASE=labeuromed
     volumes:

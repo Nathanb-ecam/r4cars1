@@ -30,6 +30,7 @@ export default function CartPage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderConfirmationVisible,setOrderConfirmationVisible] = useState(false);
+  const [rerenderCount, setRerenderCount] = useState(0);
 
   const subtotalRaw = items.reduce(
     (sum, item) => sum + Math.min(item.discountedPrice, item.originalPrice) * item.quantity, 0
@@ -186,8 +187,9 @@ export default function CartPage() {
             >
               <div className="relative h-24 w-24 md:h-40 md:w-40 flex-shrink-0">
                 <Image
-                  // src={imgSrc}
-                  src={item?.imageUrl ?? "/images/g5-no-bg.png"}
+                  // src={imgSrc}                
+                  // src={item.imageSelfHosted ? (item?.imageUrl ? `images/${item?.imageUrl}`: "/images/g5-no-bg.png" ) : (item.imageUrl) || '/images/g5-no-bg.png'}
+                  src={item.imageSelfHosted ? `/images/${item.imageUrl }` : `${item.imageUrl}` || '/images/g5-no-bg.png'}
                   alt={item.name}
                   // onError={()=>setImgSrc("/images/g5-no-bg.png")}
                   fill
@@ -246,6 +248,7 @@ export default function CartPage() {
       )}
 
       <CartCheckoutModal
+        key={rerenderCount}
         isOpen={isCheckoutOpen}
         onClose={() => setIsCheckoutOpen(false)}
         onSubmit={handleCheckout}
