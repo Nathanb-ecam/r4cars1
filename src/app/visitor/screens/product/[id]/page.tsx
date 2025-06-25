@@ -1,12 +1,13 @@
 'use client';
 
+import Modal from '@/components/Modal';
 import PriceDiscount from '@/components/visitor/PriceDiscount';
 import { useCartStore } from '@/store/cartStore';
 import { useProductStore } from '@/store/productStore';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ProductPage() {
@@ -14,6 +15,8 @@ export default function ProductPage() {
   const addItem = useCartStore((state) => state.addItem);
   const { products, isLoading, error, fetchProducts, getProductById } = useProductStore();
 
+  const [addedToCartVisible, setAddedToCartVisible] = useState(false);
+  const router = useRouter();
   
   useEffect(() => {
     if (products.length === 0) {
@@ -55,47 +58,61 @@ console.log(imgSrc)
   };
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Link href="/visitor/screens/home" className="text-2xl font-bold text-gray-900">        
-        <div className='mb-5 flex items-center gap-2'>
-          <ArrowLeftIcon className="h-4 w-4 text-gray-600" />
-          <p className='text-sm text-gray-700 border-b border-b-gray-300 '>Tous nos produits</p>
-        </div>
-      </Link>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="relative h-96 w-full">
-          <Image
-            src={imgSrc}
-            alt={product.name}
-            onError={()=>setImgSrc("/images/g5-no-bg.png")}
-            fill
-            className="object-contain rounded-lg"
-          />
-        </div>
-        <div>
-          <h1 className="md:text-xl font-bold text-gray-900">{product.name}</h1>
-          <p className=" mt-1 mb-4 text-sm md:text-md text-gray-500">{product.description}</p>
-          
-          <div className="flex justify-between flex-col">
-            <div className='md:hidden'>
-              <PriceDiscount product={product} textSize="S"></PriceDiscount>
-            </div>
-            <div className='hidden md:block'>
-              <PriceDiscount product={product} textSize="L"></PriceDiscount>
-            </div>
-            <button
-              onClick={handleAddToCart}
-              className="mt-2 bg-lime-500 w-full text-sm md:text-md text-white py-3 px-6 rounded-md hover:bg-lime-600 transition-colors"
-            >
-              Add to Cart
-            </button>
+    <>
+      {addedToCartVisible && <Modal
+                    title={product.name}
+                    sentence="Item added to order." 
+                    isOpen={true} 
+                    onPrimaryClicked={()=>router.push('/visitor/screens/cart')} 
+                    primaryText="See basket"
+                    secondaryText="Continue shopping"
+                    onSecondaryClicked={()=>setAddedToCartVisible(false)}
+                    secondaryVisible={true}                    
+                    onClose={()=>setAddedToCartVisible(false)} 
+                    />}
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Link href="/visitor/screens/home" className="text-2xl font-bold text-gray-900">        
+          <div className='mb-5 flex items-center gap-2'>
+            <ArrowLeftIcon className="h-4 w-4 text-gray-600" />
+            <p className='text-sm text-gray-700 border-b border-b-gray-300 '>Tous nos produits</p>
           </div>
-          
-          {/* <p className="mt-2 text-sm text-gray-500">
-            Stock: {product.stock}
-          </p> */}
+        </Link>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="relative h-96 w-full">
+            <Image
+              src={imgSrc ?? "/images/g5-no-bg.png"}
+              alt={product.name}
+              onError={()=>setImgSrc("/images/g5-no-bg.png")}
+              fill
+              className="object-contain rounded-lg"
+            />
+          </div>
+          <div>
+            <h1 className="md:text-xl font-bold text-gray-900">{product.name}</h1>
+            <p className=" mt-1 mb-4 text-sm md:text-md text-gray-500">{product.description}</p>
+            
+            <div className="flex justify-between flex-col">
+              <div className='md:hidden'>
+                <PriceDiscount product={product} textSize="S"></PriceDiscount>
+              </div>
+              <div className='hidden md:block'>
+                <PriceDiscount product={product} textSize="L"></PriceDiscount>
+              </div>
+              <button
+                onClick={()=>{handleAddToCart(); setAddedToCartVisible(true);}}
+                className="mt-2 bg-lime-500 w-full text-sm md:text-md text-white py-3 px-6 rounded-md hover:bg-lime-600 transition-colors"
+              >
+                Add to Cart
+              </button>
+            </div>
+            
+            {/* <p className="mt-2 text-sm text-gray-500">
+              Stock: {product.stock}
+            </p> */}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   );
 } 

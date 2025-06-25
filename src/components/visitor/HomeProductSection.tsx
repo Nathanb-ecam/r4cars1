@@ -3,6 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import PriceDiscount from "./PriceDiscount";
 import { useState } from "react";
+import ConfirmationModal from "../Modal";
+import Modal from "../Modal";
+import { useRouter } from "next/navigation";
 
 interface Props{
     title:string;
@@ -12,7 +15,25 @@ interface Props{
 
 export default function HomeProductSection({title, products, handleAddToCart} : Props){    
     if(products.length === 0) return;
+    const [addedToCartVisible, setAddedToCartVisible] = useState(false)
+    const router = useRouter();
+    const [itemToAdd, setItemToAdd] = useState('New product')
+
     return <>
+
+          {addedToCartVisible && <Modal
+                    title={itemToAdd} 
+                    sentence="Item added to order." 
+                    isOpen={true} 
+                    onPrimaryClicked={()=>router.push('/visitor/screens/cart')} 
+                    primaryText="See basket"
+                    secondaryText="Continue shopping"
+                    onSecondaryClicked={()=>setAddedToCartVisible(false)}
+                    secondaryVisible={true}                    
+                    onClose={()=>setAddedToCartVisible(false)} 
+                    />}
+
+                    
         <h1 className='mb-4 md:mb-8 text-2xl sm:text-3xl tracking-tight font-extrabold text-gray-800'>
             {title}
         </h1>
@@ -50,7 +71,7 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
             <div className="bg-gray-50 px-4 pb-4 flex justify-between gap-2">
                 <PriceDiscount textSize="S" product={product} isCol={false} ></PriceDiscount>                               
               <button
-                onClick={() => handleAddToCart(product)}                
+                onClick={() => {setItemToAdd(product.name);setAddedToCartVisible(true);handleAddToCart(product);}}                
                 className="transition-colors bg-lime-500 text-white text-xs px-5 py-2 rounded-lg hover:bg-lime-600"
               >
                 Add to Cart

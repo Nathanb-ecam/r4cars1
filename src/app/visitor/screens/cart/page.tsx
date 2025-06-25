@@ -12,7 +12,7 @@ import Link from 'next/link';
 import CartCheckoutModal from '@/components/visitor/CartCheckoutModal';
 import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro, GoAffProLineItem } from '@/models/GoAffPro';
 import PriceDiscount from '@/components/visitor/PriceDiscount';
-import ConfirmationModal from '@/components/ConfirmationModal';
+import Modal from '@/components/Modal';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -24,7 +24,8 @@ export interface CustomerPersonalInfo {
   shipping_address: string;
 }
 
-export default function CartPage() {  
+export default function CartPage(){  
+
   const bypassPayment = true;
   const { items, removeItem, updateQuantity } = useCartStore();
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -167,12 +168,13 @@ export default function CartPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {orderConfirmationVisible && <ConfirmationModal 
+      {orderConfirmationVisible && <Modal 
         title="Order confirmation" 
         sentence="Your order has been placed. Thank you!" 
-        isOpen={true} 
-        onClose={()=>setOrderConfirmationVisible(false)} 
-        onConfirm={()=>setOrderConfirmationVisible(false)} 
+        isOpen={true}                 
+        onPrimaryClicked={()=>setOrderConfirmationVisible(false)} 
+        primaryText='Finish'
+        onClose={()=>setOrderConfirmationVisible(false)}
         />}
 
       <Link href="/visitor/screens/home" className="text-2xl font-bold text-gray-900">        
