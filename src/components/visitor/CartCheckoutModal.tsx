@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import MondialRelayWidget from '../mondial-relay/RelayWidget';
 import { useCartStore } from '@/store/cartStore';
-import { CustomerPersonalInfo } from '@/app/visitor/cart/page';
+import { CustomerPersonalInfo } from '@/app/visitor/screens/cart/page';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -36,7 +36,12 @@ export default function CartCheckoutModal({
   
 
   const [step, setStep] = useState(1);
-  const [personalInfoData, setPersonalInfoData] = useState<PersonalInfo | null>(null);  
+  const [personalInfoData, setPersonalInfoData] = useState<PersonalInfo | null>({
+    first_name: '',
+    last_name: '',
+    email: '',
+    shipping_address:''
+  });  
 
 
 
@@ -218,7 +223,8 @@ export default function CartCheckoutModal({
                       Back
                     </button>
                     <button
-                      onClick={()=>setStep(3)}
+                      // onClick={handleSubmit}
+                      type='submit'
                       className="px-6 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600"
                     >
                       Next

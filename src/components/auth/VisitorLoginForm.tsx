@@ -37,7 +37,7 @@ export default function VisitorLoginForm() {
       // Cookies.set('doctorTag',formData.doctorIdentificationNumber);
       // Cookies.set('refCode',formData.refCode);      
       Cookies.set('affiliate_id',affiliate_id);      
-      router.push('/visitor/home');
+      router.push('/visitor/screens/home');
     } catch (error) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     }

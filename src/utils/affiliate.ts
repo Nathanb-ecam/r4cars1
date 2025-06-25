@@ -1,4 +1,4 @@
-import { CustomerPersonalInfo } from "@/app/visitor/cart/page";
+import { CustomerPersonalInfo } from "@/app/visitor/screens/cart/page";
 import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro } from "@/models/GoAffPro";
 
 

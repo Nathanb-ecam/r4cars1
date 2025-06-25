@@ -85,7 +85,7 @@ export default function ProductGrid() {
               </span>
             </div>
             <button
-              onClick={() => router.push(`/visitor/product/${product._id}`)}
+              onClick={() => router.push(`/visitor/screens/product/${product._id}`)}
               className="mt-4 w-full bg-lime-500 text-white py-2 px-4 rounded-md hover:bg-lime-600 transition-colors duration-300"
             >
               Voir le produit

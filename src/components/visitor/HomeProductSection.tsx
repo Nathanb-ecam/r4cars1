@@ -26,7 +26,7 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
             key={product._id}
             className="bg-white rounded-lg shadow-md overflow-hidden"
           >
-            <Link href={`/visitor/product/${product._id}`}>
+            <Link href={`/visitor/screens/product/${product._id}`}>
               <div className="relative h-48 w-full">
                 <Image
                 //   src={product.imageUrl || '/images/g5-no-bg.png'}

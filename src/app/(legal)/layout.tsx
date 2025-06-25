@@ -9,7 +9,7 @@ export default function LegalLayout({
   return (
     <div className="min-h-screen flex flex-col">
       <Header></Header>
-      <div className="flex-grow">
+      <div className="flex-grow mt-[100px]">
         {children}
       </div>
       <Footer />

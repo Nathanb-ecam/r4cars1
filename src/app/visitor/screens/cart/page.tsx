@@ -79,19 +79,32 @@ export default function CartPage() {
       // console.log("Tracing data", {doctorTag, doctorRefCode})
       const orderId = `ORDER-${Date.now()}`;  
       
-      const line_items : GoAffProLineItem[] = items.map((item,_) => {
+      // const line_items : GoAffProLineItem[] = items.map((item,_) => {
         
-        return {
-          name: item.name,
-          sku: item.sku,
-          price: Math.min(item.originalPrice,item.discountedPrice),
-          quantity: item.quantity,
-          product_id: item._id,
-          tax: 0, // tax charged on this product
-          discount: 0, // discount received on this product
-        };
-      });
+      //   return {
+      //     name: item.name,
+      //     sku: item.sku,
+      //     price: Math.min(item.originalPrice,item.discountedPrice),
+      //     quantity: item.quantity,
+      //     product_id: item._id,
+      //     tax: 0, // tax charged on this product
+      //     discount: 0, // discount received on this product
+      //   };
+      // });
 
+      const line_items: GoAffProLineItem[] = items.map((item) => ({
+        name: item.name,
+        sku: item.sku,
+        price: item.originalPrice, // always full price
+        quantity: item.quantity,
+        product_id: item._id,
+        tax: 0,
+        discount: item.originalPrice - Math.min(item.originalPrice, item.discountedPrice),
+      }));
+
+
+      console.log("WERID total")
+      console.log(total)
       const extendedGoAffProOrder: ExtendedOrderGoAffPro = {
         id: orderId, // This will be set by the backend
         number: `#${orderId}`, // This will be set by the backend
@@ -132,7 +145,16 @@ export default function CartPage() {
       Cookies.remove('authenticated');
       // Cookies.remove('doctorTag');
       // Cookies.remove('refCode');
-      Cookies.remove('affiliate_id');      
+      Cookies.remove('affiliate_id');
+      
+      //remove the httpOnly token 
+      // response.cookies.set('token', '', {
+      //   httpOnly: true,
+      //   secure: process.env.NODE_ENV === 'production',
+      //   sameSite: 'strict',
+      //   maxAge: 0, // expires immediately
+      // });
+
 
       
       // Close the modal
@@ -153,7 +175,7 @@ export default function CartPage() {
         onConfirm={()=>setOrderConfirmationVisible(false)} 
         />}
 
-      <Link href="/visitor/home" className="text-2xl font-bold text-gray-900">        
+      <Link href="/visitor/screens/home" className="text-2xl font-bold text-gray-900">        
         <div className='mb-5 flex items-center gap-2'>
           <ArrowLeftIcon className="h-4 w-4 text-gray-600" />
           <p className='text-sm text-gray-700 border-b border-b-gray-300'>Tous nos produits</p>
@@ -165,7 +187,7 @@ export default function CartPage() {
         <div className='mb-1 text-center bg-gray-50 py-20 px-2 rounded-lg'>
           <h2 className='font-medium md:text-xl text-gray-800 tracking-tight'>Your cart is empty</h2>  
           <p className='mt-1 mb-5 text-xs'>Go to products page and start adding elements.</p>        
-          <span className=' border-b border-b-lime-600 mx-2 text-sm text-lime-600'><Link href="/visitor/home">See products</Link></span>
+          <span className=' border-b border-b-lime-600 mx-2 text-sm text-lime-600'><Link href="/visitor/screens/home">See products</Link></span>
           
           
           

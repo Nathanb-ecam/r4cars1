@@ -21,12 +21,12 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/visitor/home" className="text-gray-400 hover:text-white">
+                <Link href="/visitor/screens/home" className="text-gray-400 hover:text-white">
                   Products
                 </Link>
               </li>
               <li>
-                <Link href="/visitor/cart" className="text-gray-400 hover:text-white">
+                <Link href="/visitor/screens/cart" className="text-gray-400 hover:text-white">
                   Cart
                 </Link>
               </li>

@@ -56,7 +56,7 @@ console.log(imgSrc)
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <Link href="/visitor/home" className="text-2xl font-bold text-gray-900">        
+      <Link href="/visitor/screens/home" className="text-2xl font-bold text-gray-900">        
         <div className='mb-5 flex items-center gap-2'>
           <ArrowLeftIcon className="h-4 w-4 text-gray-600" />
           <p className='text-sm text-gray-700 border-b border-b-gray-300 '>Tous nos produits</p>
