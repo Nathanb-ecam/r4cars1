@@ -21,6 +21,7 @@
     "jose": "^5.2.2",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.523.0",
     "mongoose": "^8.15.1",
     "next": "^15.3.2",
     "next-auth": "^4.24.11",

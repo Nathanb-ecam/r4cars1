@@ -8,7 +8,7 @@ export async function GET() {
     const url =   `${env.goaffpro.apiUrl}/admin/orders`
     const params = new URLSearchParams({
       // created_at_max, created_at_min
-      fields: "id,affiliate_id,status,total,subtotal,shipping_address,customer_email,number,line_items,commission" // comma-separated fields
+      fields: "id,affiliate_id,status,total,subtotal,shipping_address,customer,customer_email,number,line_items,commission" // comma-separated fields
     });
     console.log("GET URL" + url)
 

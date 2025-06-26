@@ -11,6 +11,7 @@ interface PersonalInfo{
     first_name: string,
     last_name: string,
     email: string,
+    phone: string,
     shipping_address: string,
 }
 
@@ -40,6 +41,7 @@ export default function CartCheckoutModal({
     first_name: '',
     last_name: '',
     email: '',
+    phone: '',
     shipping_address:''
   });  
 
@@ -100,15 +102,15 @@ export default function CartCheckoutModal({
           <div className="flex justify-between mb-2">
             <div className={`text-sm ${step >= 1 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
               <h2 className={`${step >= 1 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>1</h2>
-              <p>Summary</p>
+              <p className='text-xs md:text-md'>Summary</p>
             </div>
             <div className={`text-sm ${step >= 2 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
               <h2 className={`${step >= 2 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>2</h2>
-              <p>Personal Info</p>
+              <p className='text-xs md:text-md'>Personal Info</p>
             </div>
             <div className={`text-sm ${step >= 3 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
               <h2 className={`${step >= 3 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>3</h2>
-              <p>Payment</p>
+              <p className='text-xs md:text-md'>Payment</p>
             </div>  
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -123,27 +125,27 @@ export default function CartCheckoutModal({
           { step === 1 && (
               <div className="space-y-4">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-medium mb-2">Order Summary</h3>
+                  <h3 className="text-md md:text-lg font-medium mb-2">Order Summary</h3>
                   <div className="flex justify-between mb-2">
-                    <span>Subtotal:</span>
-                    <span className="font-medium">€{subtotal.toFixed(2)}</span>
+                    <span className='text-sm md:text-md'>Subtotal:</span>
+                    <span className="text-sm md:text-md font-medium">€{subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between mb-2">
-                    <span>Shipping:</span>
-                    <span className="font-medium">€{shippingCost.toFixed(2)}</span>
+                    <span className='text-sm md:text-md'>Shipping:</span>
+                    <span className="text-sm md:text-md font-medium">€{shippingCost.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between mb-2">
+                  <div className="flex font-bold justify-between mb-2 mt-4 pt-4 border-t">
                     <span>Total Amount:</span>
-                    <span className="font-medium">€{total.toFixed(2)}</span>
+                    <span className="font-bold">€{total.toFixed(2)}</span>
                   </div>
-                  <div className="mt-4 pt-4 border-t">
+                  {/* <div className="mt-4 pt-4 border-t">
                     <p className="text-sm text-gray-600">
                       <strong>Shipping Address:</strong> {personalInfoData?.shipping_address}
                     </p>
-                  </div>
+                  </div> */}
                 </div>
                 <div className='flex justify-between items-center'>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs md:text-sm text-gray-600">
                     You will be redirected to complete your payment securely.
                   </p>
                   <button
@@ -199,6 +201,19 @@ export default function CartCheckoutModal({
                       className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                       value={personalInfoData?.email}
                       onChange={(e) => setPersonalInfoData(prev => prev ? { ...prev, email: e.target.value } : prev )}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                      Phone *
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      required
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      value={personalInfoData?.phone}
+                      onChange={(e) => setPersonalInfoData(prev => prev ? { ...prev, phone: e.target.value } : prev )}
                     />
                   </div>
                   <div>

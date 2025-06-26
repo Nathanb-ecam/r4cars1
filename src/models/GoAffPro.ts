@@ -18,6 +18,7 @@ export interface GoAffProOrder {
     affiliate_id: number;
     total:number;
     subtotal:number;
+    customer:{first_name: string, last_name: string,email: string,phone: string,is_new_customer: boolean}
     shipping_address: string;
     customer_email:string;
     number:string;

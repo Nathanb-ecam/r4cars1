@@ -538,7 +538,14 @@ export default function OrdersTable() {
               <tr key={order.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.number}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.affiliate_id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customer_email}</td>
+                {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{JSON.stringify(order.customer)}</td> */}
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <div className='flex flex-col'>                      
+                      <div>{order.customer.first_name} {order.customer.last_name}</div>                                                                   
+                      <div>{order.customer.email}</div>
+                      <div>{order.customer.phone}</div>                      
+                  </div>
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.shipping_address}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <ul>

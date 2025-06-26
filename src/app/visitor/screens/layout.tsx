@@ -1,6 +1,7 @@
 'use client';
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { Gift } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Layout({ children }) {
@@ -32,25 +33,17 @@ export default function Layout({ children }) {
     <div className="relative min-h-screen flex flex-col my-0 py-0">
       {showBanner && (
       <div 
-      // className="
-      // transition-all duration-300 ease-in-out 
-      // fixed top-4 left-1/2 transform -translate-x-1/2 py-2 px-10 rounded-xl bg-lime-500/90 text-gray-200 flex items-center justify-between gap-10 z-50
-      // "
         className={`
           fixed top-0 left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out z-50 
-          rounded-lg py-2 px-10 bg-lime-500/90  text-gray-200
-          ${
-            isVisible ? 'translate-y-4 opacity-100' : '-translate-y-full opacity-0'
-          }`}
+          rounded-lg py-2 px-4 md:px-10 bg-gray-50 font-bold flex flex-row justify-center items-center gap-2
+          ${isVisible ? 'translate-y-4 opacity-100' : '-translate-y-full opacity-0'}
+        `}
       >
-        <span className="text-center text-sm font-medium py-2 mx-2">Free shipping for orders over 60€</span>
-        {/* <button
-          className="text-white"
-          onClick={() => setShowBanner(false)}
-        >
-          &times;
-        </button> */}
+        {/* <div className="w-[6px] bg-lime-500"></div> */}
+        <Gift className="text-lime-500 h-10 w-10 " />
+        <div className="text-gray-700 text-xs md:text-md font-medium py-2 md:mx-2">Free shipping for orders over 60€</div>
       </div>
+
 
       )}
       <Header />
