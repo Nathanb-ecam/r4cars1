@@ -199,7 +199,7 @@ export default function ProductsTable() {
                   id="name"
                   value={newProduct.name}
                   onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
               </div>
@@ -210,7 +210,7 @@ export default function ProductsTable() {
                   id="sku"
                   value={newProduct.sku}
                   onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
               </div>
@@ -220,7 +220,7 @@ export default function ProductsTable() {
                   id="description"
                   value={newProduct.description}
                   onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   rows={3}
                   required
                 />
@@ -232,7 +232,7 @@ export default function ProductsTable() {
                   id="originalPrice"
                   value={newProduct.originalPrice}
                   onChange={(e) => setNewProduct({ ...newProduct, originalPrice: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   step="0.01"
                   required
                 />
@@ -244,13 +244,13 @@ export default function ProductsTable() {
                   id="discountedPrice"
                   value={newProduct.discountedPrice}
                   onChange={(e) => setNewProduct({ ...newProduct, discountedPrice: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   step="0.01"
                   required
                 />
               </div>
               <div>
-                  <div>
+                  <div className='my-2 flex justify-between items-center'>
                     <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
                     <ToggleSwitch label="imageSelfHosted" title="self hosted" initiallyChecked={newProduct.imageSelfHosted} onToggle={()=>setNewProduct({ ...newProduct, imageSelfHosted: !newProduct.imageSelfHosted })} />
                   </div>
@@ -260,7 +260,7 @@ export default function ProductsTable() {
                     id="image"
                     value={newProduct.imageUrl}
                     onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     required
                   />
                 

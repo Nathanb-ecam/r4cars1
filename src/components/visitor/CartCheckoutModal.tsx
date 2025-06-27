@@ -1,7 +1,7 @@
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import MondialRelayWidget from '../mondial-relay/RelayWidget';
+import MondialRelayWidget, { Address } from '../mondial-relay/RelayWidget';
 import { useCartStore } from '@/store/cartStore';
 import { CustomerPersonalInfo } from '@/app/visitor/screens/cart/page';
 
@@ -47,17 +47,21 @@ export default function CartCheckoutModal({
 
 
 
-  useEffect(() => {    
-    // Listen for changes to the Mondial Relay widget
+  useEffect(() => {
     const checkMondialRelaySelection = setInterval(() => {
-      const targetInput = document.getElementById('Target_Widget') as HTMLInputElement;
-      if (targetInput && targetInput.value) {
-        setPersonalInfoData(prev => prev ? ({ ...prev, shipping_address: targetInput.value }) : prev);
+      const pointCodeInput = document.getElementById('Target_Widget') as HTMLInputElement;
+      const fullAddressDiv = document.getElementById('SelectedParcelAddress') as HTMLElement;
+
+      if (pointCodeInput?.value && fullAddressDiv?.innerText) {
+        const fullAddress = `${pointCodeInput.value} - ${fullAddressDiv.innerText}`;
+        setPersonalInfoData(prev => prev ? { ...prev, shipping_address: fullAddress } : prev);
       }
     }, 1000);
 
     return () => clearInterval(checkMondialRelaySelection);
   }, []);
+
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -221,7 +225,15 @@ export default function CartCheckoutModal({
                       Select a Mondial Relay Point *
                     </label>
                     <div className="border rounded-md p-2">
-                      <MondialRelayWidget />
+                      <MondialRelayWidget
+                        onAddressSelected={(mondialRelayId,address : Address) => {
+                          // const address = `${parcel.Nom} - ${parcel.Adresse1}, ${parcel.CodePostal} ${parcel.Ville}`;
+                          const fullAddress = `${address.Street}, ${address.CP} ${address.City}`;
+                          setPersonalInfoData(prev =>
+                            prev ? { ...prev, shipping_address: fullAddress } : prev
+                          );
+                        }} 
+                       />
                     </div>
                     {personalInfoData?.shipping_address && (
                       <p className="mt-2 text-sm text-gray-600">

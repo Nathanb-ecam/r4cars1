@@ -40,7 +40,7 @@ export default function CartPage(){
   const shippingCost = subtotal > 60 ? 0 : 7;
   
   const totalRaw = subtotal + shippingCost;
-  const total = Math.round(totalRaw * 10) / 10;
+  const total = Math.round(totalRaw * 10) / 10;  
   // const total = subtotal
   
 
@@ -96,16 +96,14 @@ export default function CartPage(){
       const line_items: GoAffProLineItem[] = items.map((item) => ({
         name: item.name,
         sku: item.sku,
-        price: item.originalPrice, // always full price
+        price: Math.min(item.originalPrice, item.discountedPrice), // always full price
         quantity: item.quantity,
         product_id: item._id,
         tax: 0,
         discount: item.originalPrice - Math.min(item.originalPrice, item.discountedPrice),
       }));
 
-
-      console.log("WERID total")
-      console.log(total)
+     
       const extendedGoAffProOrder: ExtendedOrderGoAffPro = {
         id: orderId, // This will be set by the backend
         number: `#${orderId}`, // This will be set by the backend
@@ -118,11 +116,15 @@ export default function CartPage(){
         date: new Date().toISOString(),
         shipping_address: customerPersonalInfo.shipping_address,
         customer: customerPersonalInfo,
-        coupons: ["EASY10OFF"],
+        // coupons: ["EASY10OFF"],
         line_items: line_items, // Take the first line item to satisfy the tuple type
         status: 'approved',
         forceSDK: true
       };
+
+      console.log("DEBUGGING ORDER TOTAL")
+      console.log(extendedGoAffProOrder)
+      console.log()
 
       const affiliate_id = Cookies.get('affiliate_id');
       console.log("AFFILIATE ID BEFORE ORDER")
@@ -146,7 +148,7 @@ export default function CartPage(){
       Cookies.remove('authenticated');
       // Cookies.remove('doctorTag');
       // Cookies.remove('refCode');
-      Cookies.remove('affiliate_id');
+      // Cookies.remove('affiliate_id');
       
       //remove the httpOnly token 
       // response.cookies.set('token', '', {

@@ -517,7 +517,7 @@ export default function OrdersTable() {
                 Customer
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Mondial Relay
+                Shipping address
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Products
@@ -556,7 +556,12 @@ export default function OrdersTable() {
                     ))}
                   </ul>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.status}</td>
+                <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
+                  <span className={`px-3 py-1 rounded-sm uppercase text-gray-600 ${['approved'].includes(order.status) ? 'bg-green-500/90' : 'bg-red-200'}`}>
+                    {order.status}
+                  </span>
+
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">€{order.total}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   <button

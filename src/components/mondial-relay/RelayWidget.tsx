@@ -7,7 +7,17 @@ declare global {
   }
 }
 
-export default function MondialRelayWidget() {
+export type Address = {
+  Street:string;
+  CP:string;
+  City:string;
+}
+
+interface MondialRelayWidgetProps {
+  onAddressSelected: (mondialRelayId:string, address: Address) => void;
+}
+
+export default function MondialRelayWidget({onAddressSelected} : MondialRelayWidgetProps) {
   const [widgetHeight, setWidgetHeight] = useState("400px");
   const [showMap, setShowMap] = useState(true);
 
@@ -99,7 +109,29 @@ export default function MondialRelayWidget() {
           ShowResultsOnMap: false,
           Height: height,
           Width: "100%",
-        });
+          OnParcelShopSelected: function (parcelShop: any) {
+            // const fullAddress = `${parcelShop.Adresse1}\n${parcelShop.CP} ${parcelShop.Ville}`;  
+            const address : Address = {
+              "Street":parcelShop.Adresse1,
+              "CP":parcelShop.CP,
+              "City":parcelShop.Ville
+            }
+            console.log("fullAddress")
+            console.log(address)
+            onAddressSelected(parcelShop.Nom,address)
+              // console.log("Selected parcel shop:", parcelShop);
+              
+              // // Extract address information
+              // // const fullAddress = `${parcelShop.Nom}\n${parcelShop.Adresse1}\n${parcelShop.CP} ${parcelShop.Ville}`;
+              // const fullAddress = `${parcelShop.Adresse1}\n${parcelShop.CP} ${parcelShop.Ville}`;
+              // console.log("Full address:", fullAddress);
+
+              // // Optionally store it in a hidden input or state
+              // const addressInput = document.getElementById("SelectedParcelAddress") as HTMLInputElement;
+              // if (addressInput) {
+              //   addressInput.value = fullAddress;
+              // }
+            }});
 
         isInitialized = true;
       } catch (error) {

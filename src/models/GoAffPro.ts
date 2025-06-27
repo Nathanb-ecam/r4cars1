@@ -52,9 +52,9 @@ export interface ExtendedOrderGoAffPro{
   number:string, // ex: #1001. human readable order number displayed to the admins
   total: number, // the order total (the final amount that the customer paid)
   subtotal: number, // order subtotal (order total minus shipping and taxes)
-  discount: number, // the discount received by the customer
+  discount?: number, // the discount received by the customer
   tax: number, // the tax charged on the order
-  shipping: number,  // the shipping charged on the order
+  shipping?: number,  // the shipping charged on the order
   currency:string, // ex: USD. ISO-4217 three letter currency code of the order
   date: string, // ex: 2021-04-27T17:06:55.450Z
   shipping_address:string,
@@ -65,7 +65,7 @@ export interface ExtendedOrderGoAffPro{
       phone?:string, // optional
       is_new_customer?:boolean //optional
   },
-  coupons: Array<string>, // ex: ['EASY10OFF']. an array of discount codes applied to the order
+  coupons?: Array<string>, // ex: ['EASY10OFF']. an array of discount codes applied to the order
   line_items:GoAffProLineItem[],
  status:string, // ex: approved
  forceSDK:boolean , //ex: true.  use this parameter to process this order as a CUSTOM ORDER (bypasses platform order enrichment 
