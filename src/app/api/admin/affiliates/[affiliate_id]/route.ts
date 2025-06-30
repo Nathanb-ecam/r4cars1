@@ -7,16 +7,16 @@ export const runtime = 'nodejs';
 export async function DELETE(
   request: Request, 
   // { params }: { params: { affiliate_id: string } }
-  context: { params: { affiliate_id: string } }
+  {params}: { params: Promise<{ affiliate_id: string }> }
 ):Promise<Response> {
     
-  const { params } = context;
-  const affiliateId = await params.affiliate_id;
+  // const { params } = params;
+  const {affiliate_id} = await params;
     // const affiliateId = await context.params.affiliate_id;
   
     console.log("__________DELETE_AFFILIATE__________")
-    console.log(affiliateId)
-    const res = await fetch(`${env.goaffpro.apiUrl}/admin/affiliates/${affiliateId}`, {
+    console.log(affiliate_id)
+    const res = await fetch(`${env.goaffpro.apiUrl}/admin/affiliates/${affiliate_id}`, {
       method: "DELETE",
       headers: {
         "x-goaffpro-access-token": env.goaffpro.accessToken,
