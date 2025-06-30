@@ -21,6 +21,9 @@ const publicPages = [
   '/admin/login',
 ];
 
+export const runtime = 'nodejs'
+
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   console.log('\n\n\n');

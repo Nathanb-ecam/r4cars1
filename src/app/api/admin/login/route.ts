@@ -4,6 +4,9 @@ import { generateToken } from '@/lib/jwt';
 import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/mongodb';
 
+export const runtime = 'nodejs'
+
+
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
