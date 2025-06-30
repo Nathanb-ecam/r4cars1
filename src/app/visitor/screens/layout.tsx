@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import { Gift } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function Layout({ children }) {
+export default function Layout({ children } : {children : React.ReactNode}) {
   const [showBanner, setShowBanner] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
 
