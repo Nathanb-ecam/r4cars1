@@ -5,13 +5,16 @@ import { env } from '@/config/env';
 
 export const runtime = 'nodejs';
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: Request, 
+{ params }: { params: Promise<{ id: string }> }  
+) {
     
-  const orderId = await params.id;
+  const {id} = await params;
 
   console.log("__________DELETE_ORDER__________")
-  console.log(orderId)
-  const res = await fetch(`${env.goaffpro.apiUrl}/admin/orders/${orderId}`, {
+  console.log(id)
+  const res = await fetch(`${env.goaffpro.apiUrl}/admin/orders/${id}`, {
     method: "DELETE",
     headers: {
       "x-goaffpro-access-token": env.goaffpro.accessToken,

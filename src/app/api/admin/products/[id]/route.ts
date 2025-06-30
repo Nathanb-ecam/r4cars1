@@ -6,9 +6,10 @@ export const runtime = 'nodejs';
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const {id} = await params
     await connectDB();
     const body = await request.json();
 
@@ -22,7 +23,7 @@ export async function PUT(
 
     // Find and update the product
     const updatedProduct = await ProductModel.findByIdAndUpdate(
-      params.id,
+      id,
       {
         $set: {
           name: body.name,
@@ -59,12 +60,12 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
-
-    const deletedProduct = await ProductModel.findByIdAndDelete(params.id);
+    const {id} = await params
+    const deletedProduct = await ProductModel.findByIdAndDelete(id);
 
     if (!deletedProduct) {
       return NextResponse.json(
