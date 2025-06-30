@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 
+export const runtime = 'nodejs'
+
+
 export enum UserRole {
   AFFILIATE = 'AFFILIATE',
   ADMIN = 'ADMIN',
