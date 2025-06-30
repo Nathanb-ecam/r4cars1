@@ -4,9 +4,13 @@ import { NextResponse } from "next/server";
 export const runtime = 'nodejs';
 
 
-export async function DELETE(request: Request, { params }: { params: { affiliate_id: string } }) {
+export async function DELETE(
+  request: Request, 
+  // { params }: { params: { affiliate_id: string } }
+  context: { params: { affiliate_id: string } }
+) {
     
-    const affiliateId = await params.affiliate_id;
+    const affiliateId = await context.params.affiliate_id;
   
     console.log("__________DELETE_AFFILIATE__________")
     console.log(affiliateId)
