@@ -8,9 +8,11 @@ export async function DELETE(
   request: Request, 
   // { params }: { params: { affiliate_id: string } }
   context: { params: { affiliate_id: string } }
-) {
+):Promise<Response> {
     
-    const affiliateId = await context.params.affiliate_id;
+  const { params } = context;
+  const affiliateId = await params.affiliate_id;
+    // const affiliateId = await context.params.affiliate_id;
   
     console.log("__________DELETE_AFFILIATE__________")
     console.log(affiliateId)
