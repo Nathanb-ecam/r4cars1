@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
   images: {
     domains: ['placehold.co'],
   },
+  // i18n: {
+  //   locales: ['en', 'fr', 'es'], 
+  //   defaultLocale: 'es'         
+  // },
 };
 
 export default nextConfig;

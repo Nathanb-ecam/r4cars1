@@ -8,8 +8,11 @@ import { useEffect } from 'react';
 import { Product } from '@/models/Product';
 import PriceDiscount from '@/components/visitor/PriceDiscount';
 import HomeProductSection from '@/components/visitor/HomeProductSection';
+import { useRouter } from 'next/router';
 
 export default function HomePage() {
+// const { locale, locales, defaultLocale } = useRouter();
+
   const addItem = useCartStore((state) => state.addItem);
   const { products, isLoading, error, fetchProducts } = useProductStore();
 
@@ -39,7 +42,10 @@ export default function HomePage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">        
-        
+        {/* <div>
+          <p>Locale: {locale}</p>
+          <p>Available locales: {locales?.join(', ')}</p>
+        </div> */}
         <HomeProductSection title='Nos offres du moment' products={products.filter(product => product.isSpecialOffer === true && product.visibleOnWebsite === true)} handleAddToCart={handleAddToCart}></HomeProductSection>
         {/* <HomeProductSection title='Tous nos produits' products={products.filter(product => (product.isSpecialOffer === undefined || product.isSpecialOffer === false) && (product.visibleOnWebsite === true))} handleAddToCart={handleAddToCart}></HomeProductSection> */}
         <HomeProductSection title='Tous nos produits' products={products.filter(product => product.visibleOnWebsite === true)} handleAddToCart={handleAddToCart}></HomeProductSection>
