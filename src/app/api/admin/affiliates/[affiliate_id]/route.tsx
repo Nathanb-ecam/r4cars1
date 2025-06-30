@@ -1,6 +1,8 @@
 import { env } from "@/config/env";
 import { NextResponse } from "next/server";
 
+export const runtime = 'nodejs';
+
 
 export async function DELETE(request: Request, { params }: { params: { affiliate_id: string } }) {
     

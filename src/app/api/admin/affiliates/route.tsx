@@ -1,6 +1,8 @@
 import { env } from "@/config/env";
 import { NextResponse } from "next/server";
 
+export const runtime = 'nodejs';
+
 export async function GET() {
   const url =   `${env.goaffpro.apiUrl}/admin/affiliates`
   // const url =   `${env.goaffpro.apiUrl}/sdk/affiliate`

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import { ProductModel } from '@/models/Product';
 
+export const runtime = 'nodejs';
+
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }

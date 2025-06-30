@@ -6,6 +6,8 @@ import connectDB from '@/lib/mongodb';
 import { env } from '@/config/env';
 import Cookies from 'js-cookie';
 
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   try {
     const { doctorIdentificationNumber, refCode } = await request.json();    

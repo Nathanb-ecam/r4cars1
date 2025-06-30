@@ -3,6 +3,7 @@ import { OrderModel } from '@/models/Order';
 import connectDB from '@/lib/mongodb';
 import { env } from '@/config/env';
 
+export const runtime = 'nodejs';
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
     

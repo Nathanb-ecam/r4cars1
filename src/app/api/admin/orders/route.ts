@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { env } from '@/config/env';
 import { ExtendSchemaGoAffPro } from '@/models/GoAffPro';
 
-
+export const runtime = 'nodejs';
 
 export async function GET() {
     const url =   `${env.goaffpro.apiUrl}/admin/orders`

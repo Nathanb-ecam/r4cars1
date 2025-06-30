@@ -2,6 +2,8 @@ import { env } from "@/config/env";
 import { ExtendSchemaGoAffPro } from "@/models/GoAffPro";
 import { NextResponse } from "next/server";
 
+export const runtime = 'nodejs';
+
 export async function POST(request : Request) {
     try{  
         const order:ExtendSchemaGoAffPro = await request.json();
