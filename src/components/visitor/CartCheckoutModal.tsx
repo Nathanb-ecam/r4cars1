@@ -2,7 +2,6 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import MondialRelayWidget, { Address } from '../mondial-relay/RelayWidget';
-import { useCartStore } from '@/store/cartStore';
 import { CustomerPersonalInfo } from '@/app/visitor/screens/cart/page';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);

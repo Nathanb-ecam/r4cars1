@@ -1,6 +1,7 @@
-import { Product } from '@/store/cartStore';
+// import { Product } from '@/store/cartStore';
 
-export const products: Product[] = [
+// export const products: Product[] = [
+export const products = [
   {
     id: '1',
     name: 'Medical Device A',
