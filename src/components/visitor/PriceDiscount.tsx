@@ -31,12 +31,12 @@ export default function PriceDiscount({product, textSize, isCol} : Props) {
     return (
     <div className={`flex gap-1 ${isCol ? 'flex-col' : 'items-center'}`}>
         {/* text-xs */}
-        <p className={`text-${original[textSize]} font-bold text-gray-900 line-through`}>
+        <p className={`text-${original[textSize as keyof typeof original]} font-bold text-gray-900 line-through`}>
             €{product.originalPrice.toFixed(2)}
         </p>
         {/* text-gray-900 */}
         {/* text-md */}
-        <p className={`text-${discounted[textSize]} font-bold text-red-700`}> 
+        <p className={`text-${discounted[textSize as keyof typeof original]} font-bold text-red-700`}> 
             €{product.discountedPrice.toFixed(2)}
         </p>
     </div>
