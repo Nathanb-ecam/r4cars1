@@ -13,6 +13,7 @@ import CartCheckoutModal from '@/components/visitor/CartCheckoutModal';
 import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro, GoAffProLineItem } from '@/models/GoAffPro';
 import PriceDiscount from '@/components/visitor/PriceDiscount';
 import Modal from '@/components/Modal';
+import {sendConfirmationEmail} from '@/lib/email';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -43,6 +44,32 @@ export default function CartPage(){
   const total = Math.round(totalRaw * 10) / 10;  
   // const total = subtotal
   
+
+
+  const sendMailConfirmation = async ({ toEmail, toName }) => {
+  try {
+    console.log("CLIENT"+ toEmail + toName)
+    const response = await fetch('/api/mail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ toEmail, toName }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || 'Échec de l’envoi de l’email');
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Erreur lors de l’envoi de l’email :', error);
+    throw error;
+  }
+};
+
 
   const handleCheckout = async (customerPersonalInfo: CustomerPersonalInfo) => {
     console.log("Cart Page is Handling checkout")
@@ -136,7 +163,7 @@ export default function CartPage(){
         const succesfullyCreated = await trackAffiliateSale(
             extendedSchema
         );
-        if(succesfullyCreated) setOrderConfirmationVisible(true)
+        if(succesfullyCreated) {setOrderConfirmationVisible(true); sendMailConfirmation({toEmail:customerPersonalInfo.email, toName:`${customerPersonalInfo.first_name} ${customerPersonalInfo.last_name}`}) }
       }else{ // use base order goaffPro schema
           console.log("No valid affiliate_id found for this refferal")
       }

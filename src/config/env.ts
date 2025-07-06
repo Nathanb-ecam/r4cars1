@@ -10,6 +10,9 @@ export const env = {
     secretKey: process.env.STRIPE_SECRET_KEY || '',
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
   },
+  brevo:{
+    apiKey: process.env.BREVO_API_KEY || '',    
+  },
   goaffpro: {
     accessToken: process.env.GOAFFPRO_API_KEY || '',
     publicToken: process.env.GOAFFPRO_PUBLIC_TOKEN || '',    
@@ -34,6 +37,7 @@ export function validateEnv() {
     'GOAFFPRO_API_KEY',
     'GOAFFPRO_PUBLIC_TOKEN',
     'NEXTAUTH_SECRET',
+    'BREVO_API_KEY',
     
     'JWT_SECRET',
     'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
