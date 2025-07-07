@@ -13,7 +13,7 @@ import CartCheckoutModal from '@/components/visitor/CartCheckoutModal';
 import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro, GoAffProLineItem } from '@/models/GoAffPro';
 import PriceDiscount from '@/components/visitor/PriceDiscount';
 import Modal from '@/components/Modal';
-import {sendConfirmationEmail} from '@/lib/email';
+import {BrevoOrderConfirmationTemplate, sendConfirmationEmail} from '@/lib/email';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -48,13 +48,19 @@ export default function CartPage(){
 
   const sendMailConfirmation = async ({ toEmail, toName }) => {
   try {
-    console.log("CLIENT"+ toEmail + toName)
+    const orderTemplate : BrevoOrderConfirmationTemplate = {
+      name:toName,
+      total:total.toString(),
+      shippingCosts:shippingCost.toString(),
+      products:items
+    } 
+    // console.log("CLIENT"+ toEmail + toName)
     const response = await fetch('/api/mail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ toEmail, toName }),
+      body: JSON.stringify({ toEmail, toName, orderTemplate }),
     });
 
     if (!response.ok) {

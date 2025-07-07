@@ -4,8 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request:Request) {
   
     try{
-  const { toEmail, toName } = await request.json();
-  console.log("SZEVZE"+ toEmail + toName)
+  const { toEmail, toName, orderTemplate } = await request.json();
 
     if (!toEmail || !toName) { 
       return NextResponse.json("Missing toEmail or toName")
@@ -15,7 +14,8 @@ export async function POST(request:Request) {
   // 2. Envoyer l'email avec brevo {
     await sendConfirmationEmail({
       toEmail,
-      toName,        
+      toName,      
+      orderTemplate  
     });
 
     return NextResponse.json({ status: 201 });

@@ -1,7 +1,19 @@
 import { env } from "@/config/env";
 
+export interface BrevoOrderConfirmationTemplate{
+  name:string;
+  total:string;
+  shippingCosts:string;
+  products:{name:string,originalPrice:number, discountedPrice:number, imageUrl:string}[]
+}
+
+
 // lib/email.js
-export async function sendConfirmationEmail({ toEmail, toName }) {
+export async function sendConfirmationEmail({ toEmail, toName, orderTemplate }: {
+  toEmail: string;
+  toName: string;
+  orderTemplate: BrevoOrderConfirmationTemplate;
+}) {
 
 const apiKey = env.brevo.apiKey;
   if (!apiKey) {
@@ -28,7 +40,13 @@ const apiKey = env.brevo.apiKey;
         },
       ],
       subject: 'Order confirmation',
-      templateId:6
+      templateId:6,
+      params: {
+        toName,
+        total: orderTemplate.total,
+        shippingCosts: orderTemplate.shippingCosts, // Note: match your interface key
+        products: orderTemplate.products,
+      },
     }),
   });
 

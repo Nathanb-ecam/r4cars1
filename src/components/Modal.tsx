@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 interface ConfirmationModalProps {
@@ -9,6 +10,7 @@ interface ConfirmationModalProps {
   secondaryVisible?:boolean;
   title: string;
   sentence: string;  
+  imageUrl?:string;
   onClose: ()=> void;
 }
 
@@ -21,6 +23,7 @@ export default function Modal({
   secondaryVisible = false,
   onClose,
   title,
+  imageUrl,
   sentence
 }: ConfirmationModalProps) {
   if (!isOpen) return null;
@@ -29,7 +32,7 @@ export default function Modal({
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+          <h3 className="text-md font-medium text-gray-900">{title}</h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500"
@@ -39,8 +42,18 @@ export default function Modal({
             </svg>
           </button>
         </div>
+      { imageUrl && <div className='flex justify-center'>
+          <div className="relative h-24 w-24 md:h-60 md:w-60 flex-shrink-0 bg-gray-50">
+            <Image className="object-contain rounded" fill
+                  src={imageUrl}
+                  alt='product-image'
+            />
+         </div>
+        </div>
+        }
+
         <div className="mt-2">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-center text-gray-500">
             {sentence}
           </p>
         </div>

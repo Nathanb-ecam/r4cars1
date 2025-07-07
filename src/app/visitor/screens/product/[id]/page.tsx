@@ -27,7 +27,7 @@ export default function ProductPage() {
   const product = getProductById(params.id as string);
   const imgSource = product?.imageUrl ?? "g5-no-bg.png" // need to repalce with a placeholder image 
   const [imgSrc, setImgSrc] = useState(product?.imageSelfHosted ? `/images/${imgSource}` : product?.imageUrl);
-console.log(imgSrc)
+// console.log(imgSrc)
   if (isLoading) {
     return (
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -60,8 +60,9 @@ console.log(imgSrc)
   return (
     <>
       {addedToCartVisible && <Modal
-                    title={product.name}
-                    sentence="Item added to order." 
+                    title='New item added to order'
+                    sentence={product.name} 
+                    imageUrl={imgSrc}
                     isOpen={true} 
                     onPrimaryClicked={()=>router.push('/visitor/screens/cart')} 
                     primaryText="See basket"

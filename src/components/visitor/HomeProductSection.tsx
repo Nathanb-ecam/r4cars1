@@ -17,13 +17,14 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
     if(products.length === 0) return;
     const [addedToCartVisible, setAddedToCartVisible] = useState(false)
     const router = useRouter();
-    const [itemToAdd, setItemToAdd] = useState('New product')
+    const [itemToAdd, setItemToAdd] = useState({name:'New product',imageUrl:''})
 
     return <>
 
           {addedToCartVisible && <Modal
-                    title={itemToAdd} 
-                    sentence="Item added to order." 
+                    title='Item added to order'
+                    imageUrl={itemToAdd.imageUrl} 
+                    sentence={itemToAdd.name}
                     isOpen={true} 
                     onPrimaryClicked={()=>router.push('/visitor/screens/cart')} 
                     primaryText="See basket"
@@ -71,7 +72,13 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
             <div className="bg-gray-50 px-4 pb-4 flex justify-between gap-2">
                 <PriceDiscount textSize="S" product={product} isCol={false} ></PriceDiscount>                               
               <button
-                onClick={() => {setItemToAdd(product.name);setAddedToCartVisible(true);handleAddToCart(product);}}                
+                onClick={() => {
+                  setItemToAdd({
+                    name: product.name, 
+                    imageUrl:  product.imageSelfHosted ? `/images/${product.imageUrl }` : `${product.imageUrl}` || '/images/g5-no-bg.png'});
+                  setAddedToCartVisible(true);
+                  handleAddToCart(product);
+                }}                
                 className="transition-colors bg-lime-500 text-white text-xs px-5 py-2 rounded-lg hover:bg-lime-600"
               >
                 Add to Cart
