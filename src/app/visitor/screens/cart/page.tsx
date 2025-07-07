@@ -46,7 +46,7 @@ export default function CartPage(){
   
 
 
-  const sendMailConfirmation = async ({ toEmail, toName }) => {
+  const sendMailConfirmation = async ({ toEmail, toName }: {toEmail:string, toName:string}) => {
   try {
     const orderTemplate : BrevoOrderConfirmationTemplate = {
       name:toName,
