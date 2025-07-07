@@ -1,11 +1,14 @@
 import { NextResponse } from 'next/server';
 import { ProductModel } from '@/models/Product';
 import connectDB from '@/lib/mongodb';
+import { env } from '@/config/env';
 
 export const runtime = 'nodejs';
 
 export async function GET() {
   try {
+    const MONGODB_URI = env.database.url;
+    console.log(MONGODB_URI)
     await connectDB();
     const products = await ProductModel.find({}).sort({ createdAt: -1 });
     return NextResponse.json(products);
