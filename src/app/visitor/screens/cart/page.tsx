@@ -248,7 +248,7 @@ export default function CartPage(){
                 <Image
                   // src={imgSrc}                
                   // src={item.imageSelfHosted ? (item?.imageUrl ? `images/${item?.imageUrl}`: "/images/g5-no-bg.png" ) : (item.imageUrl) || '/images/g5-no-bg.png'}
-                  src={item.imageSelfHosted ? `/images/${item.imageUrl }` : `${item.imageUrl}` || '/images/g5-no-bg.png'}
+                  src={item.imageUrl}
                   alt={item.name}
                   // onError={()=>setImgSrc("/images/g5-no-bg.png")}
                   fill

@@ -6,6 +6,7 @@ import { useState } from "react";
 import ConfirmationModal from "../Modal";
 import Modal from "../Modal";
 import { useRouter } from "next/navigation";
+import { ShoppingCartIcon } from "lucide-react";
 
 interface Props{
     title:string;
@@ -41,9 +42,10 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
 
         <div className="mb-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {products.map((product) => {
-           const [imgSrc, setImgSrc] = useState(
-            product.imageSelfHosted ? `/images/${product.imageUrl }` : `${product.imageUrl}` || '/images/g5-no-bg.png'
-          );
+          //  const [imgSrc, setImgSrc] = useState(
+          //   product.imageSelfHosted ? `/images/${product.imageUrl }` : `${product.imageUrl}` || '/images/g5-no-bg.png'
+          // );
+          const [imgSrc,setImgSrc] = useState(product.imageUrl.length > 0 ? product.imageUrl : '/images/g5-no-bg.png')
           return <div
             key={product._id}
             className="bg-white rounded-lg shadow-md overflow-hidden"
@@ -75,13 +77,16 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
                 onClick={() => {
                   setItemToAdd({
                     name: product.name, 
-                    imageUrl:  product.imageSelfHosted ? `/images/${product.imageUrl }` : `${product.imageUrl}` || '/images/g5-no-bg.png'});
+                    // imageUrl:  product.imageSelfHosted ? `/images/${product.imageUrl }` : `${product.imageUrl}` || '/images/g5-no-bg.png'});
+                    imageUrl:  product.imageUrl.length > 0 ? product.imageUrl : '/images/g5-no-bg.png'
+                  });         
                   setAddedToCartVisible(true);
                   handleAddToCart(product);
                 }}                
                 className="transition-colors bg-lime-500 text-white text-xs px-5 py-2 rounded-lg hover:bg-lime-600"
               >
-                Add to Cart
+                <ShoppingCartIcon className="h-6 w-6 text-gray-200" />
+                {/* Add to Cart */}
               </button>
             </div>
           </div>

@@ -3,11 +3,11 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: '**' }],
   },
-  // images: {    
-  //   domains: ['localhost','placehold.co'],
-  //   // domains: ['*'],
+  images: {    
+    domains: ['localhost','172.20.144.1','placehold.co'],
+    // domains: ['*'],
 
-  // },
+  },
 };
 
 module.exports = nextConfig; 

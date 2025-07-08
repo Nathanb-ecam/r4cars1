@@ -18,8 +18,7 @@ export async function sendConfirmationEmail({ toEmail, toName, orderTemplate }: 
 const apiKey = env.brevo.apiKey;
   if (!apiKey) {
     throw new Error('BREVO_API_KEY is not defined in environment variables.');
-  }
-  console.log("LIB"+ toEmail + toName)
+  }  
 
   const response = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',

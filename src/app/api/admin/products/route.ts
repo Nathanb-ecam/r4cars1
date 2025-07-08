@@ -6,11 +6,10 @@ import { env } from '@/config/env';
 export const runtime = 'nodejs';
 
 export async function GET() {
-  try {
-    const MONGODB_URI = env.database.url;
-    console.log(MONGODB_URI)
+  try {    
     await connectDB();
     const products = await ProductModel.find({}).sort({ createdAt: -1 });
+    console.log(products)
     return NextResponse.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);

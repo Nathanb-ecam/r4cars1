@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -28,11 +28,12 @@ export default function Modal({
 }: ConfirmationModalProps) {
   if (!isOpen) return null;
 
+  const [imgSrc,setImgSrc] = useState( (imageUrl && imageUrl?.length > 0)  ? imageUrl :'/images/g5-no-bg.png')
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-md font-medium text-gray-900">{title}</h3>
+          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500"
@@ -42,12 +43,16 @@ export default function Modal({
             </svg>
           </button>
         </div>
-      { imageUrl && <div className='flex justify-center'>
-          <div className="relative h-24 w-24 md:h-60 md:w-60 flex-shrink-0 bg-gray-50">
-            <Image className="object-contain rounded" fill
-                  src={imageUrl}
-                  alt='product-image'
-            />
+      { imageUrl && <div className='flex justify-center bg-gray-50'>
+          <div className="relative h-24 w-24 md:h-60 md:w-60 flex-shrink-0">
+            <Image
+                //   src={product.imageUrl || '/images/g5-no-bg.png'}
+                  src={imgSrc}
+                  alt={"product-image"}                  
+                  fill
+                  onError={() => setImgSrc("/images/g5-no-bg.png")}
+                  className="object-contain"
+                />
          </div>
         </div>
         }

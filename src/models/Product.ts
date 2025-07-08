@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
 
+interface Sections{
+  title:string;
+  desc:string;
+  blocks:Array<string>;
+}
 export interface Product {
   _id: string;
   name: string;
@@ -12,6 +17,9 @@ export interface Product {
   stock: number;
   isSpecialOffer:boolean;
   visibleOnWebsite:boolean;
+  components:Array<string>;
+  conditionning:string;
+  sections:Array<Sections>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,6 +35,9 @@ const productSchema = new mongoose.Schema<Product>({
   stock: { type: Number, required: false, default: 0 },
   isSpecialOffer: { type: Boolean, required: false, default: false },
   visibleOnWebsite: { type: Boolean, required: false, default: false },
+  conditionning: { type: String, required: false, default: "" },
+  components: { type: Array },
+  sections: { type: Array },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

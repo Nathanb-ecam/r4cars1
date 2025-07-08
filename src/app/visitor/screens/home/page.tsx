@@ -47,8 +47,9 @@ export default function HomePage() {
           <p>Available locales: {locales?.join(', ')}</p>
         </div> */}
         <HomeProductSection title='Nos offres du moment' products={products.filter(product => product.isSpecialOffer === true && product.visibleOnWebsite === true)} handleAddToCart={handleAddToCart}></HomeProductSection>
-        {/* <HomeProductSection title='Tous nos produits' products={products.filter(product => (product.isSpecialOffer === undefined || product.isSpecialOffer === false) && (product.visibleOnWebsite === true))} handleAddToCart={handleAddToCart}></HomeProductSection> */}
-        <HomeProductSection title='Tous nos produits' products={products.filter(product => product.visibleOnWebsite === true)} handleAddToCart={handleAddToCart}></HomeProductSection>
+        
+        <HomeProductSection title='Tous nos produits' products={products.filter(product => (product.isSpecialOffer === undefined || product.isSpecialOffer === false) && (product.visibleOnWebsite === true))} handleAddToCart={handleAddToCart}></HomeProductSection>
+        {/* <HomeProductSection title='Tous nos produits' products={products.filter(product => product.visibleOnWebsite === true)} handleAddToCart={handleAddToCart}></HomeProductSection> */}
         
     </main>
   );
