@@ -400,7 +400,7 @@ export default function OrdersTable() {
                 </div>
               </div>
 
-              <div>
+              {/* <div>
                 <label htmlFor="coupon" className="block text-sm font-medium text-gray-700">Coupon</label>
                 <select
                   id="coupon"
@@ -415,7 +415,7 @@ export default function OrdersTable() {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
 
               <div>
                 <div className="flex justify-between items-center mb-2">

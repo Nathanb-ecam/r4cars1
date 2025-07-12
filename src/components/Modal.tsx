@@ -33,7 +33,7 @@ export default function Modal({
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 max-w-md w-full">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
+          <h3 className="text-sm font-medium text-lime-500">{title}</h3>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-500"
@@ -44,7 +44,7 @@ export default function Modal({
           </button>
         </div>
       { imageUrl && <div className='flex justify-center bg-gray-50'>
-          <div className="relative h-24 w-24 md:h-60 md:w-60 flex-shrink-0">
+          <div className="relative h-24 w-24 md:h-40 md:w-40 flex-shrink-0">
             <Image
                 //   src={product.imageUrl || '/images/g5-no-bg.png'}
                   src={imgSrc}
@@ -57,8 +57,8 @@ export default function Modal({
         </div>
         }
 
-        <div className="mt-2">
-          <p className="text-sm text-center text-gray-500">
+        <div className="py-5 bg-gray-50 text-center">
+          <p className="text-xs text-center text-gray-700 font-medium">
             {sentence}
           </p>
         </div>

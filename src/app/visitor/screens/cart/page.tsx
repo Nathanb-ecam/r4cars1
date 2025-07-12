@@ -32,6 +32,7 @@ export default function CartPage(){
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderConfirmationVisible,setOrderConfirmationVisible] = useState(false);
+  const [orderFailed,setOrderFailed] = useState(false);
   const [rerenderCount, setRerenderCount] = useState(0);
 
   const subtotalRaw = items.reduce(
@@ -172,6 +173,7 @@ export default function CartPage(){
         if(succesfullyCreated) {setOrderConfirmationVisible(true); sendMailConfirmation({toEmail:customerPersonalInfo.email, toName:`${customerPersonalInfo.first_name} ${customerPersonalInfo.last_name}`}) }
       }else{ // use base order goaffPro schema
           console.log("No valid affiliate_id found for this refferal")
+          setOrderFailed(true)
       }
       
 
@@ -197,7 +199,7 @@ export default function CartPage(){
       setIsCheckoutOpen(false);
     } catch (error) {
       console.error('Error processing order:', error);
-      setIsProcessing(false);
+      setIsProcessing(false);      
     }
   };
 
@@ -211,6 +213,17 @@ export default function CartPage(){
         primaryText='Finish'
         onClose={()=>setOrderConfirmationVisible(false)}
         />}
+        
+      {orderFailed && <Modal 
+        title="Something went wrong" 
+        sentence="An issue occured while trying to save your order." 
+        isOpen={true}                 
+        onPrimaryClicked={()=>setOrderFailed(false)} 
+        primaryText='Ok'
+        onClose={()=>setOrderFailed(false)}
+        />}
+
+        
 
       <Link href="/visitor/screens/home" className="text-2xl font-bold text-gray-900">        
         <div className='mb-5 flex items-center gap-2'>
@@ -282,7 +295,11 @@ export default function CartPage(){
               </div>
             </div>
           })}
+        </div>
+      )}
 
+      {
+        items && items.length > 0 &&
           <div className="mt-8 flex justify-between items-center">
             <div>
               {/* <div className="text-xs font-bold">
@@ -303,8 +320,7 @@ export default function CartPage(){
               Checkout
             </button>
           </div>
-        </div>
-      )}
+      }
 
       <CartCheckoutModal
         key={rerenderCount}
@@ -316,6 +332,8 @@ export default function CartPage(){
         shippingCost={shippingCost}
         total={total}        
       />
+
+
     </main>
   );
 } 

@@ -39,7 +39,7 @@ const apiKey = env.brevo.apiKey;
         },
       ],
       subject: 'Order confirmation',
-      templateId:6,
+      templateId: 7,
       params: {
         toName,
         total: orderTemplate.total,

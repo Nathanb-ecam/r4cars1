@@ -10,35 +10,39 @@ export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
-    // const { doctorIdentificationNumber, refCode } = await request.json();    
-    // const url = `${env.goaffpro.apiUrl}/admin/affiliates`
+    console.log("____________________________ DEBUGGIN AFFILIATE LOGIN ____________________________")
+    const { accessCode } = await request.json();    
+    console.log(accessCode)
+    const url = `${env.goaffpro.apiUrl}/admin/affiliates`
     
-    // const params = new URLSearchParams({    
-    //   tag: doctorIdentificationNumber,      
-    //   ref_code: refCode,
-    //   fields: "id", // name,email,ref_codes,tags,coupons"  (comma-separated fields)
-    //   // fields: "refs_code" // comma-separated fields
-    // });
-    // console.log(url)
+    const params = new URLSearchParams({    
+      // tag: doctorIdentificationNumber,            
+      // tag: '',      
+      // tag:accessCode,      
+      ref_code: accessCode,
+      fields: "id", // name,email,ref_codes,tags,coupons"  (comma-separated fields)
+      // fields: "refs_code" // comma-separated fields
+    });
+    console.log(url)
   
-    // const res = await fetch(`${url}?${params.toString()}`, {    
-    //       method: 'GET', // Optional, since GET is default
-    //       headers: {          
-    //         'x-goaffpro-access-token':`${env.goaffpro.accessToken}`,          
-    //         // 'x-goaffpro-public-token':`${env.goaffpro.publicToken}`,          
-    //         'Content-Type': 'application/json', // Often a good idea to include
-    //       },
-    // });
+    const res = await fetch(`${url}?${params.toString()}`, {    
+          method: 'GET', // Optional, since GET is default
+          headers: {          
+            'x-goaffpro-access-token':`${env.goaffpro.accessToken}`,          
+            // 'x-goaffpro-public-token':`${env.goaffpro.publicToken}`,          
+            'Content-Type': 'application/json', // Often a good idea to include
+          },
+    });
           
-    // const {affiliates, total_results} = await res.json();
+    const {affiliates, total_results} = await res.json();
     
-    // console.log({affiliates, total_results})
-    // if(total_results <1){
-    //   return NextResponse.json(
-    //     { error: 'Invalid doctor number or access code' },
-    //     { status: 401 }
-    //   );
-    // }
+    console.log({affiliates, total_results})
+    if(total_results != 1){
+      return NextResponse.json(
+        { error: 'Invalid access code' },
+        { status: 401 }
+      );
+    }
       
     
     
@@ -52,7 +56,7 @@ export async function POST(request: NextRequest) {
     const response = NextResponse.json(
       { 
         message: 'Login successful', 
-        // affiliate_id:affiliates[0]?.id.toString()       
+        affiliate_id:affiliates[0]?.id.toString()       
       },
       { status: 200 }
     );

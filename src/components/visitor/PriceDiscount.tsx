@@ -23,7 +23,7 @@ export default function PriceDiscount({product, textSize, isCol} : Props) {
     }
 
     if(product.discountedPrice >= product.originalPrice){
-        return <p className="mt-2 text-md font-bold text-gray-900">
+        return <p className="mt-2 text-md font-bold text-gray-800">
                     €{product.originalPrice.toFixed(2)}
                 </p>
     }
@@ -31,7 +31,7 @@ export default function PriceDiscount({product, textSize, isCol} : Props) {
     return (
     <div className={`flex gap-1 ${isCol ? 'flex-col' : 'items-center'}`}>
         {/* text-xs */}
-        <p className={`text-${original[textSize as keyof typeof original]} font-bold text-gray-900 line-through`}>
+        <p className={`text-${original[textSize as keyof typeof original]} font-bold text-gray-800 line-through`}>
             €{product.originalPrice.toFixed(2)}
         </p>
         {/* text-gray-900 */}

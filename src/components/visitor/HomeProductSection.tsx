@@ -23,7 +23,7 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
     return <>
 
           {addedToCartVisible && <Modal
-                    title='Item added to order'
+                    title='New item successfully added to order !'
                     imageUrl={itemToAdd.imageUrl} 
                     sentence={itemToAdd.name}
                     isOpen={true} 

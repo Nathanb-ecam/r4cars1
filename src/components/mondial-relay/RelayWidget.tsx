@@ -116,8 +116,8 @@ export default function MondialRelayWidget({onAddressSelected} : MondialRelayWid
               "CP":parcelShop.CP,
               "City":parcelShop.Ville
             }
-            console.log("fullAddress")
-            console.log(address)
+            // console.log("fullAddress")
+            // console.log(address)
             onAddressSelected(parcelShop.Nom,address)
               // console.log("Selected parcel shop:", parcelShop);
               
@@ -156,6 +156,7 @@ export default function MondialRelayWidget({onAddressSelected} : MondialRelayWid
       styles.forEach(style => style.remove());
     };
   }, []); // Empty dependency array since we want to reinitialize on mount/unmount
+
 
   return (
     <>

@@ -62,7 +62,7 @@ console.log(imgSrc)
   return (
     <>
       {addedToCartVisible && <Modal
-                    title='New item added to order'
+                    title='New item successfully added to order !'
                     sentence={product.name} 
                     imageUrl={imgSrc}
                     isOpen={true} 
@@ -92,23 +92,25 @@ console.log(imgSrc)
             />
           </div>
           <div>
-            <h1 className="md:text-xl font-bold text-gray-900">{product.name}</h1>
+            <h1 className="md:text-xl font-bold text-gray-700">{product.name}</h1>
             <p className=" mt-1 mb-4 text-sm md:text-md text-gray-500">{product.description}</p>
             
             <div className="flex justify-between flex-col">
               <div className='md:hidden flex justify-between items-center mr-2'>
                 <PriceDiscount product={product} textSize="S"></PriceDiscount>
-                {product.stock > 0 && <p className="mt-2 text-xs text-gray-500">(Stock: {product.stock})</p>}
+                {/* {product.stock > 0 && <p className="mt-2 text-xs text-gray-500">(Stock: {product.stock})</p>} */}
               </div>
               <div className='hidden md:flex md:justify-between md:items-center md:mr-2'>
                 <PriceDiscount product={product} textSize="L"></PriceDiscount>
-                {product.stock > 0 && <p className="mt-2 text-xs text-gray-500">(Stock: {product.stock})</p>}
+                {/* {product.stock > 0 && <p className="mt-2 text-xs text-gray-500">(Stock: {product.stock})</p>} */}
               </div>
               <div
                 onClick={()=>{handleAddToCart(); setAddedToCartVisible(true);}}
                 className="
-                mt-2 bg-lime-500 w-full text-sm md:text-md text-white py-3 px-10 rounded-md hover:bg-lime-600 transition-colors
+                mt-2 bg-lime-500 w-full text-sm md:text-md text-white py-3 px-10
+                rounded-md hover:bg-lime-600 transition-colors
                 flex items-center gap-5
+                hover:cursor-pointer
                 "
               >
                 <ShoppingCartIcon className="h-6 w-6 text-gray-200" />

@@ -20,6 +20,7 @@ export async function POST(request:Request) {
 
     return NextResponse.json({ status: 201 });
   } catch (error) {
+    console.log(error)
     return NextResponse.json('Erreur lors de l’envoi de l’email.', { status: 500 });      
   }
 
