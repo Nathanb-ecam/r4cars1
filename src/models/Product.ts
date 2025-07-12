@@ -36,8 +36,8 @@ const productSchema = new mongoose.Schema<Product>({
   isSpecialOffer: { type: Boolean, required: false, default: false },
   visibleOnWebsite: { type: Boolean, required: false, default: false },
   conditionning: { type: String, required: false, default: "" },
-  components: { type: Array },
-  sections: { type: Array },
+  components: { type: [String] },
+  sections: { type: [String] },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
