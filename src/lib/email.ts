@@ -30,7 +30,7 @@ const apiKey = env.brevo.apiKey;
     body: JSON.stringify({
       sender: {
         name: 'Labeuromed',
-        email: 'alain.steyaert@gmail.com', 
+        email: 'info@labeuromed.eu', 
       },
       to: [
         {
