@@ -25,7 +25,7 @@ export default function OrdersTable() {
     shipping_address: '',
     line_items: [{ product_id: '', quantity: 1 }] as { product_id: string; quantity: number }[],
     status: 'pending',
-    coupons: [''],
+    // coupons: [''],
     total: 0,
     subtotal: 0,
     discount: 0,
@@ -35,7 +35,7 @@ export default function OrdersTable() {
     forceSDK: true
   });
 
-  const defaultCoupons = ['EASY10OFF']
+  // const defaultCoupons = ['EASY10OFF']
 
   useEffect(() => {
     fetchOrders();
@@ -140,7 +140,7 @@ export default function OrdersTable() {
         date: new Date().toISOString(),
         shipping_address: newOrder.shipping_address,
         customer: newOrder.customer,
-        coupons: newOrder.coupons.filter(c => c !== ''),
+        // coupons: newOrder.coupons.filter(c => c !== ''),
         line_items: line_items, // Take the first line item to satisfy the tuple type
         status: 'approved',
         forceSDK: true
@@ -175,7 +175,7 @@ export default function OrdersTable() {
         shipping_address: '',
         line_items: [{ product_id: '', quantity: 1 }],
         status: 'pending',
-        coupons: [''],
+        // coupons: [''],
         total: 0,
         subtotal: 0,
         discount: 0,

@@ -8,8 +8,8 @@ export interface Affiliate {
   name: string;
   email: string;
   ref_codes: Array<string>;
-  tags: Array<string>;
-  coupons: Array<string>;
+  // tags: Array<string>;
+  // coupons: Array<string>;
   createdAt: string;
 }
 
@@ -23,7 +23,7 @@ export default function AffiliatesTable() {
   const [newAffiliates, setNewAffiliates] = useState({
     name: '',
     email: '',
-    tag:'',
+    // tag:'',
     ref_code: '',    
     status:'approved'
   });
@@ -63,7 +63,7 @@ export default function AffiliatesTable() {
       
       await fetchAffiliates();
       setIsModalOpen(false);
-      setNewAffiliates({ name: '', email: '',tag:'',ref_code:'', status:'approved'});
+      setNewAffiliates({ name: '', email: '',ref_code:'', status:'approved'});
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -166,7 +166,7 @@ export default function AffiliatesTable() {
                   required
                 />
               </div>
-              <div>
+              {/* <div>
                 <label htmlFor="tag" className="block text-sm font-medium text-gray-700">Tag</label>
                 <input
                   type="text"
@@ -176,7 +176,7 @@ export default function AffiliatesTable() {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
-              </div>
+              </div> */}
               <div>
                 <label htmlFor="ref_code" className="block text-sm font-medium text-gray-700">Referral code</label>
                 <input
@@ -233,9 +233,9 @@ export default function AffiliatesTable() {
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Affiliation code
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              {/* <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Tags
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Registered
               </th>
@@ -257,9 +257,9 @@ export default function AffiliatesTable() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {JSON.stringify(affiliate.ref_codes)}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {JSON.stringify(affiliate.tags)}
-                </td>
+                </td> */}
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {new Date(affiliate.createdAt).toLocaleDateString()}
                 </td>
@@ -312,10 +312,10 @@ export default function AffiliatesTable() {
                 <span className="text-xs font-medium text-gray-500">Ref_codes</span>
                 <p className="text-sm text-gray-900">{JSON.stringify(affiliate.ref_codes)}</p>
               </div>
-              <div>
+              {/* <div>
                 <span className="text-xs font-medium text-gray-500">Tags</span>
                 <p className="text-sm text-gray-900">{JSON.stringify(affiliate.tags)}</p>
-              </div>
+              </div> */}
               <div>
                 <span className="text-xs font-medium text-gray-500">Registered</span>
                 <p className="text-sm text-gray-900">{new Date(affiliate.createdAt).toLocaleDateString()}</p>

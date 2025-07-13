@@ -13,7 +13,7 @@ import CartCheckoutModal from '@/components/visitor/CartCheckoutModal';
 import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro, GoAffProLineItem } from '@/models/GoAffPro';
 import PriceDiscount from '@/components/visitor/PriceDiscount';
 import Modal from '@/components/Modal';
-import {BrevoOrderConfirmationTemplate, sendConfirmationEmail} from '@/lib/email';
+import {BrevoOrderConfirmationTemplate} from '@/lib/email';
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);

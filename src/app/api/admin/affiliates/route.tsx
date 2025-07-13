@@ -8,7 +8,8 @@ export async function GET() {
   // const url =   `${env.goaffpro.apiUrl}/sdk/affiliate`
   const params = new URLSearchParams({
     // ref_code: "YOUR_REFERRAL_CODE",        // or use `coupon` instead
-    fields: "id,name,email,ref_codes,tags,coupons" // comma-separated fields
+    // fields: "id,name,email,ref_codes,tags,coupons" // comma-separated fields
+    fields: "id,name,email,ref_codes" // comma-separated fields
   });
   // console.log(url)
 
