@@ -147,10 +147,7 @@ export default function CartCheckoutModal({
                     </p>
                   </div> */}
                 </div>
-                <div className='flex justify-between items-center'>
-                  <p className="text-xs md:text-sm text-gray-600">
-                    You will be redirected to complete your payment securely.
-                  </p>
+                <div className='text-end'>         
                   <button
                     type="button"
                     onClick={() => setStep(2)}
@@ -240,7 +237,12 @@ export default function CartCheckoutModal({
                       </p>
                     )}
                   </div>
-                  <div className="flex justify-end gap-2">
+                  <div className="flex justify-between items-center">
+                   <p className="text-xs md:text-sm text-gray-600">
+                      You will be redirected to complete your payment securely.
+                   </p>
+                   
+                   <div className='flex gap-2'>
                     <button
                       type="button"
                       onClick={() => setStep(1)}
@@ -255,6 +257,7 @@ export default function CartCheckoutModal({
                     >
                       Next
                     </button>
+                   </div>
                   </div>
                 </div>
           )}
