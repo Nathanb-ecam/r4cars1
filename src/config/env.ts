@@ -21,6 +21,9 @@ export const env = {
     
     
   },
+  mondial_relay:{     
+     CLIENT_CODE: process.env.MONDIAL_RELAY_CLIENT_ID || 'BDTEST  ',
+  },
   app: {
     url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:000',
     env: process.env.NODE_ENV || 'development',

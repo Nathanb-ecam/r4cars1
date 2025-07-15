@@ -1,3 +1,4 @@
+import { env } from "@/config/env";
 import { useEffect, useState } from "react";
 
 declare global {
@@ -14,11 +15,13 @@ export type Address = {
 }
 
 interface MondialRelayWidgetProps {
+  initialCountry:string;
   onAddressSelected: (mondialRelayId:string, address: Address) => void;
 }
 
-export default function MondialRelayWidget({onAddressSelected} : MondialRelayWidgetProps) {
+export default function MondialRelayWidget({initialCountry, onAddressSelected} : MondialRelayWidgetProps) {
   const [widgetHeight, setWidgetHeight] = useState("400px");
+  const [country, _] = useState(initialCountry)
   const [showMap, setShowMap] = useState(true);
 
   useEffect(() => {
@@ -99,15 +102,19 @@ export default function MondialRelayWidget({onAddressSelected} : MondialRelayWid
         // Initialize the widget
         window.$("#Zone_Widget").MR_ParcelShopPicker({
           Target: "#Target_Widget",
-          Brand: "BDTEST  ",
-          Country: "BE",
+          // Brand: "BDTEST  ",
+          // Brand: "CC233ETC",
+          Brand: env.mondial_relay.CLIENT_CODE,
+          // Country: "BE",
+          // PostCode: "1640",
+          Country: country,
           PostCode: "1640",
           ColLivMod: "24R",
           NbResults: "7",
           Responsive: true,
           // ShowResultsOnMap: showMap,
           ShowResultsOnMap: false,
-          Height: height,
+          Height: height,          
           Width: "100%",
           OnParcelShopSelected: function (parcelShop: any) {
             // const fullAddress = `${parcelShop.Adresse1}\n${parcelShop.CP} ${parcelShop.Ville}`;  

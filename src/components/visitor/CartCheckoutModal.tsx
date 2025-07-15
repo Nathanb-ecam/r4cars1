@@ -222,6 +222,7 @@ export default function CartCheckoutModal({
                     </label>
                     <div className="border rounded-md p-2">
                       <MondialRelayWidget
+                        initialCountry='ES'
                         onAddressSelected={(mondialRelayId,address : Address) => {
                           // const address = `${parcel.Nom} - ${parcel.Adresse1}, ${parcel.CodePostal} ${parcel.Ville}`;
                           const fullAddress = `${address.Street}, ${address.CP} ${address.City}`;
