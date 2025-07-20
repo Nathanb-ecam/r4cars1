@@ -13,6 +13,11 @@ export default function Header() {
   const pathname = usePathname();
   const locale = params.locale as string || 'en';
 
+   const currentLocale = pathname.split('/')[1] || 'en';
+
+  // Remove the locale part from the path to keep the rest of the path same
+  const basePath = pathname.split('/').slice(2).join('/');
+
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -37,23 +42,39 @@ export default function Header() {
             </div>
           </Link>
 
-
+        <div className="locale-links">
+          <Link
+            href={`/en/${basePath}`}
+            className={currentLocale === 'en' ? 'active' : ''}
+            locale={false}
+          >
+            🇬🇧 English
+          </Link>
+          <Link
+            href={`/es/${basePath}`}
+            className={currentLocale === 'es' ? 'active' : ''}
+            locale={false}
+          >
+            🇪🇸 Español
+          </Link>
+          <Link
+            href={`/fr/${basePath}`}
+            className={currentLocale === 'fr' ? 'active' : ''}
+            locale={false}
+          >
+            🇫🇷 Français
+          </Link>
+        </div>
           
           <div className="flex items-center gap-2 md:gap-4">
             <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-1 md:px-2 md:py-1">
               <option value="en">
-                <Link href="/en/visitor/screens/home">🇬🇧</Link>
-              </option>
-              <option value="es">
-                <Link href="/es/visitor/screens/home">🇪🇸</Link>
-              </option>
-              <option value="fr">
-                <Link href="/fr/visitor/screens/home">🇫🇷</Link>
+                🇬🇧
               </option>
                {/* English */}
-              {/* <option value="fr">🇫🇷</option> */}
+              <option value="fr">🇫🇷</option>
                {/* Français */}
-              {/* <option value="es">🇪🇸</option> */}
+              <option value="es">🇪🇸</option>
                {/* Español */}
             </select>
             <Link href="/visitor/screens/cart" className="relative">
