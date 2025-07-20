@@ -1,27 +1,23 @@
-'use client';
-
 import Link from 'next/link';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import { useRouter, usePathname, useParams } from 'next/navigation';
+import { startTransition } from 'react';
 
 
 export default function Header() {
-  const router = useRouter();
-  const pathname = usePathname();
+  const router = useRouter();  
   const params = useParams();
+  const pathname = usePathname();
   const locale = params.locale as string || 'en';
 
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const loc = e.target.value;  
+    const nextLocale = e.target.value;  
     // router.replace(`/${loc}${pathname.slice(locale.length + 1)}`); 
-    document.cookie = `NEXT_LOCALE=${loc}; path=/; max-age=31536000; SameSite=Lax;`   
-    // router.push(`/${loc}/visitor/login`);    
-    router.refresh();
   };
 
   return (
@@ -44,11 +40,19 @@ export default function Header() {
           
           <div className="flex items-center gap-2 md:gap-4">
             <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-1 md:px-2 md:py-1">
-              <option value="en">🇬🇧</option>
+              <option value="en">
+                <Link href="/en/visitor/screens/home">🇬🇧</Link>
+              </option>
+              <option value="es">
+                <Link href="/es/visitor/screens/home">🇪🇸</Link>
+              </option>
+              <option value="fr">
+                <Link href="/fr/visitor/screens/home">🇫🇷</Link>
+              </option>
                {/* English */}
-              <option value="fr">🇫🇷</option>
+              {/* <option value="fr">🇫🇷</option> */}
                {/* Français */}
-              <option value="es">🇪🇸</option>
+              {/* <option value="es">🇪🇸</option> */}
                {/* Español */}
             </select>
             <Link href="/visitor/screens/cart" className="relative">
