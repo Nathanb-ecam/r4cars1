@@ -1,9 +1,13 @@
 import { Metadata } from 'next';
 import AdminLoginForm from '@/components/auth/AdminLoginForm';
 
-export const metadata: Metadata = {
-  title: 'Admin Login - Labeuromed',
-  description: 'Admin login page',
+// export const metadata: Metadata = {
+//   title: 'Admin Login - Labeuromed',
+//   description: 'Admin login page',
+// };
+
+export const metadata = {
+  robots: 'noindex, nofollow',
 };
 
 export default function AdminLoginPage() {
