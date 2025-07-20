@@ -12,6 +12,10 @@ export default function Header() {
   const pathname = usePathname(); 
   const locale = pathname.split('/')[1] || 'fr';
 
+  // const isLegalPage = pathname.includes('/legal/');
+  const isLegalPage = true
+
+
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -49,16 +53,19 @@ const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 
           
           <div className="flex items-center gap-2 md:gap-4">
-            <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-1 md:px-2 md:py-1">
-              <option value="en">
-                🇬🇧
-              </option>
-               {/* English */}
-              <option value="fr">🇫🇷</option>
-               {/* Français */}
-              <option value="es">🇪🇸</option>
-               {/* Español */}
-            </select>
+            {isLegalPage &&
+              <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-1 md:px-2 md:py-1">
+                <option value="en">
+                  🇬🇧
+                </option>
+                {/* English */}
+                <option value="fr">🇫🇷</option>
+                {/* Français */}
+                <option value="es">🇪🇸</option>
+                {/* Español */}
+              </select>
+            }
+            
             <Link href="/visitor/screens/cart" className="relative">
               <ShoppingCartIcon className="h-6 w-6 text-gray-200" />
               {itemCount > 0 && (

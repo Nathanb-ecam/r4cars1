@@ -155,7 +155,7 @@ export default function MondialRelayWidget({initialCountry, onAddressSelected} :
 
   return (
     <>
-      <div className="flex justify-center items-center w-full h-[300px] md:h-[400px]" id="Zone_Widget"></div>
+      <div className="flex justify-center items-center w-full max-h-[300px] md:max-h-[400px]" id="Zone_Widget"></div>
       <input type="hidden" id="Target_Widget" />
     </>
   );
