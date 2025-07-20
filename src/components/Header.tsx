@@ -4,13 +4,13 @@ import Link from 'next/link';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname, useParams } from 'next/navigation';
 
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
-  // Extract locale from pathname (e.g., /en/..., /fr/..., /es/...)
-  const locale = pathname.split('/')[1] || 'en';
+  const params = useParams();
+  const locale = params.locale as string || 'en';
 
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
