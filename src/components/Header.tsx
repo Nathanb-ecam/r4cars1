@@ -18,20 +18,9 @@ export default function Header() {
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
   const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const loc = e.target.value;
-    // Replace the first segment with the new locale
-    // const segments = pathname.split('/');
-    // segments[1] = loc;
-    // const newPath = segments.join('/') || '/';
-    // router.replace(newPath);
-    
-    router.replace(`/${loc}${pathname.slice(locale.length + 1)}`);
-    
-    Cookies.set('NEXT_LOCALE', "why", {
-      path: '/',
-      expires: 365, // days
-    });
-
+    const loc = e.target.value;  
+    // router.replace(`/${loc}${pathname.slice(locale.length + 1)}`);    
+    router.push(`/${loc}/visitor/login}`);    
   };
 
   return (
