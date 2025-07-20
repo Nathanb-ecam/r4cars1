@@ -10,9 +10,9 @@
     "allProducts": "Todos nuestros productos"
   },
   "HomeProductSection": {
-    "addedTitle": "New item successfully added to order!",
-    "seeBasket": "See basket",
-    "continueShopping": "Continue shopping"
+    "addedTitle": "¡Nuevo artículo añadido al pedido con éxito!",
+    "seeBasket": "Ver carrito",
+    "continueShopping": "Seguir comprando"
   },
   "Cart": {
     "title": "Carrito de compras",

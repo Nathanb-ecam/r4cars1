@@ -53,13 +53,18 @@ export default function VisitorLoginForm() {
           <input
             id="accessCode"
             name="accessCode"
-            type="password"
+            type="text"
             required
-            className="appearance-none text-lg rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+            className="
+            appearance-none text-lg rounded-md relative block w-full px-3 py-2 
+            border border-gray-300 placeholder-gray-500 text-gray-900 
+            focus:outline-none focus:ring-lime-500 focus:border-lime-500 focus:border-2 focus:z-10 sm:text-sm
+            focus:outline-none focus:ring-0 focus:border-inherit
+            "
             placeholder="Access Code"
             value={accessCode}
             onChange={(e) =>
-              setAccessCode(e.target.value)
+              setAccessCode(e.target.value.toUpperCase())
             }
           />
         </div>
