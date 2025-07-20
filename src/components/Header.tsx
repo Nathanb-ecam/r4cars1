@@ -10,7 +10,7 @@ import { useRouter, usePathname, useParams } from 'next/navigation';
 export default function Header() {
   const router = useRouter();  
   const pathname = usePathname(); 
-  const locale = pathname.split('/')[1] || 'en';
+  const locale = pathname.split('/')[1] || 'fr';
 
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
