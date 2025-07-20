@@ -5,6 +5,8 @@ import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import { useRouter, usePathname, useParams } from 'next/navigation';
+import Cookies from 'js-cookie';
+
 
 export default function Header() {
   const router = useRouter();
@@ -22,9 +24,13 @@ export default function Header() {
     // segments[1] = loc;
     // const newPath = segments.join('/') || '/';
     // router.replace(newPath);
-
-    const newPath = `/${loc}${pathname.slice(locale.length + 1)}`;
+    
     router.replace(`/${loc}${pathname.slice(locale.length + 1)}`);
+    
+    Cookies.set('NEXT_LOCALE', loc, {
+      path: '/',
+      expires: 365, // days
+    });
 
   };
 
