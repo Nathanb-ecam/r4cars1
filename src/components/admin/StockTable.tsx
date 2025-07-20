@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Product, ProductModel } from '@/models/Product';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { Product } from '@/models/Product';
+import { PencilIcon } from '@heroicons/react/24/outline';
 
 export default function StockTable() {
   const [products, setProducts] = useState<Product[]>([]);

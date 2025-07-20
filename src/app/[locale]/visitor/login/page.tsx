@@ -2,10 +2,15 @@
 
 import VisitorLoginForm from '@/components/auth/VisitorLoginForm';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 
 export default function VisitorLoginPage() {
-  
+  // Fallback for translation key if next-intl is not yet set up
+  let t = (k: string) => k;
+  try {
+    t = useTranslations('VisitorLogin');
+  } catch {}
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">    
@@ -18,7 +23,7 @@ export default function VisitorLoginPage() {
               <Image src="/images/LEM_Logo_White.png" alt="logo" fill />
            </div>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Please enter your access code.
+            {t('enterAccessCode')}
           </p>
         </div>
         <VisitorLoginForm></VisitorLoginForm>

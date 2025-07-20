@@ -1,0 +1,232 @@
+{
+  "VisitorLogin": {
+    "enterAccessCode": "Veuillez entrer votre code d'accès."
+  },
+  "Banner": {
+    "freeShipping": "Livraison gratuite pour les commandes de plus de 60€"
+  },
+  "Home": {
+    "specialOffers": "Nos offres du moment",
+    "allProducts": "Tous nos produits"
+  },
+  "HomeProductSection": {
+    "addedTitle": "Nouvel élément ajouté avec succès!",
+    "seeBasket": "Voir le panier",
+    "continueShopping": "Continuer mes achats"
+  },
+  "Cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "emptyCta": "Allez à la page des produits et commencez à ajouter des articles.",
+    "seeProducts": "Voir les produits",
+    "orderConfirmationTitle": "Confirmation de commande",
+    "orderConfirmationSentence": "Votre commande a été passée. Merci ! \n Vous recevrez in mail de confirmation d'ici peu. Merci de vérifier les spams.",
+    "orderConfirmationPrimary": "Terminer",
+    "orderFailedTitle": "Une erreur s'est produite",
+    "orderFailedSentence": "Un problème est survenu lors de l'enregistrement de votre commande.",
+    "orderFailedPrimary": "Ok",
+    "total":"Total",
+    "checkout":"Finaliser la commande"
+  },
+  "Product": {
+    "notFound": "Produit non trouvé",
+    "addToCart": "Ajouter au panier",
+    "backToProducts": "Tous nos produits",
+    "addedToCartTitle": "Nouvel article ajouté à la commande !",
+    "addedToCartPrimary": "Voir le panier",
+    "addedToCartSecondary": "Continuer vos achats"
+  },
+  "Checkout": {
+    "title": "Paiement",
+    "summary": "Résumé",
+    "personalInfo": "Informations personnelles",
+    "payment": "Paiement",
+    "orderSummary": "Résumé de la commande",
+    "subtotal": "Sous-total",
+    "shipping": "Livraison",
+    "totalAmount": "Montant total",
+    "back":"Retour",
+    "payNow":"Passer au paiement",
+    "next": "Suivant",
+    "firstname": "Prénom *",
+    "lastname": "Nom *",
+    "email": "Email *",
+    "phone": "Téléphone *",
+    "selectRelay": "Sélectionnez un point Mondial Relay *",
+    "selectedPoint": "Point sélectionné",
+    "securePayment": "Vous serez redirigé pour finaliser votre paiement en toute sécurité."
+  },
+  
+  "Footer":{
+    "title":"A propos de Labeuromed",
+    "links":"Liens rapides",
+    "legal":"Mentions légales",
+    "products":"Produits",
+    "cart":"Panier",
+    "privacy":"Politique de Confidentialité",
+    "terms":"Conditions d'utilisation",
+    "cookies":"Politique de cookies",
+    "localisation":"Localisation",
+    "allRights":"Tous droits réservés"
+  },
+
+
+
+
+    "CookiePolicy": {
+    "title": "Politique de Cookies",
+    "lastUpdated":"Dernière mise à jour : 24/06/2025",
+    "sections": [
+      {
+        "title": "Que sont les cookies",
+        "p": "Les cookies sont de petits fichiers texte qui sont placés sur votre appareil lorsque vous visitez notre site web. Ils nous aident à vous offrir une meilleure expérience et permettent à certaines fonctionnalités de fonctionner correctement."
+      },
+      {
+        "title": "Comment nous utilisons les cookies",
+        "p": "Nous utilisons les cookies aux fins suivantes :",
+        "liElements": [
+          "Authentification et sécurité",
+          "Mémorisation de vos préférences",
+          "Suivi des ventes d’affiliation",
+          "Analyse de l’utilisation du site"
+        ]
+      },
+      {
+        "title": "Types de cookies que nous utilisons",
+        "p": "Cookies essentiels"
+      },
+      {
+        "title": "Cookies essentiels",
+        "p": "Ces cookies sont nécessaires au bon fonctionnement du site. Ils permettent des fonctionnalités de base telles que l’authentification et la sécurité."
+      },
+      {
+        "title": "Cookies d’analyse",
+        "p": "Nous utilisons des cookies d’analyse pour comprendre comment les visiteurs interagissent avec notre site. Cela nous aide à améliorer nos services."
+      },
+      {
+        "title": "Cookies d’affiliation",
+        "p": "Ces cookies nous aident à suivre les ventes d’affiliation et à assurer un paiement correct des commissions à nos partenaires."
+      },
+      {
+        "title": "Gestion des cookies",
+        "p": "Vous pouvez contrôler et/ou supprimer les cookies comme vous le souhaitez. Vous pouvez supprimer tous les cookies déjà présents sur votre ordinateur et configurer la plupart des navigateurs pour qu’ils les bloquent."
+      },
+      {
+        "title": "Cookies tiers",
+        "p": "Certains cookies sont placés par des services tiers apparaissant sur nos pages, tels que :",
+        "liElements": [
+          "Services d’analyse",
+          "Services de suivi d’affiliation (GoAffPro)"
+        ]
+      },
+      {
+        "title": "Mises à jour de cette politique",
+        "p": "Nous pouvons mettre à jour cette Politique de Cookies de temps en temps. Nous vous informerons de tout changement en publiant la nouvelle politique sur cette page."
+      },
+      {
+        "title": "Contactez-nous",
+        "p": "Si vous avez des questions concernant notre Politique de Cookies, veuillez nous contacter à l’adresse privacy@labeuromed.com."
+      }
+    ]
+  },
+
+
+  "PrivacyPolicy": {
+    "title":"Politique de Confidentialité",
+    "lastUpdated":"Dernière mise à jour : 24/06/2025",
+    "sections": [
+      {
+        "title": "Informations que nous collectons",
+        "p": "Nous collectons les informations que vous nous fournissez directement, y compris :",
+        "liElements": [
+          "Nom et coordonnées",
+          "Numéros de médecin et d’ordonnance",
+          "Informations de paiement",
+          "Historique des commandes"
+        ]
+      },
+      {
+        "title": "Comment nous utilisons vos informations",
+        "p": "Nous utilisons les informations que nous collectons pour :",
+        "liElements": [
+          "Traiter vos commandes et paiements",
+          "Communiquer avec vous au sujet de vos commandes",
+          "Suivre les ventes d’affiliation",
+          "Améliorer nos services"
+        ]
+      },
+      {
+        "title": "Partage d’informations",
+        "p": "Nous partageons vos informations avec :",
+        "liElements": [
+          "Services de suivi d’affiliation (GoAffPro)",
+          "Fournisseurs de services qui nous assistent dans nos opérations"
+        ]
+      },
+      {
+        "title": "Sécurité des données",
+        "p": "Nous mettons en œuvre des mesures de sécurité appropriées pour protéger vos informations personnelles. Toutefois, aucun moyen de transmission sur Internet n’est 100 % sécurisé."
+      },
+      {
+        "title": "Vos droits",
+        "p": "Vous avez le droit de :",
+        "liElements": [
+          "Accéder à vos informations personnelles",
+          "Corriger les informations inexactes",
+          "Demander la suppression de vos informations",
+          "Refuser les communications marketing"
+        ]
+      }
+    ]
+  },
+
+
+  "TermsOfService": {
+    "title": "Conditions d’Utilisation",
+    "lastUpdated":"Dernière mise à jour: 24/06/2025",
+    "sections": [
+      {
+        "title": "Acceptation des Conditions",
+        "p": "En accédant aux services de Labeuromed et en les utilisant, vous acceptez d’être lié par ces Conditions de Service ainsi que par toutes les lois et réglementations applicables."
+      },
+      {
+        "title": "Produits Médicaux et Ordonnances",
+        "p": "Tous les achats nécessitent une ordonnance médicale valide. Vous devez fournir des informations précises et respecter toutes les réglementations médicales applicables."
+      },
+      {
+        "title": "Commandes et Paiement",
+        "p": "En passant une commande, vous :",
+        "liElements": [
+          "Confirmez que toutes les informations fournies sont exactes",
+          "Acceptez de payer le montant total spécifié",
+          "Nous autorisez à traiter votre paiement"
+        ]
+      },
+      {
+        "title": "Programme d’Affiliation",
+        "p": "Notre programme d’affiliation est soumis aux conditions suivantes :",
+        "liElements": [
+          "Les commissions sont versées selon notre accord d’affiliation",
+          "Nous nous réservons le droit de modifier les taux de commission",
+          "Les activités frauduleuses entraîneront une résiliation immédiate"
+        ]
+      },
+      {
+        "title": "Propriété Intellectuelle",
+        "p": "Tout le contenu de ce site web, y compris les textes, graphiques, logos et images, est la propriété de Labeuromed et est protégé par les lois sur le droit d’auteur."
+      },
+      {
+        "title": "Limitation de Responsabilité",
+        "p": "Labeuromed ne peut être tenu responsable des dommages indirects, accessoires ou consécutifs résultant de votre utilisation de nos services."
+      },
+      {
+        "title": "Modifications des Conditions",
+        "p": "Nous nous réservons le droit de modifier ces conditions à tout moment. L’utilisation continue de nos services constitue une acceptation des conditions modifiées."
+      },
+      {
+        "title": "Contact",
+        "p": "Pour toute question concernant ces Conditions de Service, veuillez nous contacter à legal@labeuromed.com."
+      }
+    ]
+  }
+} 

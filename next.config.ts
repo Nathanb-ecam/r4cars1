@@ -1,15 +1,21 @@
-import type { NextConfig } from "next";
+// import type { NextConfig } from 'next';
+// import createNextIntlPlugin from 'next-intl/plugin';
 
-const nextConfig: NextConfig = {
-  /* config options here */
-  images: {
-    // domains: ['placehold.co','172.20.144.1'],
-    domains: [''],
-  },
-  // i18n: {
-  //   locales: ['en', 'fr', 'es'], 
-  //   defaultLocale: 'es'         
-  // },
-};
+// const nextConfig: NextConfig = {
+//   experimental: {
+//     // ppr: true,
+//     // Include `turbo` so next-intl adds aliases here instead of the
+//     // newer `turbopack` key, which isn't recognized in our Next.js version.
+//     turbo: {},
+//   }
+// };
 
-export default nextConfig;
+// export default createNextIntlPlugin('./src/i18n/request.ts');
+
+import {NextConfig} from 'next';
+import createNextIntlPlugin from 'next-intl/plugin';
+ 
+const nextConfig: NextConfig = {};
+ 
+const withNextIntl = createNextIntlPlugin();
+export default withNextIntl(nextConfig);

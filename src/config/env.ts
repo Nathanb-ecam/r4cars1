@@ -5,11 +5,6 @@ export const env = {
   jwt: {
     secret: process.env.JWT_SECRET || 'secret-jwt-key',
   },
-  stripe: {
-    publishableKey: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
-    secretKey: process.env.STRIPE_SECRET_KEY || '',
-    webhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
-  },
   brevo:{
     apiKey: process.env.BREVO_API_KEY || '',    
   },
@@ -43,8 +38,6 @@ export function validateEnv() {
     'BREVO_API_KEY',
     
     'JWT_SECRET',
-    'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY',
-    'STRIPE_SECRET_KEY',
     'GOAFFPRO_API_KEY',    
     'GOAFFPRO_PUBLIC_TOKEN',    
   ];

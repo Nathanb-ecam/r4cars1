@@ -6,15 +6,16 @@ export interface LegalSection{
 
 interface Props{
     title:string;
+    lastUpdated:string;
     sections: LegalSection[]    
 }
 
-export default function LegalTemplate({title, sections}: Props){
+export default function LegalTemplate({title, lastUpdated, sections}: Props){
     return <>
     <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
     <h1 className="text-3xl font-bold mb-1 text-gray-800">{title}</h1>
     
-    <p className="mb-6 md:mb-10 ml-1 text-sm font-light border-b py-2 border-b-gray-300">Last updated: {new Date().toLocaleDateString()}</p>    
+    <p className="mb-6 md:mb-10 ml-1 text-sm font-light border-b py-2 border-b-gray-300">{lastUpdated}</p>    
 
     {sections.map(({title,p, liElements}, index)=>(
         <div key={index}>

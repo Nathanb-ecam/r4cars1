@@ -7,6 +7,7 @@ import ConfirmationModal from "../Modal";
 import Modal from "../Modal";
 import { useRouter } from "next/navigation";
 import { ShoppingCartIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Props{
     title:string;
@@ -14,8 +15,11 @@ interface Props{
     handleAddToCart: (product:Product)=>void;
 }
 
-export default function HomeProductSection({title, products, handleAddToCart} : Props){    
-    if(products.length === 0) return;
+export default function HomeProductSection({title, products, handleAddToCart} : Props){      
+
+  const t = useTranslations('HomeProductSection');  
+
+     if(products.length === 0) return;
     const [addedToCartVisible, setAddedToCartVisible] = useState(false)
     const router = useRouter();
     const [itemToAdd, setItemToAdd] = useState({name:'New product',imageUrl:''})
@@ -23,20 +27,20 @@ export default function HomeProductSection({title, products, handleAddToCart} : 
     return <>
 
           {addedToCartVisible && <Modal
-                    title='New item successfully added to order !'
+                    title={t('addedTitle')}
+                    primaryText={t('seeBasket')}
+                    onPrimaryClicked={()=>router.push('/visitor/screens/cart')}                     
+                    secondaryText={t('continueShopping')}                    
+                    onSecondaryClicked={()=>setAddedToCartVisible(false)}
+                    secondaryVisible={true}                    
                     imageUrl={itemToAdd.imageUrl} 
                     sentence={itemToAdd.name}
                     isOpen={true} 
-                    onPrimaryClicked={()=>router.push('/visitor/screens/cart')} 
-                    primaryText="See basket"
-                    secondaryText="Continue shopping"
-                    onSecondaryClicked={()=>setAddedToCartVisible(false)}
-                    secondaryVisible={true}                    
                     onClose={()=>setAddedToCartVisible(false)} 
                     />}
 
                     
-        <h1 className='mb-4 md:mb-8 text-2xl sm:text-3xl tracking-tight font-extrabold text-gray-800'>
+        <h1 className='mb-4 md:mb-8 text-2xl sm:text-3xl tracking-tight font-bold text-gray-800'>
             {title}
         </h1>
 

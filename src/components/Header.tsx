@@ -4,10 +4,25 @@ import Link from 'next/link';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function Header() {
+  const router = useRouter();
+  const pathname = usePathname();
+  // Extract locale from pathname (e.g., /en/..., /fr/..., /es/...)
+  const locale = pathname.split('/')[1] || 'en';
+
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
+
+  const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const loc = e.target.value;
+    // Replace the first segment with the new locale
+    const segments = pathname.split('/');
+    segments[1] = loc;
+    const newPath = segments.join('/') || '/';
+    router.replace(newPath);
+  };
 
   return (
     // bg-gray-900
@@ -27,7 +42,12 @@ export default function Header() {
 
 
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-4">
+            <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-2 py-1">
+              <option value="en">🇬🇧 English</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="es">🇪🇸 Español</option>
+            </select>
             <Link href="/visitor/screens/cart" className="relative">
               <ShoppingCartIcon className="h-6 w-6 text-gray-200" />
               {itemCount > 0 && (

@@ -1,10 +1,14 @@
-import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
 import MondialRelayWidget, { Address } from '../mondial-relay/RelayWidget';
-import { CustomerPersonalInfo } from '@/app/visitor/screens/cart/page';
+import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+interface CustomerPersonalInfo {
+  first_name: string;
+  last_name: string;
+  email: string;
+  shipping_address: string;
+}
 
 interface PersonalInfo{
     first_name: string,
@@ -34,7 +38,9 @@ export default function CartCheckoutModal({
   total
 }: CartCheckoutModalProps) {
   
-
+  const t = useTranslations('Checkout');
+  const pathname = usePathname();
+  const countryLocale = (pathname.split('/')[1] != "en") ? pathname.split('/')[1] : 'fr';
   const [step, setStep] = useState(1);
   const [personalInfoData, setPersonalInfoData] = useState<PersonalInfo | null>({
     first_name: '',
@@ -87,16 +93,16 @@ export default function CartCheckoutModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg p-4 md:p-6 w-full max-w-md md:max-w-screen-lg mx-auto max-h-[80vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Checkout</h2>
+          <h2 className="text-xl font-semibold">{t('title')}</h2>
           <button
-            onClick={()=>{
+            onClick={() =>{
               onClose(); 
-              // setPersonalInfoData(null);
-              // setStep(1);
             }}
             className="text-gray-500 hover:text-gray-700"
           >
-            <XMarkIcon className="h-6 w-6" />
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
@@ -105,15 +111,15 @@ export default function CartCheckoutModal({
           <div className="flex justify-between mb-2">
             <div className={`text-sm ${step >= 1 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
               <h2 className={`${step >= 1 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>1</h2>
-              <p className='text-xs md:text-md'>Summary</p>
+              <p className='text-xs md:text-md'>{t('summary')}</p>
             </div>
             <div className={`text-sm ${step >= 2 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
               <h2 className={`${step >= 2 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>2</h2>
-              <p className='text-xs md:text-md'>Personal Info</p>
+              <p className='text-xs md:text-md'>{t('personalInfo')}</p>
             </div>
             <div className={`text-sm ${step >= 3 ? 'text-lime-500 font-medium' : 'text-gray-500'} flex flex-col justify-center items-center gap-2 `}>
               <h2 className={`${step >= 3 ? 'bg-lime-500 text-white' : 'bg-gray-50'} h-8 w-8 flex justify-center items-center gap-5 rounded-full`}>3</h2>
-              <p className='text-xs md:text-md'>Payment</p>
+              <p className='text-xs md:text-md'>{t('payment')}</p>
             </div>  
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
@@ -128,17 +134,17 @@ export default function CartCheckoutModal({
           { step === 1 && (
               <div className="space-y-4">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-md md:text-lg font-medium mb-2">Order Summary</h3>
+                  <h3 className="text-md md:text-lg font-medium mb-2">{t('orderSummary')}</h3>
                   <div className="flex justify-between mb-2">
-                    <span className='text-sm md:text-md'>Subtotal:</span>
+                    <span className='text-sm md:text-md'>{t('subtotal')}:</span>
                     <span className="text-sm md:text-md font-medium">€{subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between mb-2">
-                    <span className='text-sm md:text-md'>Shipping:</span>
+                    <span className='text-sm md:text-md'>{t('shipping')}:</span>
                     <span className="text-sm md:text-md font-medium">€{shippingCost.toFixed(2)}</span>
                   </div>
                   <div className="flex font-bold justify-between mb-2 mt-4 pt-4 border-t">
-                    <span>Total Amount:</span>
+                    <span>{t('totalAmount')}:</span>
                     <span className="font-bold">€{total.toFixed(2)}</span>
                   </div>
                   {/* <div className="mt-4 pt-4 border-t">
@@ -153,7 +159,7 @@ export default function CartCheckoutModal({
                     onClick={() => setStep(2)}
                     className="px-6 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600"
                   >
-                    Next
+                    {t('next')}
                   </button>
                 </div>
               </div>
@@ -165,7 +171,7 @@ export default function CartCheckoutModal({
                   <div className="flex gap-2 md:gap-5 flex-col md:flex-row">
                     <div className='flex-1'>
                       <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">
-                        Firstname *
+                        {t('firstname')}
                       </label>
                       <input
                         type="text"
@@ -178,7 +184,7 @@ export default function CartCheckoutModal({
                     </div>
                     <div className='flex-1'>
                       <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">
-                        Lastname *
+                        {t('lastname')}
                       </label>
                       <input
                         type="text"
@@ -192,7 +198,7 @@ export default function CartCheckoutModal({
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email *
+                      {t('email')}
                     </label>
                     <input
                       type="email"
@@ -205,7 +211,7 @@ export default function CartCheckoutModal({
                   </div>
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                      Phone *
+                      {t('phone')}
                     </label>
                     <input
                       type="tel"
@@ -218,11 +224,11 @@ export default function CartCheckoutModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Select a Mondial Relay Point *
+                      {t('selectRelay')}
                     </label>
                     <div className="border rounded-md p-2">
                       <MondialRelayWidget
-                        initialCountry='ES'
+                        initialCountry={countryLocale.toUpperCase()}
                         onAddressSelected={(mondialRelayId,address : Address) => {
                           // const address = `${parcel.Nom} - ${parcel.Adresse1}, ${parcel.CodePostal} ${parcel.Ville}`;
                           const fullAddress = `${address.Street}, ${address.CP} ${address.City}`;
@@ -234,13 +240,13 @@ export default function CartCheckoutModal({
                     </div>
                     {personalInfoData?.shipping_address && (
                       <p className="mt-2 text-sm text-gray-600">
-                        Selected point: {personalInfoData?.shipping_address}
+                        {t('selectedPoint')}: {personalInfoData?.shipping_address}
                       </p>
                     )}
                   </div>
                   <div className="flex justify-between items-center">
                    <p className="text-xs md:text-sm text-gray-600">
-                      You will be redirected to complete your payment securely.
+                      {t('securePayment')}
                    </p>
                    
                    <div className='flex gap-2'>
@@ -249,14 +255,14 @@ export default function CartCheckoutModal({
                       onClick={() => setStep(1)}
                       className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                     >
-                      Back
+                      {t('back')}
                     </button>
                     <button
                       // onClick={handleSubmit}
                       type='submit'
                       className="px-6 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600"
                     >
-                      Next
+                      {t('next')}
                     </button>
                    </div>
                   </div>
@@ -278,14 +284,14 @@ export default function CartCheckoutModal({
                           onClick={() => setStep(2)}
                           className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
                         >
-                          Back
+                          {t('back')}
                         </button>
                         <button
                           type="submit"
                           disabled={isProcessing}
                           className="px-4 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600 disabled:opacity-50"
                         >
-                          Pay Now
+                          {t('payNow')}
                         </button>                   
                   </div>
                     </>

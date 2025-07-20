@@ -99,16 +99,17 @@ export default function MondialRelayWidget({initialCountry, onAddressSelected} :
           return;
         }
 
+        console.log("RELAY BRAND" + env.mondial_relay.CLIENT_CODE)
+        console.log()
         // Initialize the widget
         window.$("#Zone_Widget").MR_ParcelShopPicker({
           Target: "#Target_Widget",
           // Brand: "BDTEST  ",
           // Brand: "CC233ETC",
-          Brand: env.mondial_relay.CLIENT_CODE,
+          Brand: env.mondial_relay.CLIENT_CODE || "CC233ETC",
           // Country: "BE",
           // PostCode: "1640",
-          Country: country,
-          PostCode: "1640",
+          Country: country,          
           ColLivMod: "24R",
           NbResults: "7",
           Responsive: true,
@@ -122,22 +123,9 @@ export default function MondialRelayWidget({initialCountry, onAddressSelected} :
               "Street":parcelShop.Adresse1,
               "CP":parcelShop.CP,
               "City":parcelShop.Ville
-            }
-            // console.log("fullAddress")
-            // console.log(address)
+            }            
             onAddressSelected(parcelShop.Nom,address)
               // console.log("Selected parcel shop:", parcelShop);
-              
-              // // Extract address information
-              // // const fullAddress = `${parcelShop.Nom}\n${parcelShop.Adresse1}\n${parcelShop.CP} ${parcelShop.Ville}`;
-              // const fullAddress = `${parcelShop.Adresse1}\n${parcelShop.CP} ${parcelShop.Ville}`;
-              // console.log("Full address:", fullAddress);
-
-              // // Optionally store it in a hidden input or state
-              // const addressInput = document.getElementById("SelectedParcelAddress") as HTMLInputElement;
-              // if (addressInput) {
-              //   addressInput.value = fullAddress;
-              // }
             }});
 
         isInitialized = true;

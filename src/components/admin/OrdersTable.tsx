@@ -46,7 +46,7 @@ export default function OrdersTable() {
   const fetchOrders = async () => {
     try {
       const response = await fetch('/api/admin/orders');
-      if (!response.ok) throw new Error('Failed to fetch orders');
+      if(!response.ok) throw new Error("Failed to fetch orders");
       const data = await response.json();
       setOrders(data);
     } catch (err) {
@@ -59,7 +59,7 @@ export default function OrdersTable() {
   const fetchProducts = async () => {
     try {
       const response = await fetch('/api/products');
-      if (!response.ok) throw new Error('Failed to fetch products');
+      if(!response.ok) throw new Error("Failed to fetch orders");
       const data = await response.json();
       setProducts(data);
     } catch (err) {
@@ -70,7 +70,7 @@ export default function OrdersTable() {
   const fetchAffiliates = async () => {
     try {
       const response = await fetch('/api/admin/affiliates');
-      if (!response.ok) throw new Error('Failed to fetch doctors');
+      if(!response.ok) throw new Error("Failed to fetch orders");
       const data = await response.json();
       setAffilitates(data);
     } catch (err) {
@@ -151,15 +151,13 @@ export default function OrdersTable() {
         affiliate_id: newOrder.affiliate_id
       };
 
-      const response = await fetch('/api/admin/orders', {
+      await fetch('/api/admin/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(orderData),
       });
-
-      if (!response.ok) throw new Error('Failed to create order');
       
       await fetchOrders();
       setIsModalOpen(false);
@@ -201,12 +199,10 @@ export default function OrdersTable() {
     if (!orderToDelete) return;
 
     try {
-      const response = await fetch(`/api/admin/orders/${orderToDelete.id}`, {
+      await fetch(`/api/admin/orders/${orderToDelete.id}`, {
         method: 'DELETE',
       });
 
-      if (!response.ok) throw new Error('Failed to delete order');
-      
       await fetchOrders();
       setIsDeleteModalOpen(false);
       setOrderToDelete(null);

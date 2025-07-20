@@ -4,6 +4,7 @@ import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import ToggleSwitch from '../ui/ToggleSwitch';
 
+
 export default function ProductsTable() {
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -79,7 +80,7 @@ export default function ProductsTable() {
     }
   };
 
-  const handleEditProduct = async (e: React.FormEvent) => {
+    const handleEditProduct = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingProduct) return;
 

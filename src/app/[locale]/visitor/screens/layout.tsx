@@ -43,8 +43,6 @@ export default function Layout({ children } : {children : React.ReactNode}) {
         <Gift className="text-lime-500 h-10 w-10 " />
         <div className="text-gray-700 text-xs md:text-md font-medium py-2 md:mx-2">Free shipping for orders over 60€</div>
       </div>
-
-
       )}
       <Header />
       <div className="flex-grow min-h-[70vh] mt-[100px]">
@@ -53,4 +51,4 @@ export default function Layout({ children } : {children : React.ReactNode}) {
       <Footer />
     </div>
   );
-}
+} 

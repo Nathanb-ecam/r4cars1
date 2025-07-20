@@ -48,6 +48,7 @@ export default function AffiliatesTable() {
     }
   };
 
+
   const handleCreateAffiliates = async (e: React.FormEvent) => {
     e.preventDefault();
     try {

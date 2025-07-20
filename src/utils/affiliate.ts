@@ -1,5 +1,5 @@
-import { CustomerPersonalInfo } from "@/app/visitor/screens/cart/page";
-import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro } from "@/models/GoAffPro";
+import { ExtendSchemaGoAffPro } from "@/models/GoAffPro";
+
 
 
 export const trackAffiliateSale = async (data: ExtendSchemaGoAffPro) => {
