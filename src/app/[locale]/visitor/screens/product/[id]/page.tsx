@@ -64,9 +64,9 @@ export default function ProductPage() {
         secondaryVisible={true}
         onClose={()=>setAddedToCartVisible(false)}
       />}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-8">
         <Link href="/visitor/screens/home" className="text-2xl font-bold text-gray-900">
-          <div className='mb-5 flex items-center gap-2'>
+          <div className='md:mb-5 flex items-center gap-2'>
             <ArrowLeftIcon className="h-4 w-4 text-gray-600" />
             <p className='text-sm text-gray-700 border-b border-b-gray-300 '>{t('backToProducts')}</p>
           </div>

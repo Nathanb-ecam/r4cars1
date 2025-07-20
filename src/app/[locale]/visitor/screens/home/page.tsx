@@ -38,7 +38,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">        
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 px-4 md:py-8">        
         <HomeProductSection title={t('specialOffers')} products={products.filter(product => product.isSpecialOffer === true && product.visibleOnWebsite === true)} handleAddToCart={handleAddToCart}></HomeProductSection>
         <HomeProductSection title={t('allProducts')} products={products.filter(product => (product.isSpecialOffer === undefined || product.isSpecialOffer === false) && (product.visibleOnWebsite === true))} handleAddToCart={handleAddToCart}></HomeProductSection>
     </main>

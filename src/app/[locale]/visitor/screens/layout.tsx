@@ -2,9 +2,12 @@
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Gift } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 export default function Layout({ children } : {children : React.ReactNode}) {
+  const t = useTranslations('Banner')
+  
   const [showBanner, setShowBanner] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -16,7 +19,7 @@ export default function Layout({ children } : {children : React.ReactNode}) {
     const hideTimeout = setTimeout(() => {
       setIsVisible(false);
       setTimeout(() => setShowBanner(false), 300); // match transition duration
-    }, 4000);
+    }, 2500);
 
     return () => {
       clearTimeout(enterTimeout);
@@ -41,7 +44,7 @@ export default function Layout({ children } : {children : React.ReactNode}) {
       >
         {/* <div className="w-[6px] bg-lime-500"></div> */}
         <Gift className="text-lime-500 h-10 w-10 " />
-        <div className="text-gray-700 text-xs md:text-md font-medium py-2 md:mx-2">Free shipping for orders over 60€</div>
+        <div className="text-gray-700 text-xs md:text-md font-medium py-2 md:mx-2">{t('freeShipping')}</div>
       </div>
       )}
       <Header />

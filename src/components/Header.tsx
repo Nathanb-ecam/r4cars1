@@ -42,11 +42,14 @@ export default function Header() {
 
 
           
-          <div className="flex items-center gap-4">
-            <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-2 py-1">
-              <option value="en">🇬🇧 English</option>
-              <option value="fr">🇫🇷 Français</option>
-              <option value="es">🇪🇸 Español</option>
+          <div className="flex items-center gap-2 md:gap-4">
+            <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-1 md:px-2 md:py-1">
+              <option value="en">🇬🇧</option>
+               {/* English */}
+              <option value="fr">🇫🇷</option>
+               {/* Français */}
+              <option value="es">🇪🇸</option>
+               {/* Español */}
             </select>
             <Link href="/visitor/screens/cart" className="relative">
               <ShoppingCartIcon className="h-6 w-6 text-gray-200" />
