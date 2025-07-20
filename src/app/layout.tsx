@@ -11,10 +11,12 @@ export default async function LocaleLayout({
 }) {
 
   return (
-    <html lang="en">
-      <body>
+    // <html lang="en">
+    //   <body>
+    <>
         {children}
-      </body>
-    </html>
+    </>
+    //   {/* </body>
+    // </html> */}
   );
 }
