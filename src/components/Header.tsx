@@ -18,10 +18,14 @@ export default function Header() {
   const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const loc = e.target.value;
     // Replace the first segment with the new locale
-    const segments = pathname.split('/');
-    segments[1] = loc;
-    const newPath = segments.join('/') || '/';
-    router.replace(newPath);
+    // const segments = pathname.split('/');
+    // segments[1] = loc;
+    // const newPath = segments.join('/') || '/';
+    // router.replace(newPath);
+
+    const newPath = `/${loc}${pathname.slice(locale.length + 1)}`;
+    router.replace(`/${loc}${pathname.slice(locale.length + 1)}`);
+
   };
 
   return (
