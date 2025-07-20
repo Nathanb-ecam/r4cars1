@@ -9,8 +9,9 @@ import { startTransition } from 'react';
 
 export default function Header() {
   const router = useRouter();  
+  const params = useParams();
   
-  // const locale = params.locale as string || 'en';
+  const locale = params.locale as string || 'en';
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
