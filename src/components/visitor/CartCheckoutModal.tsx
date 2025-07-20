@@ -244,28 +244,31 @@ export default function CartCheckoutModal({
                       </p>
                     )}
                   </div>
-                  <div className="flex justify-between items-center">
-                   <p className="text-xs md:text-sm text-gray-600">
+
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+                    <p className="mb-2 text-xs md:text-sm text-gray-600">
                       {t('securePayment')}
-                   </p>
-                   
-                   <div className='flex gap-2'>
-                    <button
-                      type="button"
-                      onClick={() => setStep(1)}
-                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                    >
-                      {t('back')}
-                    </button>
-                    <button
-                      // onClick={handleSubmit}
-                      type='submit'
-                      className="px-6 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600"
-                    >
-                      {t('next')}
-                    </button>
-                   </div>
+                    </p>
+
+                    <div className="flex gap-2 justify-end sm:ml-auto">
+                      <button
+                        type="button"
+                        onClick={() => setStep(1)}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                      >
+                        {t('back')}
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-6 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600"
+                      >
+                        {t('next')}
+                      </button>
+                    </div>
                   </div>
+
+
+
                 </div>
           )}
     

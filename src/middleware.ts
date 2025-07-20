@@ -49,8 +49,7 @@ async function isTokenValid(token: string, role : string){
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  console.log("DEBUG MIDDLEWARE")
-  console.log(pathname)
+
   // Special case: redirect root domain to default locale visitor login
   if (pathname === '/') {
     const defaultLocale = i18nConfig.defaultLocale || 'en';

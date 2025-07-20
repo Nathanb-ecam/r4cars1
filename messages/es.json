@@ -53,7 +53,7 @@
     "email": "Correo electrónico *",
     "phone": "Teléfono *",
     "selectRelay": "Seleccione un punto Mondial Relay *",
-    "selectedPoint": "Punto seleccionado:",
+    "selectedPoint": "Punto seleccionado",
     "securePayment": "Serás redirigido para completar tu pago de forma segura."      
   },
 
