@@ -44,6 +44,12 @@ const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             </div>
           </Link>
 
+          <div>
+            <Link className="mx-1 border border-1 px-2 py-1" href="/es/visitor/screens/cart">ES</Link>
+            <Link className="mx-1 border border-1 px-2 py-1" href="/fr/visitor/screens/cart">FR</Link>
+            <Link className="mx-1 border border-1 px-2 py-1" href="/en/visitor/screens/cart">EN</Link>
+          </div>
+
           
           <div className="flex items-center gap-2 md:gap-4">
             <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-1 md:px-2 md:py-1">
