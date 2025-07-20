@@ -56,7 +56,7 @@
     "email": "Email *",
     "phone": "Phone *",
     "selectRelay": "Select a Mondial Relay Point *",
-    "selectedPoint": "Selected point:",
+    "selectedPoint": "Selected point",
     "securePayment": "You will be redirected to complete your payment securely."
   },
 

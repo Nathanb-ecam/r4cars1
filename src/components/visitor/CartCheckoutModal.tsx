@@ -226,7 +226,7 @@ export default function CartCheckoutModal({
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       {t('selectRelay')}
                     </label>
-                    <div className="border rounded-md p-2">
+                    <div className="border rounded-md md:p-2">
                       <MondialRelayWidget
                         initialCountry={countryLocale.toUpperCase()}
                         onAddressSelected={(mondialRelayId,address : Address) => {
@@ -240,7 +240,7 @@ export default function CartCheckoutModal({
                     </div>
                     {personalInfoData?.shipping_address && (
                       <p className="mt-2 text-sm text-gray-600">
-                        {t('selectedPoint')}: {personalInfoData?.shipping_address}
+                        {t('selectedPoint')}: <span className='font-semibold'>{personalInfoData?.shipping_address}</span>
                       </p>
                     )}
                   </div>

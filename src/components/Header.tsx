@@ -21,10 +21,11 @@ const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const segments = pathname.split('/');
 
   // Replace the locale segment (assumed to be at index 1)
-  segments[1] = locale;
-  const newPath = segments.join('/');
-
-  router.push(newPath);
+  if(["es","en","fr"].includes(segments[1])) {
+    segments[1] = locale;
+    const newPath = segments.join('/');
+    router.push(newPath);
+  }
 };
 
 
