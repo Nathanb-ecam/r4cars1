@@ -9,9 +9,9 @@ import { startTransition } from 'react';
 
 export default function Header() {
   const router = useRouter();  
-  const params = useParams();
-  
-  const locale = params.locale as string || 'en';
+  const pathname = usePathname(); 
+  const locale = pathname.split('/')[1] || 'en';
+
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -43,12 +43,6 @@ const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
               <Image src="/images/LEM_Logo_White.png" alt="logo" fill />
             </div>
           </Link>
-
-          <div>
-            <Link className="mx-1 border border-1 px-2 py-1" href="/es/visitor/screens/cart">ES</Link>
-            <Link className="mx-1 border border-1 px-2 py-1" href="/fr/visitor/screens/cart">FR</Link>
-            <Link className="mx-1 border border-1 px-2 py-1" href="/en/visitor/screens/cart">EN</Link>
-          </div>
 
           
           <div className="flex items-center gap-2 md:gap-4">
