@@ -14,6 +14,7 @@ import Modal from '@/components/Modal';
 import {BrevoOrderConfirmationTemplate} from '@/lib/email';
 import { useTranslations } from 'next-intl';
 
+export const dynamic = 'force-dynamic';
 export interface CustomerPersonalInfo {
   first_name: string;
   last_name: string;

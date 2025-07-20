@@ -6,6 +6,7 @@ import { Product } from '@/models/Product';
 import HomeProductSection from '@/components/visitor/HomeProductSection';
 import { useTranslations } from 'next-intl';
 
+export const dynamic = 'force-dynamic';
 
 export default function HomePage() {    
   
