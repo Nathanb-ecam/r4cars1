@@ -4,9 +4,9 @@ export const runtime = 'nodejs'
 
 
 export enum UserRole {
-  AFFILIATE = 'AFFILIATE',
+  // AFFILIATE = 'AFFILIATE',
   ADMIN = 'ADMIN',
-  USER = 'USER',
+  // USER = 'USER',
   VISITOR = 'VISITOR',
 }
 

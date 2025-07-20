@@ -13,7 +13,7 @@ export async function generateToken(payload: TokenPayload) {
   const token = await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
-    .setExpirationTime('24h')
+    .setExpirationTime('24h') 
     .sign(secret);
     
   return token;

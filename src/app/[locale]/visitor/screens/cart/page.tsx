@@ -104,8 +104,11 @@ export default function CartPage(){
         const succesfullyCreated = await trackAffiliateSale(
             extendedSchema
         );
-        if(succesfullyCreated) {setOrderConfirmationVisible(true); sendMailConfirmation({toEmail:customerPersonalInfo.email, toName:`${customerPersonalInfo.first_name} ${customerPersonalInfo.last_name}`}); return; }
-        setOrderFailed(true);
+        if(succesfullyCreated) {
+          setOrderConfirmationVisible(true); 
+          sendMailConfirmation({toEmail:customerPersonalInfo.email, toName:`${customerPersonalInfo.first_name} ${customerPersonalInfo.last_name}`});
+        }        
+        else setOrderFailed(true)
       }else{
         console.log("FAILED: affiliate_id not found")
         setOrderFailed(true);
