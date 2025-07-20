@@ -27,7 +27,7 @@ export default function Header() {
     
     router.replace(`/${loc}${pathname.slice(locale.length + 1)}`);
     
-    Cookies.set('NEXT_LOCALE', loc, {
+    Cookies.set('NEXT_LOCALE', "why", {
       path: '/',
       expires: 365, // days
     });
