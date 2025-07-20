@@ -110,7 +110,8 @@ export async function middleware(request: NextRequest) {
   }
 
 
-  if(LEGAL_PAGES.includes(pathname)){
+  const pathNoLocale = stripLocale(pathname);
+  if (LEGAL_PAGES.includes(pathNoLocale)) {
     const intlResponse = intlMiddleware(request);
     if (intlResponse) return intlResponse;
   }
