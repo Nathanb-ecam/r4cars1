@@ -4,7 +4,7 @@ import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import { useRouter, usePathname, useParams } from 'next/navigation';
-import { startTransition } from 'react';
+
 
 
 export default function Header() {
@@ -24,8 +24,10 @@ const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   if(["es","en","fr"].includes(segments[1])) {
     segments[1] = locale;
     const newPath = segments.join('/');
-    router.push(newPath);
+    // router.push(newPath);
+    window.location.href = newPath;
   }
+
 };
 
 
