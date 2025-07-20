@@ -18,8 +18,10 @@ export default function Header() {
 
   const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const loc = e.target.value;  
-    router.replace(`/${loc}${pathname.slice(locale.length + 1)}`);    
+    // router.replace(`/${loc}${pathname.slice(locale.length + 1)}`); 
+    document.cookie = `NEXT_LOCALE=${loc}; path=/; max-age=31536000; SameSite=Lax;`   
     // router.push(`/${loc}/visitor/login`);    
+    router.refresh();
   };
 
   return (
