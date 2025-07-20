@@ -1,6 +1,9 @@
 import LegalTemplate from "@/components/legal/LegalTemplate";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+
+
+export const dynamic = 'force-dynamic';
+
 
 export default function CookiePolicy() {  
   const t = useTranslations('CookiePolicy');  

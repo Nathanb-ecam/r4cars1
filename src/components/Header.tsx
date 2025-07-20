@@ -24,8 +24,8 @@ const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   if(["es","en","fr"].includes(segments[1])) {
     segments[1] = locale;
     const newPath = segments.join('/');
-    // router.push(newPath);
-    window.location.href = newPath;
+    router.push(newPath);
+    // window.location.href = newPath;
   }
 
 };

@@ -1,6 +1,8 @@
 import LegalTemplate from "@/components/legal/LegalTemplate";
 import { useTranslations } from "next-intl";
 
+export const dynamic = 'force-dynamic';
+
 export default function TermsOfService() {
     const t = useTranslations('TermsOfService');
     const termsTitle = t.raw('title')
