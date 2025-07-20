@@ -9,22 +9,23 @@ import { startTransition } from 'react';
 
 export default function Header() {
   const router = useRouter();  
-  const params = useParams();
-  const pathname = usePathname();
-  const locale = params.locale as string || 'en';
-
-   const currentLocale = pathname.split('/')[1] || 'en';
-
-  // Remove the locale part from the path to keep the rest of the path same
-  const basePath = pathname.split('/').slice(2).join('/');
-
+  
+  // const locale = params.locale as string || 'en';
   const items = useCartStore((state) => state.items);
   const itemCount = items.reduce((acc, item) => acc + item.quantity, 0);
 
-  const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const nextLocale = e.target.value;  
-    // router.replace(`/${loc}${pathname.slice(locale.length + 1)}`); 
-  };
+const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const locale = e.target.value;
+  const pathname = window.location.pathname;
+  const segments = pathname.split('/');
+
+  // Replace the locale segment (assumed to be at index 1)
+  segments[1] = locale;
+  const newPath = segments.join('/');
+
+  router.push(newPath);
+};
+
 
   return (
     // bg-gray-900
@@ -42,29 +43,6 @@ export default function Header() {
             </div>
           </Link>
 
-        <div className="locale-links">
-          <Link
-            href={`/en/${basePath}`}
-            className={currentLocale === 'en' ? 'active' : ''}
-            locale={false}
-          >
-            🇬🇧 English
-          </Link>
-          <Link
-            href={`/es/${basePath}`}
-            className={currentLocale === 'es' ? 'active' : ''}
-            locale={false}
-          >
-            🇪🇸 Español
-          </Link>
-          <Link
-            href={`/fr/${basePath}`}
-            className={currentLocale === 'fr' ? 'active' : ''}
-            locale={false}
-          >
-            🇫🇷 Français
-          </Link>
-        </div>
           
           <div className="flex items-center gap-2 md:gap-4">
             <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-1 md:px-2 md:py-1">
