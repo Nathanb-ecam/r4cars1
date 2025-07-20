@@ -5,7 +5,6 @@ import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import { useRouter, usePathname, useParams } from 'next/navigation';
-import Cookies from 'js-cookie';
 
 
 export default function Header() {
@@ -20,7 +19,7 @@ export default function Header() {
   const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const loc = e.target.value;  
     // router.replace(`/${loc}${pathname.slice(locale.length + 1)}`);    
-    router.push(`/${loc}/visitor/login}`);    
+    router.push(`/${loc}/visitor/login`);    
   };
 
   return (
