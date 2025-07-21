@@ -10,7 +10,7 @@ export async function GET() {
       // created_at_max, created_at_min
       fields: "id,affiliate_id,status,total,subtotal,shipping_address,customer,customer_email,number,line_items,commission" // comma-separated fields
     });
-    console.log("GET URL" + url)
+    // console.log("GET URL" + url)
 
     const response = await fetch(`${url}?${params.toString()}`, {
           method: 'GET', // Optional, since GET is default
@@ -21,10 +21,10 @@ export async function GET() {
       },
     });
       
-    console.log(response)
+    // console.log(response)
     const {orders} = await response.json();
-    console.log("GET RESPONSE")
-    console.log(JSON.stringify(orders))  
+    // console.log("GET RESPONSE")
+    // console.log(JSON.stringify(orders))  
     return NextResponse.json(orders, { status: 201 });
   }
 

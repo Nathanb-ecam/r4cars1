@@ -2,7 +2,7 @@ import { ExtendSchemaGoAffPro } from "@/models/GoAffPro";
 
 
 
-export const trackAffiliateSale = async (data: ExtendSchemaGoAffPro) => {
+export const postAffiliateSale = async (data: ExtendSchemaGoAffPro) => {
   try {
     // Here you would integrate with GoAffPro's API
     // For now, we'll just log the data
@@ -25,8 +25,8 @@ export const trackAffiliateSale = async (data: ExtendSchemaGoAffPro) => {
     return true;
     
   } catch (error) {
-    return false;
     console.error('Error tracking affiliate sale:', error);
+    return false;
   }
 };
 

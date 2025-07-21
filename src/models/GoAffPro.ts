@@ -1,3 +1,5 @@
+import { CustomerPersonalInfo } from "@/app/[locale]/visitor/screens/cart/page";
+import { CartItem } from "@/contexts/CartContext";
 
 export interface GoAffProLineItem {
   name:string, // ex: Product A. name of the product
@@ -72,4 +74,41 @@ export interface ExtendedOrderGoAffPro{
 //commission: 45, // (not recommended) specify the commission to be given for this order
  delay?: number, // ex: 60000. the amount in milliseconds to delay the processing of this order. This is use full for up-sell where the second conversion event should take preference over the first order. So send the first conversion event with a suitable delay parameter
 
+}
+
+
+export function getExtendedGoaffProOrder(
+  customerPersonalInfo : CustomerPersonalInfo,
+  cartItems : CartItem[],
+  subtotal : number,
+  shippingCost: number,
+  total: number,
+){
+      const orderId = `ORDER-${Date.now()}`;  
+      const line_items: GoAffProLineItem[] = cartItems.map((item) => ({
+        name: item.name,
+        sku: item.sku,
+        price: Math.min(item.originalPrice, item.discountedPrice),
+        quantity: item.quantity,
+        product_id: item.id,
+        tax: 0,
+        discount: item.originalPrice - Math.min(item.originalPrice, item.discountedPrice),
+      }));
+      const extendedGoAffProOrder: ExtendedOrderGoAffPro = {
+        id: orderId,
+        number: `#${orderId}`,
+        total,
+        subtotal,
+        shipping:shippingCost,
+        discount: 0,
+        tax: 0,
+        currency: 'EUR',
+        date: new Date().toISOString(),
+        shipping_address: customerPersonalInfo.shipping_address,
+        customer: customerPersonalInfo,
+        line_items: line_items,
+        status: 'approved',
+        forceSDK: true
+      };
+      return extendedGoAffProOrder;
 }

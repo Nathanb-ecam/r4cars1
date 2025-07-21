@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import MondialRelayWidget, { Address } from '../mondial-relay/RelayWidget';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import Cookies from 'js-cookie';
+import { useRouter } from '@/i18n/routing';
 
 interface CustomerPersonalInfo {
   first_name: string;
@@ -19,28 +21,29 @@ interface PersonalInfo{
 }
 
 interface CartCheckoutModalProps {
-  isOpen: boolean;
   onClose: () => void;
   onSubmit: (formData: CustomerPersonalInfo) => Promise<void>;
   isProcessing: boolean;
   subtotal: number;
   shippingCost: number;
   total: number;
+  setAffiliateId: (affiliate_id : string) => void;
 }
 
 export default function CartCheckoutModal({
-  isOpen,
   onClose,
   onSubmit,
   isProcessing,
   subtotal,
   shippingCost,
-  total
+  total,  
+  setAffiliateId
 }: CartCheckoutModalProps) {
   
   const t = useTranslations('Checkout');
+  const router = useRouter()
   const pathname = usePathname();
-  const countryLocale = (pathname.split('/')[1] != "en") ? pathname.split('/')[1] : 'fr';
+  const countryLocale = (pathname.split('/')[1] != "en") ? pathname.split('/')[1] : 'fr';  
   const [step, setStep] = useState(1);
   const [personalInfoData, setPersonalInfoData] = useState<PersonalInfo | null>({
     first_name: '',
@@ -49,7 +52,7 @@ export default function CartCheckoutModal({
     phone: '',
     shipping_address:''
   });  
-
+  
 
 
   useEffect(() => {
@@ -69,25 +72,31 @@ export default function CartCheckoutModal({
 
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if(personalInfoData === null) {console.error("Personal Info data is empty!");return}; 
+    e.preventDefault();    
+    const affiliate_id = Cookies.get('affiliate_id');
+    if(!affiliate_id) {onClose();router.push("/visitor/login");return;}
+    setAffiliateId(affiliate_id)    
+    
+    
+    if(personalInfoData === null) {console.error("Personal Info data is empty!");return};     
     
     if (step === 1){      
+
       setStep(2);
     } else if(step === 2 ){      
       // Validate all required fields
       if (!personalInfoData.first_name || !personalInfoData.last_name || !personalInfoData.email || !personalInfoData.shipping_address) {
         alert('Please fill in all required fields and select a Mondial Relay point');
         return;
-      }
+      }           
       setStep(3);
-    }else {            
-      await onSubmit(personalInfoData);
     }
+    // else {            
+      // await onSubmit(personalInfoData);
+    // }
   };
 
 
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -155,8 +164,9 @@ export default function CartCheckoutModal({
                 </div>
                 <div className='text-end'>         
                   <button
-                    type="button"
-                    onClick={() => setStep(2)}
+                    type="submit"
+                    // type="button"
+                    // onClick={() => setStep(2)}
                     className="px-6 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600"
                   >
                     {t('next')}
@@ -290,7 +300,12 @@ export default function CartCheckoutModal({
                           {t('back')}
                         </button>
                         <button
-                          type="submit"
+                          // type="submit"
+                          type='button'
+                          onClick={async ()=> {
+                            if(personalInfoData === null) {console.error("Personal Info data is empty!");return};     
+                            await onSubmit(personalInfoData)
+                          }}
                           disabled={isProcessing}
                           className="px-4 py-2 text-sm font-medium text-white bg-lime-500 rounded-md hover:bg-lime-600 disabled:opacity-50"
                         >

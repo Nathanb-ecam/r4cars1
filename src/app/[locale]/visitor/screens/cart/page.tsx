@@ -3,18 +3,17 @@ import { useState } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import { ArrowLeftIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import { trackAffiliateSale } from '@/utils/affiliate';
+import { postAffiliateSale } from '@/utils/affiliate';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CartCheckoutModal from '@/components/visitor/CartCheckoutModal';
-import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro, GoAffProLineItem } from '@/models/GoAffPro';
+import { ExtendedOrderGoAffPro, ExtendSchemaGoAffPro, getExtendedGoaffProOrder, GoAffProLineItem } from '@/models/GoAffPro';
 import PriceDiscount from '@/components/visitor/PriceDiscount';
 import Modal from '@/components/Modal';
 import {BrevoOrderConfirmationTemplate} from '@/lib/email';
 import { useTranslations } from 'next-intl';
 
-export const dynamic = 'force-dynamic';
 export interface CustomerPersonalInfo {
   first_name: string;
   last_name: string;
@@ -31,6 +30,8 @@ export default function CartPage(){
   const [orderConfirmationVisible,setOrderConfirmationVisible] = useState(false);
   const [orderFailed,setOrderFailed] = useState(false);
   const [rerenderCount, setRerenderCount] = useState(0);
+  
+  const [affiliateId,setAffiliateId] = useState("");
 
   const subtotalRaw = items.reduce(
     (sum, item) => sum + Math.min(item.discountedPrice, item.originalPrice) * item.quantity, 0
@@ -73,36 +74,11 @@ export default function CartPage(){
       setIsProcessing(true);
       // Stripe logic removed
       // ... keep affiliate and order logic ...
-      const orderId = `ORDER-${Date.now()}`;  
-      const line_items: GoAffProLineItem[] = items.map((item) => ({
-        name: item.name,
-        sku: item.sku,
-        price: Math.min(item.originalPrice, item.discountedPrice),
-        quantity: item.quantity,
-        product_id: item._id,
-        tax: 0,
-        discount: item.originalPrice - Math.min(item.originalPrice, item.discountedPrice),
-      }));
-      const extendedGoAffProOrder: ExtendedOrderGoAffPro = {
-        id: orderId,
-        number: `#${orderId}`,
-        total,
-        subtotal,
-        shipping:shippingCost,
-        discount: 0,
-        tax: 0,
-        currency: 'EUR',
-        date: new Date().toISOString(),
-        shipping_address: customerPersonalInfo.shipping_address,
-        customer: customerPersonalInfo,
-        line_items: line_items,
-        status: 'approved',
-        forceSDK: true
-      };
-      const affiliate_id = Cookies.get('affiliate_id');
-      if (affiliate_id) {
-        const extendedSchema : ExtendSchemaGoAffPro = {order:extendedGoAffProOrder,"affiliate_id": parseInt(affiliate_id)}
-        const succesfullyCreated = await trackAffiliateSale(
+      const extendedGoAffProOrder : ExtendedOrderGoAffPro = getExtendedGoaffProOrder(customerPersonalInfo, items, subtotal, shippingCost, total);
+      // const affiliate_id = Cookies.get('affiliate_id');
+      if (affiliateId) {
+        const extendedSchema : ExtendSchemaGoAffPro = {order:extendedGoAffProOrder,"affiliate_id": parseInt(affiliateId)}
+        const succesfullyCreated = await postAffiliateSale(
             extendedSchema
         );
         if(succesfullyCreated) {
@@ -124,6 +100,8 @@ export default function CartPage(){
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      
+      
       {orderConfirmationVisible && <Modal 
         title={t('orderConfirmationTitle')} 
         sentence={t('orderConfirmationSentence')} 
@@ -228,16 +206,18 @@ export default function CartPage(){
           </div>
       }
 
-      <CartCheckoutModal
-        key={rerenderCount}
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-        onSubmit={handleCheckout}
-        isProcessing={isProcessing}
-        subtotal={subtotal}
-        shippingCost={shippingCost}
-        total={total}        
-      />
+      {isCheckoutOpen &&
+        <CartCheckoutModal
+          key={rerenderCount}          
+          onClose={() => setIsCheckoutOpen(false)}
+          onSubmit={handleCheckout}
+          isProcessing={isProcessing}
+          subtotal={subtotal}
+          shippingCost={shippingCost}
+          total={total}          
+          setAffiliateId={setAffiliateId}          
+        />
+      }
 
 
     </main>

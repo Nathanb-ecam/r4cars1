@@ -24,12 +24,12 @@ export default function LocaleSwitcherSelect({defaultValue, children, label} : P
             { locale: nextLocale as Locale }
         )
     }
-
+    
 
     return (
         <select 
         defaultValue={defaultValue} onChange={(e)=>onSelectChange(e.target.value)}
-        className="text-black rounded px-1 md:px-2 md:py-1"
+        className="bg-inherit text-black rounded focus:outline-none focus:border-none"
         >
             {children}
         </select>
