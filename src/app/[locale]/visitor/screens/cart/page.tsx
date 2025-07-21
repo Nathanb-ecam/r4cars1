@@ -13,6 +13,7 @@ import PriceDiscount from '@/components/visitor/PriceDiscount';
 import Modal from '@/components/Modal';
 import {BrevoOrderConfirmationTemplate} from '@/lib/email';
 import { useTranslations } from 'next-intl';
+import Toast from '@/components/ui/Toast';
 
 export interface CustomerPersonalInfo {
   first_name: string;
@@ -42,6 +43,9 @@ export default function CartPage(){
   const totalRaw = subtotal + shippingCost;
   const total = Math.round(totalRaw * 10) / 10;  
 
+  
+  const [modalErrorMessage,setModalErrorMessage] = useState('');
+  
   const sendMailConfirmation = async ({ toEmail, toName }: {toEmail:string, toName:string}) => {
     try {
       const orderTemplate : BrevoOrderConfirmationTemplate = {
@@ -101,6 +105,13 @@ export default function CartPage(){
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       
+      {modalErrorMessage && modalErrorMessage.length > 0 &&
+          <Toast
+          message='Affiliate not provided'          
+          duration={3000}
+          onClose={() => setModalErrorMessage('')}
+          />                            
+      }
       
       {orderConfirmationVisible && <Modal 
         title={t('orderConfirmationTitle')} 
@@ -216,6 +227,7 @@ export default function CartPage(){
           shippingCost={shippingCost}
           total={total}          
           setAffiliateId={setAffiliateId}          
+          onModalError={setModalErrorMessage}
         />
       }
 

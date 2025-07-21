@@ -63,7 +63,6 @@ export async function middleware(request: NextRequest) {
   }
 
   if(pathname.includes('/visitor/screens/')){    
-    console.log("UNO")
     const token = request.cookies.get('token')?.value;
     const affiliate_id = request.cookies.get('affiliate_id')?.value;    
     if(!token || !affiliate_id) return NextResponse.redirect(new URL(VISITOR_LOGIN_URL, request.url));
@@ -85,8 +84,7 @@ export async function middleware(request: NextRequest) {
 
   // }
 
-  if(pathname.includes('/admin/') && pathname != "/admin/login"){    
-    console.log("DOS")
+  if(pathname.includes('/admin/') && pathname != "/admin/login"){        
     const token = request.cookies.get('token')?.value;
     if(!token) return NextResponse.redirect(new URL(ADMIN_LOGIN_URL, request.url));
     const isValid = await isTokenValid(token, UserRole.ADMIN)

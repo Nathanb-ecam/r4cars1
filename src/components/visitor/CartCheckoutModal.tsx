@@ -28,6 +28,7 @@ interface CartCheckoutModalProps {
   shippingCost: number;
   total: number;
   setAffiliateId: (affiliate_id : string) => void;
+  onModalError: (errorMessage: string) => void;
 }
 
 export default function CartCheckoutModal({
@@ -37,7 +38,8 @@ export default function CartCheckoutModal({
   subtotal,
   shippingCost,
   total,  
-  setAffiliateId
+  setAffiliateId,
+  onModalError
 }: CartCheckoutModalProps) {
   
   const t = useTranslations('Checkout');
@@ -74,7 +76,7 @@ export default function CartCheckoutModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();    
     const affiliate_id = Cookies.get('affiliate_id');
-    if(!affiliate_id) {onClose();router.push("/visitor/login");return;}
+    if(!affiliate_id) {onModalError("Affiliate id was not found");onClose();return;}
     setAffiliateId(affiliate_id)    
     
     
