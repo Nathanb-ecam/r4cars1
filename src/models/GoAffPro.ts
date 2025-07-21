@@ -1,4 +1,5 @@
 import { CustomerPersonalInfo } from "@/app/[locale]/visitor/screens/cart/page";
+import { CartItem } from "@/store/cartStore";
 
 export interface GoAffProLineItem {
   name:string, // ex: Product A. name of the product
@@ -89,7 +90,7 @@ export function getExtendedGoaffProOrder(
         sku: item.sku,
         price: Math.min(item.originalPrice, item.discountedPrice),
         quantity: item.quantity,
-        product_id: item.id,
+        product_id: item._id,
         tax: 0,
         discount: item.originalPrice - Math.min(item.originalPrice, item.discountedPrice),
       }));
