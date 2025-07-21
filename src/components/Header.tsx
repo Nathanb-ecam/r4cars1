@@ -4,6 +4,9 @@ import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { useCartStore } from '@/store/cartStore';
 import Image from 'next/image';
 import { useRouter, usePathname, useParams } from 'next/navigation';
+import { Locale, routing } from '@/i18n/routing';
+import LocaleSwitcher from './ui/LocaleSwitcher';
+
 
 
 
@@ -25,7 +28,7 @@ const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const segments = pathname.split('/');
 
   // Replace the locale segment (assumed to be at index 1)
-  if(["es","en","fr"].includes(segments[1])) {
+  if(routing.locales.includes(segments[1] as Locale)) {
     segments[1] = locale;
     const newPath = segments.join('/');
     router.push(newPath);
@@ -52,19 +55,8 @@ const handleLocaleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           </Link>
 
           
-          <div className="flex items-center gap-2 md:gap-4">
-            {isLegalPage &&
-              <select value={locale} onChange={handleLocaleChange} className="text-black rounded px-1 md:px-2 md:py-1">
-                <option value="en">
-                  🇬🇧
-                </option>
-                {/* English */}
-                <option value="fr">🇫🇷</option>
-                {/* Français */}
-                <option value="es">🇪🇸</option>
-                {/* Español */}
-              </select>
-            }
+          <div className="flex items-center gap-2 md:gap-4">  
+            <LocaleSwitcher></LocaleSwitcher>
             
             <Link href="/visitor/screens/cart" className="relative">
               <ShoppingCartIcon className="h-6 w-6 text-gray-200" />
