@@ -1,5 +1,4 @@
 import { CustomerPersonalInfo } from "@/app/[locale]/visitor/screens/cart/page";
-import { CartItem } from "@/contexts/CartContext";
 
 export interface GoAffProLineItem {
   name:string, // ex: Product A. name of the product
