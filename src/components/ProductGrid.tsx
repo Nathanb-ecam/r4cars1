@@ -79,11 +79,8 @@ export default function ProductGrid() {
             </p>
             <div className="flex justify-between items-center">
               <span className="text-lg font-bold text-indigo-600">
-                {product.originalPrice.toFixed(2)} €
-              </span>
-              <span className="text-sm text-gray-500">
-                Stock: {product.stock}
-              </span>
+                {Number(product.originalPrice).toFixed(2)} €
+              </span>              
             </div>
             <button
               onClick={() => router.push(`/visitor/screens/product/${product._id}`)}
