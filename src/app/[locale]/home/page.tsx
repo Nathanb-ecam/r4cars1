@@ -1,25 +1,30 @@
 "use client";
 import { useProductStore } from '@/store/productStore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import HomeProductSection from '@/components/visitor/HomeProductSection';
 import { useTranslations } from 'next-intl';
 
+
 export const dynamic = 'force-dynamic';
 
+export default function HomePage() {
+  const t = useTranslations('Home');
+  const { products, isLoading, error, fetchProducts, total } = useProductStore();
 
-
-export default function HomePage() {    
-  
-  const t = useTranslations('Home');  
-  const { products, isLoading, error, fetchProducts } = useProductStore();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
-    fetchProducts();
-  }
-  ,[]);
-  // ,[fetchProducts]);
+    fetchProducts(currentPage, itemsPerPage);
+  }, [currentPage]);
 
-  console.log("Products:",products)
+  const totalPages = Math.ceil(total / itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -32,22 +37,37 @@ export default function HomePage() {
   if (error) {
     return (
       <div className="text-red-500 text-center py-8">
-        {error}        
+        {error}
       </div>
     );
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 px-4 md:py-8">        
-        <HomeProductSection 
-        title={t('allProducts')}         
-        products={
-          products.filter(product => 
-            // (product.isSpecialOffer === undefined || product.isSpecialOffer === false) && 
-            (product.visibleOnWebsite === true)
-          )
-        } 
-        />
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-8">
+      <HomeProductSection
+        title={t('allProducts')}
+        products={products}
+      />
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-8 pb-4 gap-2">
+        <button className='border border-gray-200 px-2 py-1 rounded-lg' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
+          ← Précédent
+        </button>
+        {[...Array(totalPages)].map((_, i) => (
+          <button
+            key={i}
+            // variant={currentPage === i + 1 ? 'default' : 'outline'}
+            onClick={() => handlePageChange(i + 1)}
+            className={`text-gray-500 ${currentPage === i + 1 ? 'underline decoration-blue-500 underline-offset-2 font-bold' : ''}`}
+          >
+            {i + 1}
+          </button>
+        ))}
+        <button className='border border-gray-200 px-2 py-1 rounded-lg' disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
+          Suivant →
+        </button>
+      </div>
     </main>
   );
-} 
+}

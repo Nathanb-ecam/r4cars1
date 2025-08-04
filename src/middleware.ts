@@ -52,7 +52,7 @@ export async function middleware(request: NextRequest) {
 
   // Special case: redirect root domain to default locale visitor login
   if (pathname === '/') {
-    const url = new URL(`/${locale}/visitor/home`, request.url);
+    const url = new URL(`/${locale}/home`, request.url);
     return NextResponse.redirect(url);
   }    
 
