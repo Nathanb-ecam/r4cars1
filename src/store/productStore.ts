@@ -9,7 +9,7 @@ interface ProductStore {
     
   clearProducts: () => void;
   // fetchProducts: () => Promise<void>;
-  fetchProducts: (page:number, limit:number) => Promise<void>;
+  fetchProducts: (page?: number, limit?: number) => Promise<void>;
   getProductById: (productId: string) => Product | undefined;
 }
 
