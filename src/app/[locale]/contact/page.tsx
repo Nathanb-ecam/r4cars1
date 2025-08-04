@@ -28,7 +28,7 @@ export default function ContactPage() {
     e.preventDefault();
     // Handle contact form submission logic here
     console.log('Contact Data:', contactData);
-    sendConfirmationEmail(contactData.email, contactData.name, contactData.message)
+    // sendConfirmationEmail(contactData.email, contactData.name, contactData.message)
     // Reset form
     setContactData({
       name: '',
