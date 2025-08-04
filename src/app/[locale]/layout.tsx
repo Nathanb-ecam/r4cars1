@@ -4,10 +4,9 @@ import '../globals.css';
 import {NextIntlClientProvider, hasLocale} from 'next-intl';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
-export const metadata = {
-  robots: 'noindex, nofollow',
-};
  
 export default async function LocaleLayout({
   children,
@@ -25,7 +24,11 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body>
         <NextIntlClientProvider locale={locale}>
-          {children}
+          <Header />
+            <div className="flex-grow min-h-[70vh] pt-[100px]">
+              {children}
+            </div>
+            <Footer />
         </NextIntlClientProvider>
       </body>
     </html>

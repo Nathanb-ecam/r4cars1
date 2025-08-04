@@ -3,23 +3,8 @@ import {defineRouting} from 'next-intl/routing';
  
 export const routing = defineRouting({
   // A list of all locales that are supported
-  locales: ['en', 'es','fr'],
- 
-  // Used when no locale matches
+  locales: ['de','fr'],   
   defaultLocale: 'fr',
-
-  // pathnames: {
-  //   '/visitor/screens/home': {
-  //     en: '/home-testing',
-  //     fr: '/accueil-test',
-  //     es: '/inicio-prueba'
-  //   },
-  //   '/visitor/login': {
-  //     en: '/login',
-  //     fr: '/connexion',
-  //     es: '/connecion'
-  //   },
-  // }
     
 });
 

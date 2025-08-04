@@ -7,10 +7,9 @@
   },
   "Home": {
     "specialOffers": "Nos offres du moment",
-    "allProducts": "Tous nos véhicules"
+    "allProducts": "Tous nos produits"
   },
   "HomeProductSection": {
-      "viewDetails": "Plus d'informations",
     "addedTitle": "Nouvel élément ajouté avec succès!",
     "seeBasket": "Voir le panier",
     "continueShopping": "Continuer mes achats"
@@ -32,7 +31,7 @@
   "Product": {
     "notFound": "Produit non trouvé",
     "addToCart": "Ajouter au panier",
-    "backToProducts": "Retouner aux véhicules",
+    "backToProducts": "Tous nos produits",
     "addedToCartTitle": "Nouvel article ajouté à la commande !",
     "addedToCartPrimary": "Voir le panier",
     "addedToCartSecondary": "Continuer vos achats"
@@ -63,25 +62,15 @@
     "links":"Liens rapides",
     "socials":"Réseaux sociaux",
     "legal":"Mentions légales",
-    "products":"Véhicules",
+    "products":"Produits",
     "cart":"Panier",
     "about":"À propos",
-    "contact":"Contact",
+    "contact":"À propos",
     "privacy":"Politique de Confidentialité",
     "terms":"Conditions d'utilisation",
     "cookies":"Politique de cookies",
     "localisation":"Localisation",
     "allRights":"Tous droits réservés"
-  },
-   
-   "CompanyInfo":{
-    "name": "r4cars1",
-    "address": "123 Rue de l'Exemple, Saillon, Suisse",
-    "phone": "+33 1 23 45 67 ",
-    "email": "contact@r4cars1.com",
-    "facebook": "https://www.facebook.com/r4cars1",
-    "instagram": "https://www.instagram.com/r4cars1",
-    "twitter": "https://www.twitter.com/r4cars1"
   },
 
 

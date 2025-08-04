@@ -1,18 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import OrdersTable from '@/components/admin/OrdersTable';
-import StockTable from '@/components/admin/StockTable';
 import ProductsTable from '@/components/admin/ProductsTable';
-import AffiliatesTable from '@/components/admin/AffiliatesTable';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState('products');
 
   const tabs = [
-    { id: 'orders', label: 'Sales' },    
-    { id: 'affiliates', label: 'Affiliates' },
-    { id: 'stock', label: 'Stock' },
+    // { id: 'orders', label: 'Sales' },    
+    // { id: 'affiliates', label: 'Affiliates' },
+    // { id: 'stock', label: 'Stock' },
     { id: 'products', label: 'Products' },
   ];
 
@@ -59,10 +56,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="mt-8">
-        {activeTab === 'orders' && <OrdersTable />}        
-        {activeTab === 'affiliates' && <AffiliatesTable />}
-        {activeTab === 'stock' && <StockTable />}
+      <div className="mt-8">        
         {activeTab === 'products' && <ProductsTable />}
       </div>
     </div>

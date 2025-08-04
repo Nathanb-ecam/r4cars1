@@ -48,43 +48,21 @@ async function isTokenValid(token: string, role : string){
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
+  const locale = pathname.split('/')[1] || 'fr';
 
   // Special case: redirect root domain to default locale visitor login
   if (pathname === '/') {
-    const defaultLocale = i18nConfig.defaultLocale || 'en';
-    const url = new URL(`/${defaultLocale}/visitor/login`, request.url);
-    url.searchParams.set('redirect', pathname);
+    const url = new URL(`/${locale}/visitor/home`, request.url);
     return NextResponse.redirect(url);
-  }  
-  
-  if(pathname == "/visitor/login") {    
-    return NextResponse.redirect(new URL(`/en/${VISITOR_LOGIN_URL}`, request.url))
-  }
+  }    
 
-  if(pathname.includes('/visitor/screens/')){    
-    const token = request.cookies.get('token')?.value;
-    const affiliate_id = request.cookies.get('affiliate_id')?.value;    
-    if(!token || !affiliate_id) return NextResponse.redirect(new URL(VISITOR_LOGIN_URL, request.url));
-    const isValid = await isTokenValid(token, UserRole.VISITOR)
-    if(isValid){
-      const intlResponse = intlMiddleware(request);
-      if (intlResponse) return intlResponse;
-    }
-    return NextResponse.redirect(new URL(VISITOR_LOGIN_URL, request.url));
-  }
+  if (pathname === '/admin/login') {    
+    return NextResponse.next();
+  }    
 
-  // if(pathname.includes('/api/admin')){
-  //   const token = request.cookies.get('token')?.value;
-    // if(!token) return new NextResponse(
-    //   JSON.stringify({ error: 'Access denied: Admin role required' }),
-    //   { status: 403, headers: { 'Content-Type': 'application/json' } }
-    // );
-  //   const isValid = await isTokenValid(token, UserRole.ADMIN)
 
-  // }
-
-  if(pathname.includes('/admin/') && pathname != "/admin/login"){        
+  if(pathname.includes('/admin') && !pathname.includes("/admin/login")){        
+    console.log("HOOOOW")
     const token = request.cookies.get('token')?.value;
     if(!token) return NextResponse.redirect(new URL(ADMIN_LOGIN_URL, request.url));
     const isValid = await isTokenValid(token, UserRole.ADMIN)
@@ -113,10 +91,16 @@ export async function middleware(request: NextRequest) {
     const intlResponse = intlMiddleware(request);
     if (intlResponse) return intlResponse;
   }
-       
+ 
+  
+  const intlResponse = intlMiddleware(request);
+  if (intlResponse) return intlResponse;    
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next/|api/|public/|images/|favicon.ico).*)"]
+  matcher: [
+  "/((?!_next|api|favicon.ico|images|.*\\.(?:png|jpg|jpeg|svg|webp|ico)).*)"
+  ]
 };
 

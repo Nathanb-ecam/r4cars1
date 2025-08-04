@@ -178,7 +178,7 @@ export default function ProductsTable() {
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Create New Product</h3>
+              <h3 className="text-lg font-medium text-slate-900">Create New Product</h3>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-gray-400 hover:text-gray-500"
@@ -292,7 +292,7 @@ export default function ProductsTable() {
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">Edit Product</h3>
+              <h3 className="text-lg font-medium text-slate-900">Edit Product</h3>
               <button
                 onClick={() => setIsEditModalOpen(false)}
                 className="text-gray-400 hover:text-gray-500"
@@ -441,27 +441,29 @@ export default function ProductsTable() {
           <tbody className="bg-white divide-y divide-gray-200">
             {products.map((product) => (
               <tr key={product._id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {product.name}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {product.sku}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-900">
+                <td className="px-6 py-4 text-sm text-slate-900">
                   <div className="max-w-xs truncate">
                     {product.description}
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  €{product.originalPrice.toFixed(2)}
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                  {/* €{product.originalPrice.toFixed(2)} */}
+                  €{product.originalPrice}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  €{product.discountedPrice.toFixed(2)}
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                  €{product.discountedPrice}
+                  {/* €{product.discountedPrice.toFixed(2)} */}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {new Date(product.createdAt).toLocaleDateString()}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   <div className="flex space-x-2">
                     <button
                       onClick={() => openEditModal(product)}
@@ -491,7 +493,7 @@ export default function ProductsTable() {
               <div className="flex justify-between items-center">
                 <div>
                   <span className="text-xs font-medium text-gray-500">Product</span>
-                  <p className="text-sm text-gray-900">{product.name}</p>
+                  <p className="text-sm text-slate-900">{product.name}</p>
                 </div>
                 <div className="flex space-x-2 pt-2">
                   <button
@@ -510,23 +512,25 @@ export default function ProductsTable() {
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">SKU</span>
-                <p className="text-sm text-gray-900">{product.sku}</p>
+                <p className="text-sm text-slate-900">{product.sku}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Description</span>
-                <p className="text-sm text-gray-900">{product.description}</p>
+                <p className="text-sm text-slate-900">{product.description}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Original Price</span>
-                <p className="text-sm text-gray-900">€{product.originalPrice.toFixed(2)}</p>
+                {/* <p className="text-sm text-slate-900">€{product.originalPrice.toFixed(2)}</p> */}
+                <p className="text-sm text-slate-900">€{product.originalPrice}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Discounted Price</span>
-                <p className="text-sm text-gray-900">€{product.discountedPrice.toFixed(2)}</p>
+                {/* <p className="text-sm text-slate-900">€{product.discountedPrice.toFixed(2)}</p> */}
+                <p className="text-sm text-slate-900">€{product.discountedPrice}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Added</span>
-                <p className="text-sm text-gray-900">{new Date(product.createdAt).toLocaleDateString()}</p>
+                <p className="text-sm text-slate-900">{new Date(product.createdAt).toLocaleDateString()}</p>
               </div>  
             </div>
           </div>

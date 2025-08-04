@@ -8,11 +8,11 @@ export default function LegalLayout({
 }) {
   return (
     <div className="min-h-screen flex flex-col">
-      <Header></Header>
-      <div className="flex-grow mt-[100px]">
+      {/* <Header></Header> */}
+      {/* <div className="flex-grow mt-[100px]"> */}
         {children}
-      </div>
-      <Footer />
+      {/* </div> */}
+      {/* <Footer /> */}
     </div>
   );
 } 
