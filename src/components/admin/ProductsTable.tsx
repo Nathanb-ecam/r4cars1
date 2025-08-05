@@ -6,20 +6,20 @@ import ToggleSwitch from '../ui/ToggleSwitch';
 
 
 type TableProduct = {
-    _id: '',
-    name: '',
-    fullName: '',
-    description: '',
-    transmission: '',
-    kms: '',
-    year: '',
-    benzineType: '',
-    hp: '',
-    doors: '',
-    motorisation: '',
-    price: '',
-    imageUrl: '',
-    visibleOnWebsite: false,
+    _id: string;
+    name: string;
+    fullName: string;
+    description: string;
+    transmission: string;
+    kms: string;
+    year: string;
+    benzineType: string;
+    hp: string;
+    doors: string;
+    motorisation: string;
+    price: string;
+    imageUrl: string;
+    visibleOnWebsite: boolean;
 }
 
 export default function ProductsTable() {
