@@ -30,26 +30,26 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">{t('title')}</h3>
             <div className='flex flex-col gap-4'>
-              <IconLabel className="text-gray-400" icon={<MdPhone className="text-xl text-gray-500 " />} text={c('phone')} />
-              <IconLabel className="text-gray-400" icon={<MdLocationOn className="text-xl text-gray-500 " />} text={c('address')} />
-              <IconLabel className="text-gray-400" icon={<MdEmail className="text-xl text-gray-500 " />} text={c('email')} />
+              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdPhone className="text-gray-500 " />} text={c('phone')} />
+              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdLocationOn className="text-gray-500 " />} text={c('address')} />
+              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdEmail className="text-gray-500 " />} text={c('email')} />
             </div>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">{t('links')}</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/home" className="text-gray-400 hover:text-white">
+                <Link href="/home" className="text-gray-400 text-sm sm:text-md hover:text-white">
                   {t('products')}
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-gray-400 hover:text-white">
+                <Link href="/about" className="text-gray-400 text-sm sm:text-md hover:text-white">
                   {t('about')}
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-400 hover:text-white">
+                <Link href="/contact" className="text-gray-400 text-sm sm:text-md hover:text-white">
                   {t('contact')}
                 </Link>
               </li>

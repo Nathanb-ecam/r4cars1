@@ -48,9 +48,9 @@ export default function ProductPage() {
     <>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-8">
         <Link href="/home" className="text-2xl font-bold text-slate-900">
-          <div className='md:mb-5 flex items-center gap-2'>
+          <div className='mb-3 md:mb-5 flex items-center gap-2'>
             <ArrowLeftIcon className="h-4 w-4 text-gray-600" />
-            <p className='text-sm text-gray-700 border-b tracking-tight border-b-gray-300 '>{t('backToProducts')}</p>
+            <p className='text-sm text-gray-700 md:border-b tracking-tight border-b-gray-300 '>{t('backToProducts')}</p>
           </div>
         </Link>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

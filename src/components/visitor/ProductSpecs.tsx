@@ -11,7 +11,7 @@ const ProductSpecs = ({product}  : {product: Product}) => {
       
       {/* Kilométrage */}
       <div className="flex items-start gap-2">
-        <FaRoad className="mt-1 text-xl" />
+        <FaRoad className="min-w-[14px] h-5 mt-1" />
         <div>
           <p className="text-gray-500">Kilométrage</p>
           <p className="font-semibold">{product.kms.toLocaleString()} km</p>
@@ -20,7 +20,7 @@ const ProductSpecs = ({product}  : {product: Product}) => {
 
       {/* Transmission */}
       <div className="flex items-start gap-2">
-        <GiGearStickPattern className="mt-1 text-xl" />
+        <GiGearStickPattern className="min-w-[14px] h-5 mt-1" />
         <div>
           <p className="text-gray-500">Transmission</p>
           <p className="font-semibold">{product.transmission}</p>
@@ -29,7 +29,7 @@ const ProductSpecs = ({product}  : {product: Product}) => {
 
       {/* Année */}
       <div className="flex items-start gap-2">
-        <AiOutlineCalendar className="mt-1 text-xl" />
+        <AiOutlineCalendar className="min-w-[14px] h-5 mt-1" />
         <div>
           <p className="text-gray-500">Année</p>
           <p className="font-semibold">{product.year}</p>
@@ -38,7 +38,7 @@ const ProductSpecs = ({product}  : {product: Product}) => {
 
       {/* Carburant */}
       <div className="flex items-start gap-2">
-        <FaGasPump className="mt-1 text-xl" />
+        <FaGasPump className="min-w-[10px] h-5 mt-1" />
         <div>
           <p className="text-gray-500">Carburant</p>
           <p className="font-semibold">{product.benzineType}</p>
@@ -47,7 +47,7 @@ const ProductSpecs = ({product}  : {product: Product}) => {
 
       {/* Puissance */}
       <div className="flex items-start gap-2">
-        <MdSpeed className="mt-1 text-xl" />
+        <MdSpeed className="min-w-[14px] h-5 mt-1" />
         <div>
           <p className="text-gray-500">Puissance</p>
           <p className="font-semibold">{product.hp}</p>
@@ -56,7 +56,7 @@ const ProductSpecs = ({product}  : {product: Product}) => {
 
       {/* Portes */}
       <div className="flex items-start gap-2">
-        <MdDoorFront className="mt-1 text-xl" />
+        <MdDoorFront className="min-w-[14px] h-5 mt-1" />
         <div>
           <p className="text-gray-500">Portes</p>
           <p className="font-semibold">{product.doors}</p>
