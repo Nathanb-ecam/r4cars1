@@ -24,11 +24,32 @@ export default function ContactPage() {
   });
 
 
-  const handleContactSubmit = (e: React.FormEvent) => {
+  const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Handle contact form submission logic here
     console.log('Contact Data:', contactData);    
-    sendContactMail(contactData)
+    
+    // Call the API to send the contact email on endpoint /api/mail
+    try {
+      const response = await fetch('/api/mail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactData),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to send email');
+      }
+
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Error sending contact email:', error);
+      throw error;
+    }
     // Reset form
     setContactData({
       fromName: '',

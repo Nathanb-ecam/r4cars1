@@ -78,7 +78,7 @@ export default function ProductsTable() {
         },
         body: JSON.stringify({
           ...newProduct,          
-          price: parseFloat(newProduct.price)          
+          price: newProduct.price          
         }),
       });
 
@@ -103,8 +103,7 @@ export default function ProductsTable() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...editingProduct,
-          // price: parseFloat(editingProduct.price.toString()),          
+          ...editingProduct,          
         }),
       });
 
