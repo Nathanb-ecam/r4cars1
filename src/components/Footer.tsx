@@ -57,7 +57,7 @@ export default function Footer() {
           </div>
 
           
-          <div className='flex gap-6'>         
+          <div className='flex gap-6 justify-center md:justify-start'>         
             <IconLabel className="text-gray-400" icon={<Link href={c('facebook')}><FaFacebook className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>}  />
             <IconLabel className="text-gray-400" icon={<Link href={c('instagram')}><FaInstagram className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>} />
             <IconLabel className="text-gray-400" icon={<Link href={c('twitter')}><FaTwitter className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>} />          

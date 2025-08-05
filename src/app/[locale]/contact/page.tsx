@@ -50,17 +50,20 @@ export default function ContactPage() {
       console.error('Error sending contact email:', error);
       throw error;
     }
-    // Reset form
-    setContactData({
-      fromName: '',
-      fromEmail: '',
-      fromPhone: '',
-      message: ''
-    });
+    finally {
+      // Optionally, you can reset the form or show a success message
+      // Reset form
+      setContactData({
+        fromName: '',
+        fromEmail: '',
+        fromPhone: '',
+        message: ''
+      });
+    }
   };
   
   return(
-    <div className='min-h-[80vh] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div className='min-h-[80vh] max-w-7xl mx-auto px-4 md:pb-10 sm:px-6 lg:px-8'>
       <div className='mb-8'>
         <h1 className='text-3xl font-bold text-slate-700'>Contactez-nous</h1>        
       </div>
@@ -73,7 +76,7 @@ export default function ContactPage() {
           </div>
           
             <form className='flex flex-col gap-4 mt-12' onSubmit={handleContactSubmit}>
-              <div className='flex gap-4'>
+              <div className='flex gap-4 flex-wrap'>
                 <LabelInput  value={contactData.fromName} required={true} className="flex-1" label='Prénom et nom' onChange={(value) => setContactData({...contactData, fromName: value})} placeholder="John Doe"/>
                 <LabelInput  value={contactData.fromPhone} className="flex-1" label='Phone' onChange={(value) => setContactData({...contactData, fromPhone: value})} placeholder="+33 1 23 45 67 89"/>
               </div>
@@ -85,7 +88,7 @@ export default function ContactPage() {
             </form>
           
         </div>
-        <div className='md:basis-[30%] md:max-w-[30%] w-full flex flex-col gap-4'>
+        <div className='md:basis-[30%] md:max-w-[30%] w-full flex flex-col gap-4 pb-10'>
           <h2 className='font-bold text-slate-700'>La société</h2>
           <IconLabel icon={<MdPhone className="text-xl" />} text={c('phone')} />
           <IconLabel icon={<MdLocationOn className="text-xl" />} text={c('address')} />
