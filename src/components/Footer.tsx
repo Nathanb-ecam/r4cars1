@@ -84,7 +84,7 @@ export default function Footer() {
           </div> */}
         </div>
         <div className="text-md mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} r4cars1. {t('allRights')}.</p>
+          <p>&copy; {new Date().getFullYear()} r4cars. {t('allRights')}.</p>
         </div>
       </div>
     </footer>
