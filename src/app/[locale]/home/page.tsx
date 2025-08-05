@@ -64,7 +64,7 @@ export default function HomePage() {
             {i + 1}
           </button>
         ))}
-        <button className='border border-gray-200 px-2 py-1 rounded-lg' disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
+        <button className={`border border-gray-200 px-2 py-1 rounded-lg ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
           Suivant →
         </button>
       </div>

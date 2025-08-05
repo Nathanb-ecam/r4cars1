@@ -23,8 +23,8 @@ export async function sendContactMail({ fromEmail, fromName, fromPhone, message 
     },
     body: JSON.stringify({
       sender: {
-        name: fromName,
-        email: fromEmail,
+        name: 'r4cars',
+        email: 'info@r4cars.ch',
       },
       to: [
         {
