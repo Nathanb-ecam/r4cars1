@@ -1,21 +1,22 @@
-import {sendConfirmationEmail} from '@/lib/email';
+import { sendContactMail} from '@/lib/email';
 import { NextResponse } from 'next/server';
 
 export async function POST(request:Request) {
   
     try{
-  const { toEmail, toName, orderTemplate } = await request.json();
+  const { fromEmail, fromName, fromPhone, message } = await request.json();
 
-    if (!toEmail || !toName) { 
-      return NextResponse.json("Missing toEmail or toName")
+    if (!fromEmail || !fromName || !message) { 
+      return NextResponse.json("Missing fromEmail, fromName or message")
     }
 
 
   // 2. Envoyer l'email avec brevo {
-    await sendConfirmationEmail({
-      toEmail,
-      toName,      
-      orderTemplate  
+    await sendContactMail({
+      fromEmail: fromEmail,
+      fromName: fromName,
+      fromPhone: fromPhone,
+      message: message
     });
 
     return NextResponse.json({ status: 201 });

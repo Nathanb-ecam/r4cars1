@@ -1,24 +1,18 @@
 import { env } from "@/config/env";
 
-export interface BrevoOrderConfirmationTemplate{
-  name:string;
-  total:string;
-  shippingCosts:string;
-  products:{name:string,originalPrice:number, discountedPrice:number, imageUrl:string}[]
-}
 
 
 // lib/email.js
-export async function sendConfirmationEmail({ toEmail, toName, orderTemplate }: {
-  toEmail: string;
-  toName: string;
-  orderTemplate: BrevoOrderConfirmationTemplate;
+export async function sendContactMail({ fromEmail, fromName, fromPhone, message }: {
+  fromEmail: string;
+  fromName: string;
+  fromPhone?: string;
+  message: string;
 }) {
-
-const apiKey = env.brevo.apiKey;
+  const apiKey = env.brevo.apiKey;
   if (!apiKey) {
     throw new Error('BREVO_API_KEY is not defined in environment variables.');
-  }  
+  }
 
   const response = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
@@ -29,22 +23,22 @@ const apiKey = env.brevo.apiKey;
     },
     body: JSON.stringify({
       sender: {
-        name: 'Labeuromed',
-        email: 'info@labeuromed.eu', 
+        name: fromName,
+        email: fromEmail,
       },
       to: [
         {
-          email: toEmail,
-          name: toName,
+        name: 'r4cars',
+        email: 'info@r4cars.ch',
         },
       ],
-      subject: 'Order confirmation',
-      templateId: 7,
+      subject: 'Nouveau message de contact',
+      templateId: 1,
       params: {
-        toName,
-        total: orderTemplate.total,
-        shippingCosts: orderTemplate.shippingCosts, // Note: match your interface key
-        products: orderTemplate.products,
+        fromName,
+        fromEmail,
+        fromPhone,
+        message,
       },
     }),
   });
@@ -57,3 +51,5 @@ const apiKey = env.brevo.apiKey;
 
   return await response.json();
 }
+
+

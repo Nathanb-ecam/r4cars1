@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ProductModel } from '@/models/Product';
+import { allowedFields, ProductModel } from '@/models/Product';
 import connectDB from '@/lib/mongodb';
 
 export const runtime = 'nodejs';
@@ -10,31 +10,42 @@ export async function PUT(
 ) {
   try {
     const {id} = await params
+    console.log("Updating product with ID:", id);
     await connectDB();
     const body = await request.json();
+    console.log("Request body:", body);
 
-    // Validate required fields
-    if (!body.name || !body.description || !body.originalPrice || !body.discountedPrice) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
-    }
 
+    const hasAtLeastOneField = allowedFields.some((field) => field in body);
+
+      if (!hasAtLeastOneField) {
+        return NextResponse.json(
+          { error: 'At least one field must be provided for update.' },
+          { status: 400 }
+        );
+      }
+
+
+    console.log("NOT YET")
     // Find and update the product
     const updatedProduct = await ProductModel.findByIdAndUpdate(
       id,
       {
         $set: {
           name: body.name,
+          fullName: body.fullName,
           description: body.description,
-          originalPrice: body.originalPrice,
-          discountedPrice: body.discountedPrice,          
-          sku: body.sku,
+          price: body.price,
+          kms: body.kms,
+          benzineType: body.benzineType,
+          year: body.year,
+          transmission: body.transmission,
+          doors: body.doors,
+          motorisation: body.motorisation,
+          sections: body.sections,
           imageUrl: body.imageUrl,
-          stock: body.stock,
-          visibleOnWebsite: body.visibleOnWebsite,
-          isSpecialOffer: body.isSpecialOffer,
+          hp: body.hp,
+          visibleOnWebsite: body.visibleOnWebsite,          
           updatedAt: new Date()
         }
       },

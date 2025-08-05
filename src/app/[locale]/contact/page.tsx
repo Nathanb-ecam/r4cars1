@@ -7,7 +7,7 @@ import { MdEmail, MdLocationOn, MdPhone } from 'react-icons/md';
 import { LabelInput } from '@/components/ui/LabelInput';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { IconLabel } from '@/components/ui/IconLabel';
-import { sendConfirmationEmail } from '@/lib/email';
+import { sendContactMail } from '@/lib/email';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,9 +17,9 @@ export default function ContactPage() {
   
   const c = useTranslations('CompanyInfo');  
   const [contactData, setContactData] = useState({
-    name: '',
-    email: '',
-    phone: '',
+    fromName: '',
+    fromEmail: '',
+    fromPhone: '',
     message: ''
   });
 
@@ -27,13 +27,13 @@ export default function ContactPage() {
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Handle contact form submission logic here
-    console.log('Contact Data:', contactData);
-    // sendConfirmationEmail(contactData.email, contactData.name, contactData.message)
+    console.log('Contact Data:', contactData);    
+    sendContactMail(contactData)
     // Reset form
     setContactData({
-      name: '',
-      email: '',
-      phone: '',
+      fromName: '',
+      fromEmail: '',
+      fromPhone: '',
       message: ''
     });
   };
@@ -53,10 +53,10 @@ export default function ContactPage() {
           
             <form className='flex flex-col gap-4 mt-12' onSubmit={handleContactSubmit}>
               <div className='flex gap-4'>
-                <LabelInput  value={contactData.name} required={true} className="flex-1" label='Prénom et nom' onChange={(value) => setContactData({...contactData, name: value})} placeholder="John Doe"/>
-                <LabelInput  value={contactData.phone} className="flex-1" label='Phone' onChange={(value) => setContactData({...contactData, phone: value})} placeholder="+33 1 23 45 67 89"/>
+                <LabelInput  value={contactData.fromName} required={true} className="flex-1" label='Prénom et nom' onChange={(value) => setContactData({...contactData, fromName: value})} placeholder="John Doe"/>
+                <LabelInput  value={contactData.fromPhone} className="flex-1" label='Phone' onChange={(value) => setContactData({...contactData, fromPhone: value})} placeholder="+33 1 23 45 67 89"/>
               </div>
-              <LabelInput value={contactData.email} required={true} label='Email' onChange={(value) => setContactData({...contactData, email: value})} placeholder="johndoe@example.com"/>
+              <LabelInput value={contactData.fromEmail} required={true} label='Email' onChange={(value) => setContactData({...contactData, fromEmail: value})} placeholder="johndoe@example.com"/>
               <LabelInput inputSize='lg' value={contactData.message} required={true} label='Question' onChange={(value) => setContactData({...contactData, message: value})} placeholder="Votre message"/>
               <div className='text-right'>
                 <PrimaryButton className="px-10 rounded-lg" text="Envoyer" type="submit" onClick={() => {}} />

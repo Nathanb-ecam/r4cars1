@@ -5,13 +5,17 @@ interface Sections{
   desc:string;
   blocks:Array<string>;
 }
+
+export const allowedFields = [
+    'name', 'fullName', 'description', 'price', 'kms', 'benzineType',
+    'year', 'transmission', 'doors', 'motorisation', 'sections',
+    'imageUrl', 'hp', 'visibleOnWebsite'
+];
 export interface Product {
   _id: string;
   name: string;
-  fullName: string;
-  sku: string;
-  originalPrice:string;
-  discountedPrice:string;
+  fullName: string;  
+  price:string;  
   description: string;
 
   transmission: string;
@@ -22,9 +26,7 @@ export interface Product {
   doors:string;
   motorisation: string;
   
-  imageUrl: string;
-  imageSelfHosted:boolean;  
-  isSpecialOffer:boolean;
+  imageUrl: string;  
   visibleOnWebsite:boolean;
     
   sections:Array<Sections>;
@@ -32,13 +34,12 @@ export interface Product {
   updatedAt: Date;
 }
 
+
 const productSchema = new mongoose.Schema<Product>({
   name: { type: String, required: true },
   fullName: { type: String, required: true },
-  description: { type: String, required: true },
-  sku: { type: String, required: true },
-  originalPrice: { type: String, required: true },
-  discountedPrice: { type: String, required: true },
+  description: { type: String, required: true },  
+  price: { type: String, required: true },  
   
     
   transmission: { type: String, required: true },
@@ -48,9 +49,7 @@ const productSchema = new mongoose.Schema<Product>({
   doors: { type: String, required: true },
   kms: { type: String, required: true },
   
-  imageUrl: { type: String, required: true },
-  imageSelfHosted: { type: Boolean, required: true, default: true },  
-  isSpecialOffer: { type: Boolean, required: false, default: false },
+  imageUrl: { type: String, required: true },  
   visibleOnWebsite: { type: Boolean, required: false, default: false },
   
   

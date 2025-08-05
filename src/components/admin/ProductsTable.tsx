@@ -5,7 +5,42 @@ import DeleteConfirmationModal from './DeleteConfirmationModal';
 import ToggleSwitch from '../ui/ToggleSwitch';
 
 
+type TableProduct = {
+    _id: '',
+    name: '',
+    fullName: '',
+    description: '',
+    transmission: '',
+    kms: '',
+    year: '',
+    benzineType: '',
+    hp: '',
+    doors: '',
+    motorisation: '',
+    price: '',
+    imageUrl: '',
+    visibleOnWebsite: false,
+}
+
 export default function ProductsTable() {
+
+  const emptyTableProduct: TableProduct = {
+    _id: '',
+    name: '',
+    fullName: '',
+    description: '',
+    transmission: '',
+    kms: '',
+    year: '',
+    benzineType: '',
+    hp: '',
+    doors: '',
+    motorisation: '',
+    price: '',
+    imageUrl: '',
+    visibleOnWebsite: false,
+  }
+
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -13,30 +48,8 @@ export default function ProductsTable() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-  const [editingProduct, setEditingProduct] = useState({
-    _id: '',
-    name: '',
-    description: '',
-    originalPrice: '',
-    discountedPrice: '',
-    imageUrl: '',
-    imageSelfHosted:false,
-    sku: '',
-    isSpecialOffer:false,
-    visibleOnWebsite:false
-  });
-  const [newProduct, setNewProduct] = useState({
-    _id: '',
-    name: '',
-    description: '',
-    originalPrice: '',
-    discountedPrice: '',
-    imageUrl: '',
-    imageSelfHosted: true,
-    sku: '',
-    isSpecialOffer:false,
-    visibleOnWebsite:false
-  });
+  const [editingProduct, setEditingProduct] = useState<TableProduct>(emptyTableProduct);
+  const [newProduct, setNewProduct] = useState<TableProduct>(emptyTableProduct);
 
   useEffect(() => {
     fetchProducts();
@@ -46,8 +59,8 @@ export default function ProductsTable() {
     try {
       const response = await fetch('/api/products');
       if (!response.ok) throw new Error('Failed to fetch products');
-      const data = await response.json();
-      setProducts(data);
+      const {products, total} = await response.json();
+      setProducts(products);      
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -65,8 +78,7 @@ export default function ProductsTable() {
         },
         body: JSON.stringify({
           ...newProduct,          
-          originalPrice: parseFloat(newProduct.originalPrice),
-          discountedPrice: parseFloat(newProduct.discountedPrice)
+          price: parseFloat(newProduct.price)          
         }),
       });
 
@@ -74,7 +86,7 @@ export default function ProductsTable() {
       
       await fetchProducts();
       setIsModalOpen(false);
-      setNewProduct({ _id:'',name: '', description: '', originalPrice: '', discountedPrice: '', imageUrl: '',imageSelfHosted:false, sku: '' , isSpecialOffer:false, visibleOnWebsite:false});
+      setNewProduct(emptyTableProduct);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -92,16 +104,16 @@ export default function ProductsTable() {
         },
         body: JSON.stringify({
           ...editingProduct,
-          originalPrice: parseFloat(editingProduct.originalPrice.toString()),
-          discountedPrice: parseFloat(editingProduct.discountedPrice.toString())
+          // price: parseFloat(editingProduct.price.toString()),          
         }),
       });
 
       if (!response.ok) throw new Error('Failed to update product');
-      
-      await fetchProducts();
+      const updatedProduct = await response.json();
+      setProducts((prev) => prev.map((p) => (p._id === updatedProduct._id ? updatedProduct : p)));
+      // await fetchProducts();
       setIsEditModalOpen(false);
-      setEditingProduct({_id: '',name: '',description: '',originalPrice: '',discountedPrice: '',imageUrl: '',imageSelfHosted:false,sku: '',isSpecialOffer:false,visibleOnWebsite:false});
+      setEditingProduct(emptyTableProduct);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     }
@@ -125,7 +137,8 @@ export default function ProductsTable() {
 
       if (!response.ok) throw new Error('Failed to delete product');
       
-      await fetchProducts();
+      setProducts((prev) => prev.filter((p) => p._id !== productToDelete._id));
+      // await fetchProducts();
       setIsDeleteModalOpen(false);
       setProductToDelete(null);
     } catch (err) {
@@ -136,10 +149,10 @@ export default function ProductsTable() {
   const openEditModal = (product: Product) => {    
     const p = {
       ...product,
-      originalPrice: product.originalPrice.toString(),
-      discountedPrice: product.discountedPrice.toString()
+      price: product.price.toString(),      
     }
-    setEditingProduct(p);
+    const {sections, createdAt, updatedAt , ...prod } = p
+    setEditingProduct(prod as TableProduct);
     setIsEditModalOpen(true);
   };
 
@@ -176,7 +189,7 @@ export default function ProductsTable() {
       {/* Create Product Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium text-slate-900">Create New Product</h3>
               <button
@@ -190,8 +203,7 @@ export default function ProductsTable() {
             </div>
             <form onSubmit={handleCreateProduct} className="space-y-4">
               <div>
-                  <ToggleSwitch label="visibleOnWebsite" title={"On website"} initiallyChecked={newProduct.visibleOnWebsite} onToggle={()=>setNewProduct({ ...newProduct, visibleOnWebsite: !newProduct.visibleOnWebsite })} />
-                  <ToggleSwitch label="specialOffer" title={"Grouped offer"} initiallyChecked={newProduct.isSpecialOffer} onToggle={()=>setNewProduct({ ...newProduct, isSpecialOffer: !newProduct.isSpecialOffer })} />
+                  <ToggleSwitch label="visibleOnWebsite" title={"On website"} initiallyChecked={newProduct.visibleOnWebsite} onToggle={()=>setNewProduct({ ...newProduct, visibleOnWebsite: !newProduct.visibleOnWebsite })} />                  
               </div>
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
@@ -205,12 +217,12 @@ export default function ProductsTable() {
                 />
               </div>
               <div>
-                <label htmlFor="sku" className="block text-sm font-medium text-gray-700">SKU</label>
+                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">fullName</label>
                 <input
                   type="text"
-                  id="sku"
-                  value={newProduct.sku}
-                  onChange={(e) => setNewProduct({ ...newProduct, sku: e.target.value })}
+                  id="fullName"
+                  value={newProduct.fullName}
+                  onChange={(e) => setNewProduct({ ...newProduct, fullName: e.target.value })}
                   className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
@@ -227,43 +239,123 @@ export default function ProductsTable() {
                 />
               </div>
               <div>
-                <label htmlFor="originalPrice" className="block text-sm font-medium text-gray-700">Original Price</label>
+                <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
                 <input
-                  type="number"
-                  id="originalPrice"
-                  value={newProduct.originalPrice}
-                  onChange={(e) => setNewProduct({ ...newProduct, originalPrice: e.target.value })}
+                  type="text"
+                  id="price"
+                  value={newProduct.price}
+                  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                   className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   step="0.01"
                   required
                 />
               </div>
+   
+
               <div>
-                <label htmlFor="discountedPrice" className="block text-sm font-medium text-gray-700">Discounted Price</label>
+                <label htmlFor="transmission" className="block text-sm font-medium text-gray-700">Transmission</label>
+                <input
+                  type="text"
+                  id="transmission"
+                  value={newProduct.transmission}
+                  onChange={(e) => setNewProduct({ ...newProduct, transmission: e.target.value })}
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="kms" className="block text-sm font-medium text-gray-700">KMS</label>
                 <input
                   type="number"
-                  id="discountedPrice"
-                  value={newProduct.discountedPrice}
-                  onChange={(e) => setNewProduct({ ...newProduct, discountedPrice: e.target.value })}
+                  id="kms"
+                  value={newProduct.kms}
+                  onChange={(e) => setNewProduct({ ...newProduct, kms: e.target.value })}
                   className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   step="0.01"
                   required
                 />
               </div>
+
+              <div>
+                <label htmlFor="year" className="block text-sm font-medium text-gray-700">Année</label>
+                <input
+                  type="number"
+                  id="year"
+                  value={newProduct.year}
+                  onChange={(e) => setNewProduct({ ...newProduct, year: e.target.value })}
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="benzineType" className="block text-sm font-medium text-gray-700">benzineType</label>
+                <input
+                  type="number"
+                  id="benzineType"
+                  value={newProduct.benzineType}
+                  onChange={(e) => setNewProduct({ ...newProduct, benzineType: e.target.value })}
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="hp" className="block text-sm font-medium text-gray-700">hp</label>
+                <input
+                  type="text"
+                  id="hp"
+                  value={newProduct.hp}
+                  onChange={(e) => setNewProduct({ ...newProduct, hp: e.target.value })}
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="doors" className="block text-sm font-medium text-gray-700">doors</label>
+                <input
+                  type="number"
+                  id="doors"
+                  value={newProduct.doors}
+                  onChange={(e) => setNewProduct({ ...newProduct, doors: e.target.value })}
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  step="0.01"
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="motorisation" className="block text-sm font-medium text-gray-700">motorisation</label>
+                <input
+                  type="text"
+                  id="motorisation"
+                  value={newProduct.motorisation}
+                  onChange={(e) => setNewProduct({ ...newProduct, motorisation: e.target.value })}
+                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  step="0.01"
+                  required
+                />
+              </div>
+
               <div>
                   <div className='my-2 flex justify-between items-center'>
                     <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
-                    <ToggleSwitch label="imageSelfHosted" title="self hosted" initiallyChecked={newProduct.imageSelfHosted} onToggle={()=>setNewProduct({ ...newProduct, imageSelfHosted: !newProduct.imageSelfHosted })} />
+                    
+                   <input
+                     type="string"
+                     id="image"
+                     value={newProduct.imageUrl}
+                     onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
+                     className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                     required
+                   />
                   </div>
                 
-                  <input
-                    type="string"
-                    id="image"
-                    value={newProduct.imageUrl}
-                    onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
-                    className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    required
-                  />
                 
              
               </div>
@@ -290,7 +382,7 @@ export default function ProductsTable() {
       {/* Edit Product Modal */}
       {isEditModalOpen && editingProduct && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium text-slate-900">Edit Product</h3>
               <button
@@ -304,8 +396,7 @@ export default function ProductsTable() {
             </div>
             <form onSubmit={handleEditProduct} className="space-y-4">
               <div className='flex gap-4'>
-                <ToggleSwitch label="visibleOnSite" title="On website" initiallyChecked={editingProduct.visibleOnWebsite} onToggle={()=>setEditingProduct({ ...editingProduct, visibleOnWebsite: !editingProduct.visibleOnWebsite })} />
-                <ToggleSwitch label="specialOffer" title="Grouped offer" initiallyChecked={editingProduct.isSpecialOffer} onToggle={()=>setEditingProduct({ ...editingProduct, isSpecialOffer: !editingProduct.isSpecialOffer })} />
+                <ToggleSwitch label="visibleOnSite" title="On website" initiallyChecked={editingProduct.visibleOnWebsite} onToggle={()=>setEditingProduct({ ...editingProduct, visibleOnWebsite: !editingProduct.visibleOnWebsite })} />                
               </div>
               <div>
                 <label htmlFor="edit-name" className="block text-sm font-medium text-gray-700">Name</label>
@@ -319,12 +410,12 @@ export default function ProductsTable() {
                 />
               </div>
               <div>
-                <label htmlFor="edit-sku" className="block text-sm font-medium text-gray-700">SKU</label>
+                <label htmlFor="edit-fullName" className="block text-sm font-medium text-gray-700">fullName</label>
                 <input
                   type="text"
-                  id="edit-sku"
-                  value={editingProduct.sku}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, sku: e.target.value })}
+                  id="edit-fullName"
+                  value={editingProduct.fullName}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, fullName: e.target.value })}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   required
                 />
@@ -341,42 +432,117 @@ export default function ProductsTable() {
                 />
               </div>
               <div>
-                <label htmlFor="edit-originalPrice" className="block text-sm font-medium text-gray-700">Original Price</label>
+                <label htmlFor="edit-price" className="block text-sm font-medium text-gray-700">Original Price</label>
                 <input
-                  type="number"
-                  id="edit-originalPrice"
-                  value={editingProduct.originalPrice}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, originalPrice: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
+                  type="text"
+                  id="edit-price"
+                  value={editingProduct.price}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
                   required
                 />
               </div>
+
               <div>
-                <label htmlFor="edit-discountedPrice" className="block text-sm font-medium text-gray-700">Discounted Price</label>
+                <label htmlFor="edit-transmission" className="block text-sm font-medium text-gray-700">Transmission</label>
                 <input
-                  type="number"
-                  id="edit-discountedPrice"
-                  value={editingProduct.discountedPrice}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, discountedPrice: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
+                  type="text"
+                  id="edit-transmission"
+                  value={editingProduct.transmission}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, transmission: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
                   required
                 />
               </div>
+
+              <div>
+                <label htmlFor="edit-kms" className="block text-sm font-medium text-gray-700">kms</label>
+                <input
+                  type="text"
+                  id="edit-kms"
+                  value={editingProduct.kms}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, kms: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="edit-year" className="block text-sm font-medium text-gray-700">Année</label>
+                <input
+                  type="text"
+                  id="edit-year"
+                  value={editingProduct.year}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, year: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                 
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="edit-benzineType" className="block text-sm font-medium text-gray-700">Type de Benzine</label>
+                <input
+                  type="text"
+                  id="edit-benzineType"
+                  value={editingProduct.benzineType}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, benzineType: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="edit-hp" className="block text-sm font-medium text-gray-700">Puissance</label>
+                <input
+                  type="text"
+                  id="edit-hp"
+                  value={editingProduct.hp}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, hp: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  required                
+                />
+              </div>
+
+              <div>
+                <label htmlFor="edit-doors" className="block text-sm font-medium text-gray-700">Nombre de Portes</label>
+                <input
+                  type="text"
+                  id="edit-doors"
+                  value={editingProduct.doors}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, doors: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="edit-motorisation" className="block text-sm font-medium text-gray-700">Motorisation</label>
+                <input
+                  type="text"
+                  id="edit-motorisation"
+                  value={editingProduct.motorisation}
+                  onChange={(e) => setEditingProduct({ ...editingProduct, motorisation: e.target.value })}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
+                  required
+                />
+              </div>
+
+
+
+
+
               <div>                
-                  <div className='flex justify-between'>
-                      <label htmlFor="edit-image" className="block text-sm font-medium text-gray-700">Image URL</label>
-                      <ToggleSwitch label="imageSelfHosted" title="self hosted" initiallyChecked={editingProduct.imageSelfHosted} onToggle={()=>setEditingProduct({ ...editingProduct, imageSelfHosted: !editingProduct.imageSelfHosted })} />
+                  <div className=''>
+                      <label htmlFor="edit-image" className="block text-sm font-medium text-gray-700">Image URL</label>                      
+                      <input
+                        type="string"
+                        id="edit-image"
+                        value={editingProduct.imageUrl}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, imageUrl: e.target.value })}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        // required
+                      />
                   </div>
-                  <input
-                    type="string"
-                    id="edit-image"
-                    value={editingProduct.imageUrl}
-                    onChange={(e) => setEditingProduct({ ...editingProduct, imageUrl: e.target.value })}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                    // required
-                  />
                 
               </div>
               <div className="flex justify-end space-x-3">
@@ -419,16 +585,16 @@ export default function ProductsTable() {
                 Product
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                SKU
+                Model
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Description
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Original Price
+                Price
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Discounted Price
+                KMS
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Added
@@ -439,13 +605,13 @@ export default function ProductsTable() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {products.map((product) => (
+            {Array.isArray(products) && products.map((product) => (
               <tr key={product._id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {product.name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                  {product.sku}
+                  {product.fullName}
                 </td>
                 <td className="px-6 py-4 text-sm text-slate-900">
                   <div className="max-w-xs truncate">
@@ -454,10 +620,10 @@ export default function ProductsTable() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                   {/* €{product.originalPrice.toFixed(2)} */}
-                  €{product.originalPrice}
+                  €{product.price}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
-                  €{product.discountedPrice}
+                  €{product.kms}
                   {/* €{product.discountedPrice.toFixed(2)} */}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
@@ -487,7 +653,7 @@ export default function ProductsTable() {
 
       {/* Mobile view */}
       <div className="md:hidden space-y-4">
-        {products.map((product) => (
+        {Array.isArray(products) && products.map((product) => (
           <div key={product._id} className="bg-white shadow rounded-lg p-4">
             <div className="space-y-2">
               <div className="flex justify-between items-center">
@@ -511,22 +677,20 @@ export default function ProductsTable() {
                 </div>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">SKU</span>
-                <p className="text-sm text-slate-900">{product.sku}</p>
+                <span className="text-xs font-medium text-gray-500">fullName</span>
+                <p className="text-sm text-slate-900">{product.fullName}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Description</span>
                 <p className="text-sm text-slate-900">{product.description}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Original Price</span>
-                {/* <p className="text-sm text-slate-900">€{product.originalPrice.toFixed(2)}</p> */}
-                <p className="text-sm text-slate-900">€{product.originalPrice}</p>
+                <span className="text-xs font-medium text-gray-500">Price</span>                
+                <p className="text-sm text-slate-900">€{product.price}</p>
               </div>
               <div>
-                <span className="text-xs font-medium text-gray-500">Discounted Price</span>
-                {/* <p className="text-sm text-slate-900">€{product.discountedPrice.toFixed(2)}</p> */}
-                <p className="text-sm text-slate-900">€{product.discountedPrice}</p>
+                <span className="text-xs font-medium text-gray-500">KMS</span>
+                <p className="text-sm text-slate-900">€{product.kms}</p>
               </div>
               <div>
                 <span className="text-xs font-medium text-gray-500">Added</span>
