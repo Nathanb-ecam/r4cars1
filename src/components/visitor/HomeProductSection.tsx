@@ -52,7 +52,7 @@ export default function HomeProductSection({title, products} : Props){
                     <div className="bg-gray-100 text-xs text-gray-600 font-medium rounded-full px-2 py-1">{product.kms} kms</div>
                   </div>
                 </div>
-                <p className="mt-1 text-xs md:text-sm text-gray-500 h-25 line-clamp-3 min-h-[4.5em]">
+                <p className="mt-2 text-xs md:text-sm text-gray-500 h-25 line-clamp-5 md:line-clamp-3 min-h-[4.5em]">
                   {product.description}
                 </p>                                            
               </div>
