@@ -43,7 +43,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     const res = await fetch(`/api/products?page=${page}&limit=${limit}`);
     if (!res.ok) throw new Error('Erreur lors du chargement des produits');
     const data = await res.json();
-    console.log("Fetched DEVUGGG products:", data.products);
+    // console.log("Fetched DEVUGGG products:", data.products);
     set({ products: data.products, total: data.total, isLoading: false });
   } catch (err: any) {
     set({ error: err.message, isLoading: false });

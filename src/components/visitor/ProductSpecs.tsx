@@ -7,7 +7,7 @@ import { Product } from '@/models/Product';
 
 const ProductSpecs = ({product}  : {product: Product}) => {
   return (
-    <div className="border rounded-lg p-4 grid grid-cols-3 gap-4 text-sm text-gray-700 bg-white">
+    <div className="border rounded-lg p-4 grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-gray-700 bg-white">
       
       {/* Kilométrage */}
       <div className="flex items-start gap-2">

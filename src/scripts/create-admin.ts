@@ -1,4 +1,4 @@
-import { User, UserModel, UserRole } from '../models/User';
+import { UserModel, UserRole } from '../models/User';
 import connectDB from '../lib/mongodb';
 import bcrypt from 'bcryptjs';
 
@@ -7,8 +7,8 @@ async function createAdminUser() {
     await connectDB();
     console.log('Connected to MongoDB');
 
-    const adminEmail = 'admin@labeuromed.com';
-    const adminPassword = 'admin123'; // Change this to a secure password
+    const adminEmail = '';
+    const adminPassword = ''; // Change this to a secure password
 
     // Check if admin user already exists
     const existingAdmin = await UserModel.findOne({ email: adminEmail });
