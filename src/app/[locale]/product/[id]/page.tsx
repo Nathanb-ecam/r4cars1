@@ -78,7 +78,7 @@ export default function ProductPage() {
                   <div key={`section-idx-${sectionIdx}`} className="mb-4">
                     <div className='font-medium tracking-wide'><span className='font-bold text-gray-800'>{sectionIdx + 1}. </span>{section.title}</div>
                     {/* {section.desc && <div className='mb-1 pl-1 text-light text-xs text-gray-600'>{section.desc}</div>} */}
-                    <ul className="list-disc pl-5">
+                    <ul className="list-disc ml-10">
                       {section.blocks && section.blocks.map((component,idx)=>
                           // <div key={idx} className='text-xs font-medium text-gray-700 bg-gray-100 py-1 px-3 rounded-md'>
                           //   {component}

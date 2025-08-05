@@ -52,12 +52,12 @@ export default function ProductsTable() {
   const [newProduct, setNewProduct] = useState<TableProduct>(emptyTableProduct);
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts(1,10000);
   }, []);
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (page: number = 1, limit: number = 6) => {
     try {
-      const response = await fetch('/api/products');
+      const response = await fetch(`/api/products?page=${page}&limit=${limit}`);
       if (!response.ok) throw new Error('Failed to fetch products');
       const {products, total} = await response.json();
       setProducts(products);      
