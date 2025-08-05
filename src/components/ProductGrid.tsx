@@ -63,8 +63,8 @@ export default function ProductGrid() {
         >
           <div className="relative h-48">
             <Image
-              // src={product.image}
-              src={product.imageSelfHosted ? (product?.imageUrl ? `images/${product?.imageUrl}`: "/images/g5-no-bg.png" ) : (product.imageUrl) || '/images/g5-no-bg.png'}
+              src={product.imageUrl || '/images/g5-no-bg.png'} // Fallback image if product.imageUrl is empty
+              // src={product.imageSelfHosted ? (product?.imageUrl ? `images/${product?.imageUrl}`: "/images/g5-no-bg.png" ) : (product.imageUrl) || '/images/g5-no-bg.png'}
               alt={product.name}
               fill
               className="object-contain"
@@ -79,7 +79,7 @@ export default function ProductGrid() {
             </p>
             <div className="flex justify-between items-center">
               <span className="text-lg font-bold text-indigo-600">
-                {Number(product.originalPrice).toFixed(2)} €
+                {Number(product.price).toFixed(2)} €
               </span>              
             </div>
             <button
