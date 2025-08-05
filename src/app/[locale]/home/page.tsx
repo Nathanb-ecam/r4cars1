@@ -51,7 +51,7 @@ export default function HomePage() {
 
       {/* Pagination Controls */}
       <div className="flex justify-center mt-8 pb-4 gap-2">
-        <button className='border border-gray-200 px-2 py-1 rounded-lg' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
+        <button className='mr-2 border border-gray-200 px-2 py-1 rounded-lg' disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)}>
           ← Précédent
         </button>
         {[...Array(totalPages)].map((_, i) => (
@@ -59,12 +59,12 @@ export default function HomePage() {
             key={i}
             // variant={currentPage === i + 1 ? 'default' : 'outline'}
             onClick={() => handlePageChange(i + 1)}
-            className={`text-gray-500 ${currentPage === i + 1 ? 'underline decoration-blue-500 underline-offset-2 font-bold' : ''}`}
+            className={`text-gray-500 ${currentPage === i + 1 ? 'underline decoration-gray-500 underline-offset-2 font-bold' : ''}`}
           >
             {i + 1}
           </button>
         ))}
-        <button className={`border border-gray-200 px-2 py-1 rounded-lg ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
+        <button className={`ml-2 border border-gray-200 px-2 py-1 rounded-lg ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)}>
           Suivant →
         </button>
       </div>
