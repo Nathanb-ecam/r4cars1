@@ -5,26 +5,36 @@ import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { ShoppingCartIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import ProductSpecs from '@/components/visitor/ProductSpecs';
+import { PrimaryButton } from '@/components/ui/PrimaryButton';
 
 export default function ProductPage() {
   const params = useParams();
   const { products, isLoading, error, fetchProducts, getProductById } = useProductStore();  
   const t = useTranslations('Product');
+  const router = useRouter();
+  const pathname = usePathname();
 
-  useEffect(() => {
-    if (products.length === 0) {
-      fetchProducts();
-    }
-  }, [products.length, fetchProducts]);
+  // useEffect(() => {
+  //   if (products.length === 0) {
+  //     fetchProducts();
+  //   }
+  // }, [products.length, fetchProducts]);
 
   const product = getProductById(params.id as string);
   
   const [imgSrc, setImgSrc] = useState((product?.imageUrl && product?.imageUrl?.length > 0) ? product.imageUrl : "");
 
+  
+  const contactFormWithPost = () => {
+    // if(product && product._id) router.push(`/contact` )
+    if(product && product._id) router.push(`/contact?url=${encodeURIComponent(pathname)}` )
+    else console.log("Product was not defined") 
+  }
+  
   if (isLoading) {
     return (
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -56,19 +66,33 @@ export default function ProductPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className='flex flex-col gap-4'>
              <div className="relative h-64 w-full bg-gray-50 ">
-               <Image
-                 src={imgSrc ?? "/images/g5-no-bg.png"}
-                 alt={product.name}
-                 onError={()=>setImgSrc("/images/g5-no-bg.png")}
-                 fill
-                 className="object-cover rounded-lg"
-                />
+               {
+                imgSrc && 
+                <Image
+                  src={imgSrc ?? "/images/g5-no-bg.png"}
+                  alt={product.name}
+                  onError={()=>setImgSrc("/images/g5-no-bg.png")}
+                  fill
+                  className="object-cover rounded-lg"
+                  />
+               }
              </div>
             <ProductSpecs product={product} />
-          </div>
-
+            <div className="md:hidden text-end text-slate-900">
+                  <span className='tracking-tight text-xs'>àpd.</span> <span className='text-lg font-semibold'>{product.price} CHF</span>                  
+            </div>
+            <PrimaryButton className="md:hidden text-sm rounded-lg" text={"Posez une question"} onClick={contactFormWithPost} />
+          </div>          
+          
+          
           <div>
             <div className='flex flex-col'>
+                <div className="hidden md:flex md:justify-between md:items-center mb-4 text-slate-900">
+                  <div>
+                    <span className='tracking-tight text-xs'>àpd.</span> <span className='text-lg font-semibold'>{product.price} CHF</span>
+                  </div>
+                  <PrimaryButton className="hidden md:block text-sm rounded-lg" text={"Posez une question"} onClick={contactFormWithPost} />
+                </div>
                 <h1 className="md:text-xl font-bold text-gray-700">{product.name}<span></span></h1>                
                 <p className="text-xs md:text-sm text-gray-600 tracking-wide">{product.fullName}</p>                            
             </div>

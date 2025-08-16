@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-interface Sections{
+export interface Sections{
   title:string;
   desc:string;
   blocks:Array<string>;
@@ -58,7 +58,7 @@ const productSchema = new mongoose.Schema<Product>({
     type: [
     {
       title: { type: String, required: true },
-      desc: { type: String, required: true },
+      desc: { type: String, required: false },
       blocks: { type: [String], required: true },
     }
   ]

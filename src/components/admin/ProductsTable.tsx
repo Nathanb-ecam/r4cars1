@@ -3,6 +3,7 @@ import { Product, ProductModel } from '@/models/Product';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 import ToggleSwitch from '../ui/ToggleSwitch';
+import VehicleForm from './VehicleForm';
 
 
 type TableProduct = {
@@ -68,18 +69,19 @@ export default function ProductsTable() {
     }
   };
 
-  const handleCreateProduct = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateProduct = async (p  :Product) => {
+    // e.preventDefault();
     try {
       const response = await fetch('/api/admin/products', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...newProduct,          
-          price: newProduct.price          
-        }),
+        body: JSON.stringify(p),
+        // body: JSON.stringify({
+        //   ...newProduct,          
+        //   price: newProduct.price          
+        // }),
       });
 
       if (!response.ok) throw new Error('Failed to create product');
@@ -181,7 +183,7 @@ export default function ProductsTable() {
           <svg className="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
           </svg>
-          Add Product
+          Add new vehicle
         </button>
       </div>
 
@@ -190,7 +192,7 @@ export default function ProductsTable() {
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[80vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-slate-900">Create New Product</h3>
+              <h3 className="text-lg font-medium text-slate-900">Create New Listing</h3>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-gray-400 hover:text-gray-500"
@@ -200,180 +202,11 @@ export default function ProductsTable() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleCreateProduct} className="space-y-4">
-              <div>
-                  <ToggleSwitch label="visibleOnWebsite" title={"On website"} initiallyChecked={newProduct.visibleOnWebsite} onToggle={()=>setNewProduct({ ...newProduct, visibleOnWebsite: !newProduct.visibleOnWebsite })} />                  
-              </div>
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={newProduct.name}
-                  onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">fullName</label>
-                <input
-                  type="text"
-                  id="fullName"
-                  value={newProduct.fullName}
-                  onChange={(e) => setNewProduct({ ...newProduct, fullName: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                  id="description"
-                  value={newProduct.description}
-                  onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  rows={3}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
-                <input
-                  type="text"
-                  id="price"
-                  value={newProduct.price}
-                  onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
-                  required
-                />
-              </div>
-   
-
-              <div>
-                <label htmlFor="transmission" className="block text-sm font-medium text-gray-700">Transmission</label>
-                <input
-                  type="text"
-                  id="transmission"
-                  value={newProduct.transmission}
-                  onChange={(e) => setNewProduct({ ...newProduct, transmission: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="kms" className="block text-sm font-medium text-gray-700">KMS</label>
-                <input
-                  type="number"
-                  id="kms"
-                  value={newProduct.kms}
-                  onChange={(e) => setNewProduct({ ...newProduct, kms: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="year" className="block text-sm font-medium text-gray-700">Année</label>
-                <input
-                  type="number"
-                  id="year"
-                  value={newProduct.year}
-                  onChange={(e) => setNewProduct({ ...newProduct, year: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="benzineType" className="block text-sm font-medium text-gray-700">benzineType</label>
-                <input
-                  type="number"
-                  id="benzineType"
-                  value={newProduct.benzineType}
-                  onChange={(e) => setNewProduct({ ...newProduct, benzineType: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="hp" className="block text-sm font-medium text-gray-700">hp</label>
-                <input
-                  type="text"
-                  id="hp"
-                  value={newProduct.hp}
-                  onChange={(e) => setNewProduct({ ...newProduct, hp: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="doors" className="block text-sm font-medium text-gray-700">doors</label>
-                <input
-                  type="number"
-                  id="doors"
-                  value={newProduct.doors}
-                  onChange={(e) => setNewProduct({ ...newProduct, doors: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="motorisation" className="block text-sm font-medium text-gray-700">motorisation</label>
-                <input
-                  type="text"
-                  id="motorisation"
-                  value={newProduct.motorisation}
-                  onChange={(e) => setNewProduct({ ...newProduct, motorisation: e.target.value })}
-                  className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  step="0.01"
-                  required
-                />
-              </div>
-
-              <div>
-                  <div className='my-2 flex justify-between items-center'>
-                    <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
-                    
-                   <input
-                     type="string"
-                     id="image"
-                     value={newProduct.imageUrl}
-                     onChange={(e) => setNewProduct({ ...newProduct, imageUrl: e.target.value })}
-                     className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                     required
-                   />
-                  </div>
-                
-                
-             
-              </div>
-              <div className="flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Create
-                </button>
-              </div>
-            </form>
+            <VehicleForm
+              initialProduct={newProduct}
+              onSubmit={handleCreateProduct}
+              onCancel={()=>setIsModalOpen(false)}
+            />
           </div>
         </div>
       )}

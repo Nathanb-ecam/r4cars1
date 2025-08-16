@@ -5,6 +5,7 @@ import HomeProductSection from '@/components/visitor/HomeProductSection';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { LayoutEquipe } from '@/components/about/LayoutEquipe';
+import { env } from '@/config/env';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,8 +37,8 @@ export default function AboutPage() {
             <h2 className='md:leading-loose text-xl md:text-2xl tracking-tight font-bold text-slate-700'>Notre garage</h2>
             <p></p>
             <div className="flex justify-center my-10">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d20198.601754921146!2d3.2669696!3d50.741730499999996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sbe!4v1753348567388!5m2!1sfr!2sbe" 
+              <iframe                 
+                src={`${env.company.maps}`}
                 width="600" height="450" 
                 // style="border:0;" 
                 allowFullScreen={true} loading="lazy" referrerPolicy="no-referrer-when-downgrade"

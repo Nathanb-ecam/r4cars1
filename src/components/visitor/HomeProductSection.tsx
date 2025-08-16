@@ -59,7 +59,7 @@ export default function HomeProductSection({title, products} : Props){
             {/* </Link> */}
             <div className="flex justify-between items-center px-4 py-2">
               <div className="text-lg font-semibold text-slate-900">
-                {product.price} €
+                {product.price} CHF
               </div>
               <div className="text-end gap-2">                
                 <PrimaryButton className="text-sm rounded-lg" text={t('viewDetails')} onClick={() => router.push(`/product/${product._id}`)} />

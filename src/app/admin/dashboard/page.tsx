@@ -4,13 +4,11 @@ import { useState } from 'react';
 import ProductsTable from '@/components/admin/ProductsTable';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('products');
+  const [activeTab, setActiveTab] = useState('listings');
 
-  const tabs = [
-    // { id: 'orders', label: 'Sales' },    
-    // { id: 'affiliates', label: 'Affiliates' },
-    // { id: 'stock', label: 'Stock' },
-    { id: 'products', label: 'Products' },
+  const tabs = [    
+    { id: 'listings', label: 'Listings' },
+    { id: 'employees', label: 'Employees' },
   ];
 
   return (
@@ -57,7 +55,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="mt-8">        
-        {activeTab === 'products' && <ProductsTable />}
+        {activeTab === 'listings' && <ProductsTable />}
       </div>
     </div>
   );

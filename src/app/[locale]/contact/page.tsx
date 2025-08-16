@@ -6,20 +6,25 @@ import { MdEmail, MdLocationOn, MdPhone } from 'react-icons/md';
 import { LabelInput } from '@/components/ui/LabelInput';
 import { PrimaryButton } from '@/components/ui/PrimaryButton';
 import { IconLabel } from '@/components/ui/IconLabel';
+import { useSearchParams } from 'next/navigation';
+import { env } from '@/config/env';
 
 export const dynamic = 'force-dynamic';
 
 
 
 export default function ContactPage() {    
-    
-  const c = useTranslations('CompanyInfo');  
+       
+  const searchParams = useSearchParams();
+  const url = searchParams.get('url');
+  // console.log("RECEIVED" + url)
   
   const [successfullySent, setSuccessfullySent] = useState<boolean | null>(null);  
   const [contactData, setContactData] = useState({
     fromName: '',
     fromEmail: '',
     fromPhone: '',
+    url: url,
     message: ''
   });
 
@@ -59,6 +64,7 @@ export default function ContactPage() {
         fromName: '',
         fromEmail: '',
         fromPhone: '',
+        url: '',
         message: ''
       });
       throw error;
@@ -81,7 +87,7 @@ export default function ContactPage() {
             <p className="text-center">
               {successfullySent
                 ? 'Merci pour votre message ! Nous vous répondrons dans les plus brefs délais.'
-                : 'Votre message n\'a pas pu être envoyé. Merci de réessayer plus tard ou de nous contacter à "info@r4cars.ch".'}
+                : `Votre message n\'a pas pu être envoyé. Merci de réessayer plus tard ou de nous contacter à "${env.company.mail}".`}
             </p>
 
             <button
@@ -111,7 +117,7 @@ export default function ContactPage() {
               <form className='flex flex-col gap-4 mt-12' onSubmit={handleContactSubmit}>
                 <div className='flex gap-4 flex-wrap'>
                   <LabelInput  value={contactData.fromName} required={true} className="flex-1" label='Prénom et nom' onChange={(value) => setContactData({...contactData, fromName: value})} placeholder="John Doe"/>
-                  <LabelInput  value={contactData.fromPhone} className="flex-1" label='Phone' onChange={(value) => setContactData({...contactData, fromPhone: value})} placeholder="+33 1 23 45 67 89"/>
+                  <LabelInput  value={contactData.fromPhone} className="flex-1" label='Phone' onChange={(value) => setContactData({...contactData, fromPhone: value})} placeholder="+41 12 345 67 89"/>
                 </div>
                 <LabelInput value={contactData.fromEmail} type='email' required={true} label='Email' onChange={(value) => setContactData({...contactData, fromEmail: value})} placeholder="johndoe@example.com"/>
                 <LabelInput inputSize='lg' value={contactData.message} required={true} label='Question' onChange={(value) => setContactData({...contactData, message: value})} placeholder="Votre message"/>
@@ -123,9 +129,9 @@ export default function ContactPage() {
           </div>
           <div className='md:basis-[30%] md:max-w-[30%] w-full flex flex-col gap-4 pb-10'>
             <h2 className='font-bold text-slate-700'>La société</h2>
-            <IconLabel icon={<MdPhone className="text-xl" />} text={c('phone')} />
-            <IconLabel icon={<MdLocationOn className="text-xl" />} text={c('address')} />
-            <IconLabel icon={<MdEmail className="text-xl" />} text={c('email')} />
+            <IconLabel icon={<MdPhone className="text-xl" />} text={env.company.phone} />
+            <IconLabel icon={<MdLocationOn className="text-xl" />} text={env.company.address} />
+            <IconLabel icon={<MdEmail className="text-xl" />} text={env.company.mail} />
           </div>
         </div>
 

@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request:Request) {
   
     try{
-  const { fromEmail, fromName, fromPhone, message } = await request.json();
+  const { fromEmail, fromName, fromPhone, message, url } = await request.json();
 
     if (!fromEmail || !fromName || !message) { 
       return NextResponse.json("Missing fromEmail, fromName or message")
@@ -16,6 +16,7 @@ export async function POST(request:Request) {
       fromEmail: fromEmail,
       fromName: fromName,
       fromPhone: fromPhone,
+      url: url,
       message: message
     });
 

@@ -10,8 +10,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo-lab-user
       - MONGO_INITDB_ROOT_PASSWORD=mongo-lab-pass
-      - MONGO_INITDB_DATABASE=labeuromed
-      # - MONGO_INITDB_DATABASE=labeuromed
+      - MONGO_INITDB_DATABASE=r4cars
+      # - MONGO_INITDB_DATABASE=r4cars
     volumes:
       - mongodb_data:/data/db
 

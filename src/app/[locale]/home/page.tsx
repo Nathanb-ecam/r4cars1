@@ -1,6 +1,6 @@
 "use client";
 import { useProductStore } from '@/store/productStore';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import HomeProductSection from '@/components/visitor/HomeProductSection';
 import { useTranslations } from 'next-intl';
 
@@ -11,11 +11,18 @@ export default function HomePage() {
   const t = useTranslations('Home');
   const { products, isLoading, error, fetchProducts, total } = useProductStore();
 
+  const mainRef = useRef<HTMLElement | null>(null);
+
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
   useEffect(() => {
     fetchProducts(currentPage, itemsPerPage);
+  
+    // scroll back to <main> after fetching new products
+    if (mainRef.current) {
+      mainRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }, [currentPage]);
 
   const totalPages = Math.ceil(total / itemsPerPage);
@@ -43,11 +50,13 @@ export default function HomePage() {
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-8">
+    <main ref={mainRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-8 scroll-mt-20">
+      
       <HomeProductSection
         title={t('allProducts')}
         products={products}
       />
+      
 
       {/* Pagination Controls */}
       <div className="flex justify-center mt-8 pb-4 gap-2">

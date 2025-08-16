@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { MdEmail, MdLocationOn, MdPhone } from 'react-icons/md';
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { IconLabel } from './ui/IconLabel';
+import { env } from '@/config/env';
 
 function SectionLine({ title, content }: { title: string; content: string }) {
   return (
@@ -19,8 +20,7 @@ function SectionLine({ title, content }: { title: string; content: string }) {
 }
 
 export default function Footer() {
-  const t = useTranslations('Footer');
-  const c = useTranslations('CompanyInfo');
+  const t = useTranslations('Footer');  
 
   return (
     // bg-gray-900
@@ -30,9 +30,9 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4">{t('title')}</h3>
             <div className='flex flex-col gap-4'>
-              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdPhone className="text-gray-500 " />} text={c('phone')} />
-              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdLocationOn className="text-gray-500 " />} text={c('address')} />
-              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdEmail className="text-gray-500 " />} text={c('email')} />
+              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdPhone className="text-gray-500 " />} text={env.company.phone} />
+              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdLocationOn className="text-gray-500 " />} text={env.company.address} />
+              <IconLabel className="text-sm sm:text-md text-gray-400" icon={<MdEmail className="text-gray-500 " />} text={env.company.mail} />
             </div>
           </div>
           <div>
@@ -58,9 +58,9 @@ export default function Footer() {
 
           
           <div className='flex gap-6 justify-center md:justify-start'>         
-            <IconLabel className="text-gray-400" icon={<Link href={c('facebook')}><FaFacebook className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>}  />
-            <IconLabel className="text-gray-400" icon={<Link href={c('instagram')}><FaInstagram className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>} />
-            <IconLabel className="text-gray-400" icon={<Link href={c('twitter')}><FaTwitter className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>} />          
+            {env.company.facebook && env.company.facebook.length > 0 && env.company.facebook.includes('facebook.com') && <IconLabel className="text-gray-400" icon={<Link href={env.company.facebook}><FaFacebook className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>}  />}
+            {env.company.instagram && env.company.instagram.length > 0 && env.company.instagram.includes('instagram.com') && <IconLabel className="text-gray-400" icon={<Link href={env.company.instagram}><FaInstagram className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>} />}
+            {env.company.twitter && env.company.twitter.length > 0 && env.company.twitter.includes('twitter.com') && <IconLabel className="text-gray-400" icon={<Link href={env.company.twitter}><FaTwitter className="text-3xl text-gray-500 hover:cursor-pointer" /></Link>} />}
           </div>
           {/* <div>
             <h3 className="text-lg font-semibold mb-4">{t('legal')}</h3>
@@ -84,7 +84,7 @@ export default function Footer() {
           </div> */}
         </div>
         <div className="text-md mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} r4cars. {t('allRights')}.</p>
+          <p>&copy; {new Date().getFullYear()} {env.company.brand_name}. {t('allRights')}.</p>
         </div>
       </div>
     </footer>

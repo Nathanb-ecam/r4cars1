@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import AdminLoginForm from '@/components/auth/AdminLoginForm';
 
 // export const metadata: Metadata = {
-//   title: 'Admin Login - Labeuromed',
+//   title: 'Admin Login - r4cars',
 //   description: 'Admin login page',
 // };
 
