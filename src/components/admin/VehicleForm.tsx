@@ -9,9 +9,10 @@ interface ProductFormProps {
   initialProduct: any;
   onSubmit: (product: any) => void;
   onCancel: () => void;
+  mode?: "create" | "edit";
 }
 
-export default function VehicleForm({ initialProduct, onSubmit, onCancel }: ProductFormProps) {
+export default function VehicleForm({ initialProduct, onSubmit, onCancel, mode = "create" }: ProductFormProps) {
   const [newProduct, setNewProduct] = useState(initialProduct);
 
   // ➕ Add a new section
@@ -131,7 +132,7 @@ export default function VehicleForm({ initialProduct, onSubmit, onCancel }: Prod
           </button>
         </div>
 
-        {newProduct.sections?.map((section: Section, index: number) => (
+        {newProduct.sections?.map((section: Sections, index: number) => (
           <div key={index} className="p-4 border rounded-lg mb-4 bg-gray-50">
             <div className="flex justify-between items-center">
               <h4 className="font-medium">Section {index + 1}</h4>
@@ -152,12 +153,12 @@ export default function VehicleForm({ initialProduct, onSubmit, onCancel }: Prod
                 onChange={(e) => handleSectionChange(index, "title", e.target.value)}
                 className="w-full rounded-md border-gray-300 shadow-sm px-2 py-1"
               />
-              <textarea
+              {/* <textarea
                 placeholder="Description"
                 value={section.desc}
                 onChange={(e) => handleSectionChange(index, "desc", e.target.value)}
                 className="w-full rounded-md border-gray-300 shadow-sm px-2 py-1"
-              />
+              /> */}
 
               {/* Blocks */}
               <div className="space-y-1">
@@ -208,7 +209,7 @@ export default function VehicleForm({ initialProduct, onSubmit, onCancel }: Prod
           type="submit"
           className="px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-md hover:bg-indigo-600"
         >
-          Create
+          {mode === "create" ? "Create" : "Save changes"}
         </button>
       </div>
     </form>

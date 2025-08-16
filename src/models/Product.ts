@@ -47,6 +47,7 @@ const productSchema = new mongoose.Schema<Product>({
   benzineType: { type: String, required: true },
   hp: { type: String, required: true },
   doors: { type: String, required: true },
+  motorisation: { type: String, required: true },
   kms: { type: String, required: true },
   
   imageUrl: { type: String, required: true },  

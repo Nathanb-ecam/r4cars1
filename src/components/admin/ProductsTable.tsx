@@ -38,7 +38,7 @@ export default function ProductsTable() {
     doors: '',
     motorisation: '',
     price: '',
-    imageUrl: '',
+    imageUrl: '',    
     visibleOnWebsite: false,
   }
 
@@ -78,10 +78,6 @@ export default function ProductsTable() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(p),
-        // body: JSON.stringify({
-        //   ...newProduct,          
-        //   price: newProduct.price          
-        // }),
       });
 
       if (!response.ok) throw new Error('Failed to create product');
@@ -94,8 +90,8 @@ export default function ProductsTable() {
     }
   };
 
-    const handleEditProduct = async (e: React.FormEvent) => {
-    e.preventDefault();
+    const handleEditProduct = async (p : Product) => {
+    // e.preventDefault();
     if (!editingProduct) return;
 
     try {
@@ -104,9 +100,7 @@ export default function ProductsTable() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...editingProduct,          
-        }),
+        body: JSON.stringify(p),
       });
 
       if (!response.ok) throw new Error('Failed to update product');
@@ -152,8 +146,8 @@ export default function ProductsTable() {
       ...product,
       price: product.price.toString(),      
     }
-    const {sections, createdAt, updatedAt , ...prod } = p
-    setEditingProduct(prod as TableProduct);
+    const { createdAt, updatedAt , ...prod } = p
+    setEditingProduct(prod);
     setIsEditModalOpen(true);
   };
 
@@ -206,6 +200,7 @@ export default function ProductsTable() {
               initialProduct={newProduct}
               onSubmit={handleCreateProduct}
               onCancel={()=>setIsModalOpen(false)}
+              mode="create"
             />
           </div>
         </div>
@@ -226,173 +221,12 @@ export default function ProductsTable() {
                 </svg>
               </button>
             </div>
-            <form onSubmit={handleEditProduct} className="space-y-4">
-              <div className='flex gap-4'>
-                <ToggleSwitch label="visibleOnSite" title="On website" initiallyChecked={editingProduct.visibleOnWebsite} onToggle={()=>setEditingProduct({ ...editingProduct, visibleOnWebsite: !editingProduct.visibleOnWebsite })} />                
-              </div>
-              <div>
-                <label htmlFor="edit-name" className="block text-sm font-medium text-gray-700">Name</label>
-                <input
-                  type="text"
-                  id="edit-name"
-                  value={editingProduct.name}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="edit-fullName" className="block text-sm font-medium text-gray-700">fullName</label>
-                <input
-                  type="text"
-                  id="edit-fullName"
-                  value={editingProduct.fullName}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, fullName: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="edit-description" className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                  id="edit-description"
-                  value={editingProduct.description}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  rows={3}
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="edit-price" className="block text-sm font-medium text-gray-700">Original Price</label>
-                <input
-                  type="text"
-                  id="edit-price"
-                  value={editingProduct.price}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, price: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="edit-transmission" className="block text-sm font-medium text-gray-700">Transmission</label>
-                <input
-                  type="text"
-                  id="edit-transmission"
-                  value={editingProduct.transmission}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, transmission: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="edit-kms" className="block text-sm font-medium text-gray-700">kms</label>
-                <input
-                  type="text"
-                  id="edit-kms"
-                  value={editingProduct.kms}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, kms: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="edit-year" className="block text-sm font-medium text-gray-700">Année</label>
-                <input
-                  type="text"
-                  id="edit-year"
-                  value={editingProduct.year}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, year: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                 
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="edit-benzineType" className="block text-sm font-medium text-gray-700">Type de Benzine</label>
-                <input
-                  type="text"
-                  id="edit-benzineType"
-                  value={editingProduct.benzineType}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, benzineType: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="edit-hp" className="block text-sm font-medium text-gray-700">Puissance</label>
-                <input
-                  type="text"
-                  id="edit-hp"
-                  value={editingProduct.hp}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, hp: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                  required                
-                />
-              </div>
-
-              <div>
-                <label htmlFor="edit-doors" className="block text-sm font-medium text-gray-700">Nombre de Portes</label>
-                <input
-                  type="text"
-                  id="edit-doors"
-                  value={editingProduct.doors}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, doors: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="edit-motorisation" className="block text-sm font-medium text-gray-700">Motorisation</label>
-                <input
-                  type="text"
-                  id="edit-motorisation"
-                  value={editingProduct.motorisation}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, motorisation: e.target.value })}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"                  
-                  required
-                />
-              </div>
-
-
-
-
-
-              <div>                
-                  <div className=''>
-                      <label htmlFor="edit-image" className="block text-sm font-medium text-gray-700">Image URL</label>                      
-                      <input
-                        type="string"
-                        id="edit-image"
-                        value={editingProduct.imageUrl}
-                        onChange={(e) => setEditingProduct({ ...editingProduct, imageUrl: e.target.value })}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        // required
-                      />
-                  </div>
-                
-              </div>
-              <div className="flex justify-end space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setIsEditModalOpen(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 text-sm font-medium text-white bg-indigo-500 border border-transparent rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
+            <VehicleForm
+                  initialProduct={editingProduct}
+                  onSubmit={handleEditProduct}
+                  onCancel={()=>setIsEditModalOpen(false)}
+                  mode="edit"
+            />
           </div>
         </div>
       )}
