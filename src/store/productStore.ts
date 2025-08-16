@@ -3,6 +3,7 @@ import { create } from 'zustand';
 
 interface ProductStore {  
   products: Product[];
+  product: Product | null;
   total: number;
   isLoading: boolean;
   error: string | null;
@@ -10,11 +11,13 @@ interface ProductStore {
   clearProducts: () => void;
   // fetchProducts: () => Promise<void>;
   fetchProducts: (page?: number, limit?: number) => Promise<void>;
-  getProductById: (productId: string) => Product | undefined;
+  getProductById: (productId: string) => Promise<Product | undefined>;
+  setProductById: (productId: string) => Promise<Product | undefined>;
 }
 
 export const useProductStore = create<ProductStore>((set, get) => ({  
   products: [],
+  product:null,
   total: 0,
   isLoading: false,
   error: null,
@@ -51,7 +54,30 @@ export const useProductStore = create<ProductStore>((set, get) => ({
 },
 
 
-  getProductById: (productId: string) => {
-    return get().products.find((product) => product._id === productId);
+  getProductById: async (productId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await fetch(`/api/products?id=${productId}`);
+      if (!res.ok) throw new Error('Erreur lors du chargement du produit');
+      const product: Product = await res.json();
+      set({ isLoading: false });
+      return product;
+    } catch (err: any) {
+      set({ error: err.message, isLoading: false });
+      return undefined;
+    }
+  },
+  setProductById: async (productId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await fetch(`/api/products?id=${productId}`);
+      if (!res.ok) throw new Error('Erreur lors du chargement du produit');
+      const product:Product = await res.json();
+      set({ isLoading: false, product:product});
+      return product;
+    } catch (err: any) {
+      set({ error: err.message, isLoading: false });
+      return undefined;
+    }
   },
 })); 

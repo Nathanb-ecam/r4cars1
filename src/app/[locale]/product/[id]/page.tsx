@@ -13,21 +13,27 @@ import { PrimaryButton } from '@/components/ui/PrimaryButton';
 
 export default function ProductPage() {
   const params = useParams();
-  const { products, isLoading, error, fetchProducts, getProductById } = useProductStore();  
+  const { products, product, isLoading, error, fetchProducts, setProductById } = useProductStore();  
   const t = useTranslations('Product');
   const router = useRouter();
   const pathname = usePathname();
 
   // useEffect(() => {
+  //   console.log("refetching ... ")
   //   if (products.length === 0) {
   //     fetchProducts();
   //   }
   // }, [products.length, fetchProducts]);
 
-  const product = getProductById(params.id as string);
+
+  useEffect(()=>{
+      setProductById(params.id as string);
+  },[])
+
   
   const [imgSrc, setImgSrc] = useState((product?.imageUrl && product?.imageUrl?.length > 0) ? product.imageUrl : "");
-
+  // console.log()
+  // console.log("IMAGE SRC" + imgSrc)
   
   const contactFormWithPost = () => {
     // if(product && product._id) router.push(`/contact` )
@@ -45,7 +51,9 @@ export default function ProductPage() {
     );
   }
 
-  if (error || !product) {
+  
+  
+  if (error || product === null || !product) {
     return (
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <p className="text-red-500 text-center">{t('notFound')}</p>

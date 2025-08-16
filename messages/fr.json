@@ -30,7 +30,7 @@
     "checkout":"Finaliser la commande"
   },
   "Product": {
-    "notFound": "Produit non trouvé",
+    "notFound": "Une erreur est survenue ... ",
     "addToCart": "Ajouter au panier",
     "backToProducts": "Retourner aux véhicules",
     "addedToCartTitle": "Nouvel article ajouté à la commande !",

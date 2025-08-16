@@ -3,8 +3,6 @@ import { useState } from "react";
 import ToggleSwitch from "@/components/ui/ToggleSwitch";
 import { Sections } from "@/models/Product";
 
-
-
 interface ProductFormProps {
   initialProduct: any;
   onSubmit: (product: any) => void;
@@ -78,18 +76,18 @@ export default function VehicleForm({ initialProduct, onSubmit, onCancel, mode =
         }
       />
 
-      {/* Basic fields (name, description, etc.) */}
+      {/* Basic fields */}
       {[
         { id: "name", label: "Name", type: "text" },
         { id: "fullName", label: "Full Name", type: "text" },
         { id: "description", label: "Description", type: "textarea" },
         { id: "price", label: "Price", type: "text" },
-        { id: "transmission", label: "Transmission", type: "text" },
+        { id: "transmission", label: "Transmission", type: "select", options: ["MAN", "AUTO"] },
         { id: "kms", label: "KMS", type: "number" },
         { id: "year", label: "Year", type: "number" },
-        { id: "benzineType", label: "Benzine Type", type: "text" },
+        { id: "benzineType", label: "Benzine Type", type: "select", options: ["Diesel", "Essence"] },
         { id: "hp", label: "HP", type: "text" },
-        { id: "doors", label: "Doors", type: "number" },
+        { id: "doors", label: "Doors", type: "select", options: [3, 5] },
         { id: "motorisation", label: "Motorisation", type: "text" },
         { id: "imageUrl", label: "Image URL", type: "text" },
       ].map((field) => (
@@ -106,6 +104,20 @@ export default function VehicleForm({ initialProduct, onSubmit, onCancel, mode =
               rows={3}
               required
             />
+          ) : field.type === "select" ? (
+            <select
+              id={field.id}
+              value={newProduct[field.id]}
+              onChange={(e) => setNewProduct({ ...newProduct, [field.id]: e.target.value })}
+              className="py-2 px-3 mt-1 block w-full rounded-md border-gray-300 shadow-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              required
+            >
+              {field.options!.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           ) : (
             <input
               type={field.type}
@@ -153,12 +165,6 @@ export default function VehicleForm({ initialProduct, onSubmit, onCancel, mode =
                 onChange={(e) => handleSectionChange(index, "title", e.target.value)}
                 className="w-full rounded-md border-gray-300 shadow-sm px-2 py-1"
               />
-              {/* <textarea
-                placeholder="Description"
-                value={section.desc}
-                onChange={(e) => handleSectionChange(index, "desc", e.target.value)}
-                className="w-full rounded-md border-gray-300 shadow-sm px-2 py-1"
-              /> */}
 
               {/* Blocks */}
               <div className="space-y-1">

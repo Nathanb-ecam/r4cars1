@@ -14,7 +14,7 @@ const ProductSpecs = ({product}  : {product: Product}) => {
         <FaRoad className="min-w-[14px] h-5 mt-1" />
         <div>
           <p className="text-gray-500">Kilométrage</p>
-          <p className="font-semibold">{product.kms.toLocaleString()} km</p>
+          <p className="font-semibold">{product?.kms?.toLocaleString()} km</p>
         </div>
       </div>
 
