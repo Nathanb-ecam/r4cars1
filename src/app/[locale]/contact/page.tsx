@@ -16,15 +16,17 @@ export const dynamic = 'force-dynamic';
 export default function ContactPage() {    
        
   const searchParams = useSearchParams();
-  const url = searchParams.get('url');
+  const [linkedUrl, setLinkedUrl] = useState(searchParams.get('url'));
+  const carFullName = searchParams.get('carFullName');
   // console.log("RECEIVED" + url)
+  const [carLinked, setCarLinked] = useState((linkedUrl?.length && linkedUrl?.length > 0) ? true : false);
   
   const [successfullySent, setSuccessfullySent] = useState<boolean | null>(null);  
   const [contactData, setContactData] = useState({
     fromName: '',
     fromEmail: '',
     fromPhone: '',
-    url: url,
+    url: linkedUrl,
     message: ''
   });
 
@@ -55,7 +57,7 @@ export default function ContactPage() {
         throw new Error(errorText || 'Failed to send email');
       }
 
-      const result = await response.json();
+      await response.json();
       setSuccessfullySent(true);
     } catch (error) {
       setSuccessfullySent(false);
@@ -121,6 +123,25 @@ export default function ContactPage() {
                 </div>
                 <LabelInput value={contactData.fromEmail} type='email' required={true} label='Email' onChange={(value) => setContactData({...contactData, fromEmail: value})} placeholder="johndoe@example.com"/>
                 <LabelInput inputSize='lg' value={contactData.message} required={true} label='Question' onChange={(value) => setContactData({...contactData, message: value})} placeholder="Votre message"/>
+                
+                {carLinked && 
+                  
+                    <div className='flex items-center gap-2'>
+
+                      <h2 className='text-gray-600 text-sm tracking-tight'>Annonce liée: </h2>
+                      <div className='text-xs bg-gray-100 rounded-full w-full py-[.2rem] px-4 flex items-center w-max'>
+                        <label className='text-gray-700 tracking-tight'>{carFullName}</label>
+                        <button
+                          type="button"
+                          onClick={() => {setCarLinked(false); setContactData({...contactData, url : ""});}}
+                          className="ml-2 text-gray-400 text-lg hover:text-red-500 hover:cursor-pointer"
+                        >
+                          &times;
+                        </button>
+                      </div>                    
+                    </div>
+                  }
+                
                 <div className='text-right'>
                   <PrimaryButton className="px-10 rounded-lg" text="Envoyer" type="submit" onClick={() => {}} />
                 </div>

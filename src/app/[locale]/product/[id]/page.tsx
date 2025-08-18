@@ -18,6 +18,7 @@ export default function ProductPage() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [imgSrc, setImgSrc] = useState("/brand-images/logo_nom_alt2.svg");
   // useEffect(() => {
   //   console.log("refetching ... ")
   //   if (products.length === 0) {
@@ -30,18 +31,22 @@ export default function ProductPage() {
       setProductById(params.id as string);
   },[])
 
+  useEffect(()=>{
+    if(product?.imageUrl) setImgSrc(product?.imageUrl)    
+  },[product])
+
   
-  const [imgSrc, setImgSrc] = useState((product?.imageUrl && product?.imageUrl?.length > 0) ? product.imageUrl : "");
+  
   // console.log()
   // console.log("IMAGE SRC" + imgSrc)
   
   const contactFormWithPost = () => {
     // if(product && product._id) router.push(`/contact` )
-    if(product && product._id) router.push(`/contact?url=${encodeURIComponent(pathname)}` )
+    if(product && product._id) router.push(`/contact?url=${encodeURIComponent(pathname)}&carFullName=${encodeURIComponent(product.fullName)}` )
     else console.log("Product was not defined") 
   }
   
-  if (isLoading) {
+  if (isLoading || product === null || !product) {
     return (
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-center items-center min-h-[400px]">
@@ -51,9 +56,9 @@ export default function ProductPage() {
     );
   }
 
+
   
-  
-  if (error || product === null || !product) {
+  if (error) {
     return (
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <p className="text-red-500 text-center">{t('notFound')}</p>
@@ -77,9 +82,9 @@ export default function ProductPage() {
                {
                 imgSrc && 
                 <Image
-                  src={imgSrc ?? "/images/g5-no-bg.png"}
+                  src={imgSrc}
                   alt={product.name}
-                  onError={()=>setImgSrc("/images/g5-no-bg.png")}
+                  onError={()=>setImgSrc("/brand-images/logo_nom_alt2.svg")}
                   fill
                   className="object-cover rounded-lg"
                   />

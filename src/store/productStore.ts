@@ -57,7 +57,7 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   getProductById: async (productId: string) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await fetch(`/api/products?id=${productId}`);
+      const res = await fetch(`/api/products/${productId}`);
       if (!res.ok) throw new Error('Erreur lors du chargement du produit');
       const product: Product = await res.json();
       set({ isLoading: false });
@@ -70,10 +70,12 @@ export const useProductStore = create<ProductStore>((set, get) => ({
   setProductById: async (productId: string) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await fetch(`/api/products?id=${productId}`);
+      const res = await fetch(`/api/products/${productId}`);
       if (!res.ok) throw new Error('Erreur lors du chargement du produit');
-      const product:Product = await res.json();
+      const product : Product = await res.json();
       set({ isLoading: false, product:product});
+      // console.log("setProductById" + JSON.stringify(data.products))
+      console.log("setProductById")
       return product;
     } catch (err: any) {
       set({ error: err.message, isLoading: false });

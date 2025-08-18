@@ -37,7 +37,7 @@ export default function HomeProductSection({title, products} : Props){
                   src={imgSrc}
                   alt={product.name}                  
                   fill
-                  onError={() => setImgSrc("/images/g5-no-bg.png")}
+                  onError={() => setImgSrc("/brand-images/logo_nom_alt2.svg")}
                   className="object-cover"
                 />
               </div>

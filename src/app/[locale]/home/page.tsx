@@ -50,7 +50,7 @@ export default function HomePage() {
   }
 
   return (
-    <main ref={mainRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-8 scroll-mt-20">
+    <main ref={mainRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 md:py-8 scroll-mt-10 md:scroll-mt-20">
       
       <HomeProductSection
         title={t('allProducts')}
