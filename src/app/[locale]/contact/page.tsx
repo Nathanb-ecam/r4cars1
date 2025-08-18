@@ -110,7 +110,7 @@ export default function ContactPage() {
         </div>
 
         <div className='flex md:flex-row flex-col gap-10'>
-          <div className='md:basis-[70%] md:max-w-[70%] w-full'>
+          <div className='md:basis-[70%] md:max-w-[70%] w-full pb-10 md:pb-0'>
             <div className='font-light text-lg text-gray-800'>
                 Contactez-nous pour tout ce qui concerne notre entreprise ou nos services.<br/>
                 Nous ferons de notre mieux pour vous répondre dans les plus brefs délais.
@@ -148,7 +148,7 @@ export default function ContactPage() {
               </form>
             
           </div>
-          <div className='md:basis-[30%] md:max-w-[30%] w-full flex flex-col gap-4 pb-10'>
+          <div className='hidden md:block md:basis-[30%] md:max-w-[30%] w-full flex flex-col gap-4 pb-10'>
             <h2 className='font-bold text-slate-700'>La société</h2>
             <IconLabel icon={<MdPhone className="text-xl" />} text={env.company.phone} />
             <IconLabel icon={<MdLocationOn className="text-xl" />} text={env.company.address} />

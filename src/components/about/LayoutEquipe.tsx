@@ -1,31 +1,44 @@
 import Image from "next/image";
+import { Employee } from "@/models/Employee"; // adjust import to your project
 
 type Props = {
-  children?: React.ReactNode;
-className?: string;
+  className?: string;
+  employees: Employee[];
 };
 
-export function LayoutEquipe({ children, className }: Props) {
-    return (
-      <div className={`w-full  ${className}`}>
-        <div className="flex md:flex-row flex-col w-full gap-2">
-          <div className='md:w-1/2 max-w-1/2 flex flex-col md:flex-row gap-10 my-10 md:my-0'>
-            <Image className='rounded-full bg-gray-50' src="/brand-images/logo_entier_alt2.svg" alt="Rémi Callewaert" width={120} height={120} />
-            <div className=''>              
-              <h3 className='tracking-tight text-lg font-bold'>Rémi Callewaert</h3>
-              <p className='mb-2 text-gray-700 tracking-wide font-light'>Directeur général</p>
-              <p className='text-gray-700 leading-snug'>Fondateur et visionnaire en chef, Tony est le moteur de l'entreprise. Il aime rester occupé en participant au développement des stratégies de vente, marketing et d'expérience client.</p>
+export function LayoutEquipe({ className, employees }: Props) {
+  if(!employees || employees === null) return;
+  return (
+    <div className={`w-full ${className || ""}`}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {employees.map((employee) => (
+          <div
+            key={employee._id}
+            className="flex flex-col md:flex-row gap-6 items-start"
+          >
+            
+            <Image
+              className="rounded-full  bg-gray-50 flex-shrink-0"
+              src={employee.imageUrl || "/brand-images/logo_entier_alt2.svg"}
+              alt={employee.fullName}
+              width={120}
+              height={120}
+            />
+            
+            <div>
+              <h3 className="tracking-tight text-lg font-bold">
+                {employee.fullName}
+              </h3>
+              <p className="mb-2 text-gray-700 tracking-wide font-light">
+                {employee.role}
+              </p>
+              <p className="text-gray-700 leading-snug">
+                {employee.description}
+              </p>
             </div>
           </div>
-          <div className='md:w-1/2 max-w-1/2 flex flex-col md:flex-row gap-10 my-10 md:my-0'>
-            <Image className='rounded-full bg-gray-50' src="/brand-images/logo_entier_alt2.svg" alt="Membre de l'équipe 2" width={120} height={120} />
-            <div className=''>              
-              <h3 className='tracking-tight leading-relax text-lg font-bold'>Rémi Callewaert</h3>
-              <p className='mb-2 text-gray-700 tracking-wide font-light'>Directeur général</p>
-              <p className='text-gray-700 leading-snug'>Mich adore relever des défis. Fort de son expérience de plusieurs années en tant que directeur commercial dans l'industrie automobile, Mich a aidé l'entreprise à en arriver là où elle en est aujourd'hui. Mich fait partie des meilleurs esprits.</p>
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
-    );
+    </div>
+  );
 }

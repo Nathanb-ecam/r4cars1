@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import ProductsTable from '@/components/admin/ProductsTable';
+import EmployeeTable from '@/components/admin/EmployeesTable';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('listings');
@@ -56,6 +57,7 @@ export default function AdminDashboard() {
 
       <div className="mt-8">        
         {activeTab === 'listings' && <ProductsTable />}
+        {activeTab === 'employees' && <EmployeeTable />}
       </div>
     </div>
   );

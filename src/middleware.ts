@@ -61,8 +61,7 @@ export async function middleware(request: NextRequest) {
   }    
 
 
-  if(pathname.includes('/admin') && !pathname.includes("/admin/login")){        
-    console.log("HOOOOW")
+  if(pathname.includes('/admin') && !pathname.includes("/admin/login")){            
     const token = request.cookies.get('token')?.value;
     if(!token) return NextResponse.redirect(new URL(ADMIN_LOGIN_URL, request.url));
     const isValid = await isTokenValid(token, UserRole.ADMIN)
