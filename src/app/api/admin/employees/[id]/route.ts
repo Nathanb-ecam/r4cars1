@@ -3,10 +3,14 @@ import connectDB from "@/lib/mongodb"
 import { EmployeeModel } from "@/models/Employee";
 
 // GET employee by id
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest, 
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const {id} = await params;
     await connectDB();
-    const employee = await EmployeeModel.findById(params.id);
+    const employee = await EmployeeModel.findById(id);
     if (!employee) {
       return NextResponse.json({ error: "Employee not found" }, { status: 404 });
     }
@@ -17,11 +21,15 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 }
 
 // UPDATE employee
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: NextRequest, 
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const {id} = await params;
     await connectDB();
     const body = await req.json();
-    const employee = await EmployeeModel.findByIdAndUpdate(params.id, body, { new: true });
+    const employee = await EmployeeModel.findByIdAndUpdate(id, body, { new: true });
     if (!employee) {
       return NextResponse.json({ error: "Employee not found" }, { status: 404 });
     }
